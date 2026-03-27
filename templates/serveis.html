@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{% if lang=='ca' %}Serveis — Reus Revela{% else %}Servicios — Reus Revela{% endif %}{% endblock %}
+{% block content %}
+<div class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang=='ca' %}Els nostres serveis{% else %}Nuestros servicios{% endif %}</div>
+      <h1 class="display">{% if lang=='ca' %}Qualitat professional en cada detall{% else %}Calidad profesional en cada detalle{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Oferim una àmplia gamma de serveis fotogràfics i d'emmarcació per a particulars i professionals.{% else %}Ofrecemos una amplia gama de servicios fotográficos y de enmarcación para particulares y profesionales.{% endif %}</p>
+    </div>
+
+    <div style="margin-top:4rem" id="impressio">
+      <hr class="divider" style="margin-bottom:4rem">
+      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
+        <div>
+          <div class="tag">01</div>
+          <h2 class="display">{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h2>
+          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Paper fotogràfic professional Fuji Crystal. Disponible des de 10×15 cm fins a 120×180 cm. Color i blanc i negre.{% else %}Papel fotográfico profesional Fuji Crystal. Disponible desde 10×15 cm hasta 120×180 cm. Color y blanco y negro.{% endif %}</p>
+          <ul style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.6rem">
+            {% for item in [('ca','Acabat brillant, mat i satinat','Acabado brillante, mate y satinado'),('ca','Servei de 24h disponible','Servicio de 24h disponible'),('ca','Gestió de color professional','Gestión de color profesional'),('ca','Formats estàndard i a mida','Formatos estándar y a medida')] %}
+            <li style="display:flex;align-items:center;gap:.6rem;font-size:14px;color:var(--muted)">
+              <span style="color:var(--gold);font-weight:700">✓</span>
+              {{ item[1] if lang=='es' else item[2] if lang=='es' else item[1] }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="img-placeholder" style="height:320px;border-radius:12px">
+          <div style="text-align:center"><div style="font-size:48px">📸</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:5rem" id="emmarcacio">
+      <hr class="divider" style="margin-bottom:4rem">
+      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
+        <div class="img-placeholder" style="height:320px;border-radius:12px;order:0">
+          <div style="text-align:center"><div style="font-size:48px">🖼</div></div>
+        </div>
+        <div>
+          <div class="tag">02</div>
+          <h2 class="display">{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</h2>
+          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Més de 500 motllures de fusta, alumini i materials nobles. Passpartús de tots els colors i gruixos. Vidres normals, UV i de conservació.{% else %}Más de 500 molduras de madera, aluminio y materiales nobles. Passepartouts de todos los colores y grosores. Vidrios normales, UV y de conservación.{% endif %}</p>
+          <a href="/professionals" class="btn btn-gold" style="margin-top:1.5rem">{% if lang=='ca' %}Calcular pressupost{% else %}Calcular presupuesto{% endif %} →</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:5rem" id="revelat">
+      <hr class="divider" style="margin-bottom:4rem">
+      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
+        <div>
+          <div class="tag">03</div>
+          <h2 class="display">{% if lang=='ca' %}Revelat i retoc digital{% else %}Revelado y retoque digital{% endif %}</h2>
+          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Tractament d'imatge professional, restauració de fotografies antigues i escanejat d'alta resolució. Fem reviure les teves fotografies.{% else %}Tratamiento de imagen profesional, restauración de fotografías antiguas y escaneado de alta resolución. Hacemos revivir tus fotografías.{% endif %}</p>
+        </div>
+        <div class="img-placeholder" style="height:320px;border-radius:12px">
+          <div style="text-align:center"><div style="font-size:48px">💻</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:5rem" id="professionals">
+      <hr class="divider" style="margin-bottom:3rem">
+      <div class="fade-up" style="background:var(--ink);border-radius:16px;padding:3rem;color:#fff;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem">
+        <div>
+          <div class="tag" style="background:rgba(184,148,90,.2);color:var(--gold)">{% if lang=='ca' %}Per a professionals{% else %}Para profesionales{% endif %}</div>
+          <h2 class="display" style="color:#fff;margin-bottom:.75rem">{% if lang=='ca' %}Àrea exclusiva per a fotògrafs i galeries{% else %}Área exclusiva para fotógrafos y galerías{% endif %}</h2>
+          <p style="color:rgba(255,255,255,.6);font-size:15px">{% if lang=='ca' %}Tarifes especials, calculadora de pressupostos online i gestió de comandes. Demana accés.{% else %}Tarifas especiales, calculadora de presupuestos online y gestión de pedidos. Solicita acceso.{% endif %}</p>
+        </div>
+        <a href="/professionals" class="btn btn-gold" style="white-space:nowrap">{% if lang=='ca' %}Saber-ne més{% else %}Saber más{% endif %} →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

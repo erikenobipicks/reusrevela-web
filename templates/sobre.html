@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{% if lang=='ca' %}Qui som — Reus Revela{% else %}Quiénes somos — Reus Revela{% endif %}{% endblock %}
+{% block content %}
+<div class="section">
+  <div class="container">
+    <div class="grid-2 fade-up" style="align-items:center;gap:5rem">
+      <div>
+        <div class="tag">{% if lang=='ca' %}La nostra història{% else %}Nuestra historia{% endif %}</div>
+        <h1 class="display">{% if lang=='ca' %}Quatre dècades de passió per la fotografia{% else %}Cuatro décadas de pasión por la fotografía{% endif %}</h1>
+        <p class="lead" style="margin-top:1.25rem">
+          {% if lang=='ca' %}Des de 1985, Reus Revela és el laboratori fotogràfic de referència a la comarca del Baix Camp. El que va néixer com un petit laboratori artesanal s'ha convertit en un centre complet de serveis fotogràfics i d'emmarcació.{% else %}Desde 1985, Reus Revela es el laboratorio fotográfico de referencia en la comarca del Baix Camp. Lo que nació como un pequeño laboratorio artesanal se ha convertido en un centro completo de servicios fotográficos y de enmarcación.{% endif %}
+        </p>
+        <p style="color:var(--muted);margin-top:1rem;font-size:15px;line-height:1.8">
+          {% if lang=='ca' %}Avui combinem les tècniques tradicionals amb la tecnologia més avançada per oferir el millor resultat en cada projecte. La nostra experiència i el tracte personal fan de Reus Revela un lloc on les teves fotografies estan en bones mans.{% else %}Hoy combinamos las técnicas tradicionales con la tecnología más avanzada para ofrecer el mejor resultado en cada proyecto. Nuestra experiencia y el trato personal hacen de Reus Revela un lugar donde tus fotografías están en buenas manos.{% endif %}
+        </p>
+      </div>
+      <div>
+        <div class="img-placeholder" style="height:420px;border-radius:16px">
+          <div style="text-align:center"><div style="font-size:56px">📷</div><div style="margin-top:.5rem">{% if lang=='ca' %}Foto del local{% else %}Foto del local{% endif %}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:5rem">
+      <hr class="divider" style="margin-bottom:4rem">
+      <div class="grid-3 fade-up">
+        <div class="card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:1rem">🎯</div>
+          <h3 class="card-title">{% if lang=='ca' %}Missió{% else %}Misión{% endif %}</h3>
+          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Preservar i potenciar la bellesa de les fotografies amb el màxim nivell de qualitat i professionalitat.{% else %}Preservar y potenciar la belleza de las fotografías con el máximo nivel de calidad y profesionalidad.{% endif %}</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:1rem">👁</div>
+          <h3 class="card-title">{% if lang=='ca' %}Visió{% else %}Visión{% endif %}</h3>
+          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Ser el soci de confiança per a fotògrafs i particulars que busquen excel·lència en cada imatge.{% else %}Ser el socio de confianza para fotógrafos y particulares que buscan excelencia en cada imagen.{% endif %}</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:1rem">❤️</div>
+          <h3 class="card-title">{% if lang=='ca' %}Valors{% else %}Valores{% endif %}</h3>
+          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Qualitat, honestedat, tracte proper i compromís amb la satisfacció de cada client.{% else %}Calidad, honestidad, trato cercano y compromiso con la satisfacción de cada cliente.{% endif %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

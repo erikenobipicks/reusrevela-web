@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}{% if lang=='ca' %}Contacte — Reus Revela{% else %}Contacto — Reus Revela{% endif %}{% endblock %}
+{% block head %}
+<style>
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;align-items:start;margin-top:3rem}
+.contact-info-card{background:var(--ink);border-radius:14px;padding:2.5rem;color:#fff}
+.contact-info-card h3{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:1.5rem;font-weight:400}
+.info-row{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
+.info-icon{width:40px;height:40px;background:rgba(184,148,90,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.info-row h4{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.25rem}
+.info-row p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6}
+.info-row a{color:rgba(255,255,255,.7);transition:color .2s}.info-row a:hover{color:#fff}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem}
+.f{margin-bottom:1.25rem}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.f input,.f textarea,.f select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
+.f input:focus,.f textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,148,90,.1)}
+.f textarea{resize:vertical;min-height:130px}
+.success-msg{display:none;background:var(--green-l);border:1px solid #B8DCC9;border-radius:8px;padding:1rem;color:var(--green);font-size:14px;font-weight:500;margin-top:1rem}
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+{% block content %}
+<div class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang=='ca' %}Parlem{% else %}Hablemos{% endif %}</div>
+      <h1 class="display">{% if lang=='ca' %}Contacta amb nosaltres{% else %}Contáctanos{% endif %}</h1>
+      <p class="lead" style="margin-top:.75rem">{% if lang=='ca' %}Estem al teu servei de dilluns a divendres i dissabtes al matí.{% else %}Estamos a tu servicio de lunes a viernes y sábados por la mañana.{% endif %}</p>
+    </div>
+
+    <div class="contact-grid fade-up">
+      <div>
+        <div class="contact-info-card">
+          <h3>{% if lang=='ca' %}On som{% else %}Dónde estamos{% endif %}</h3>
+          <div class="info-row">
+            <div class="info-icon">📍</div>
+            <div>
+              <h4>{% if lang=='ca' %}Adreça{% else %}Dirección{% endif %}</h4>
+              <p>C/ Mare Molas, 26<br>43201 Reus, Tarragona</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">📞</div>
+            <div>
+              <h4>{% if lang=='ca' %}Telèfon{% else %}Teléfono{% endif %}</h4>
+              <p><a href="tel:+34977316111">977 316 111</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">✉️</div>
+            <div>
+              <h4>Email</h4>
+              <p><a href="mailto:reusrevela@gmail.com">reusrevela@gmail.com</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon">🕐</div>
+            <div>
+              <h4>{% if lang=='ca' %}Horari{% else %}Horario{% endif %}</h4>
+              <p>{% if lang=='ca' %}Dl–Dv: 9:30–13:30 / 16:30–20:00<br>Ds: 10:00–14:00{% else %}Lun–Vie: 9:30–13:30 / 16:30–20:00<br>Sáb: 10:00–14:00{% endif %}</p>
+            </div>
+          </div>
+        </div>
+
+        {% if request.args.get('pro') %}
+        <div style="background:var(--gold-l);border:1px solid var(--gold);border-radius:10px;padding:1.25rem;margin-top:1.5rem">
+          <p style="font-size:13px;color:#7A5020;font-weight:500">⭐ {% if lang=='ca' %}Sol·licites accés a l'àrea de professionals. Indica-ho al missatge i et contactarem en 24h.{% else %}Solicitas acceso al área de profesionales. Indícalo en el mensaje y te contactaremos en 24h.{% endif %}</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="form-card">
+        <h3 style="font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:1.5rem">
+          {% if lang=='ca' %}Envia'ns un missatge{% else %}Envíanos un mensaje{% endif %}
+        </h3>
+        <div class="f">
+          <label>{% if lang=='ca' %}Nom complet{% else %}Nombre completo{% endif %} *</label>
+          <input type="text" id="f-nom" placeholder="{% if lang=='ca' %}El teu nom{% else %}Tu nombre{% endif %}">
+        </div>
+        <div class="f">
+          <label>Email *</label>
+          <input type="email" id="f-email" placeholder="email@exemple.com">
+        </div>
+        <div class="f">
+          <label>{% if lang=='ca' %}Telèfon (opcional){% else %}Teléfono (opcional){% endif %}</label>
+          <input type="tel" id="f-tel" placeholder="6XX XXX XXX">
+        </div>
+        <div class="f">
+          <label>{% if lang=='ca' %}Assumpte{% else %}Asunto{% endif %}</label>
+          <select id="f-assumpte">
+            <option>{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</option>
+            <option>{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</option>
+            <option>{% if lang=='ca' %}Accés àrea professionals{% else %}Acceso área profesionales{% endif %} {% if request.args.get('pro') %}✓{% endif %}</option>
+            <option>{% if lang=='ca' %}Altra consulta{% else %}Otra consulta{% endif %}</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>{% if lang=='ca' %}Missatge{% else %}Mensaje{% endif %} *</label>
+          <textarea id="f-msg" placeholder="{% if lang=='ca' %}Explica'ns en què et podem ajudar...{% else %}Cuéntanos en qué podemos ayudarte...{% endif %}">{% if request.args.get('pro') %}{% if lang=='ca' %}Hola, m'agradaria sol·licitar accés a l'àrea de professionals.{% else %}Hola, me gustaría solicitar acceso al área de profesionales.{% endif %}{% endif %}</textarea>
+        </div>
+        <button onclick="enviarContacte()" class="btn btn-dark" style="width:100%;justify-content:center;font-size:15px;padding:14px">
+          {% if lang=='ca' %}Enviar missatge{% else %}Enviar mensaje{% endif %}
+        </button>
+        <div class="success-msg" id="success-msg">
+          ✓ {% if lang=='ca' %}Missatge enviat! Ens posarem en contacte aviat.{% else %}¡Mensaje enviado! Nos pondremos en contacto pronto.{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+function enviarContacte(){
+  var nom=document.getElementById('f-nom').value.trim();
+  var email=document.getElementById('f-email').value.trim();
+  var msg=document.getElementById('f-msg').value.trim();
+  if(!nom||!email||!msg){alert('{% if lang=="ca" %}Omple els camps obligatoris.{% else %}Rellena los campos obligatorios.{% endif %}');return;}
+  var btn=event.currentTarget; btn.disabled=true; btn.textContent='{% if lang=="ca" %}Enviant...{% else %}Enviando...{% endif %}';
+  fetch('/api/contacte',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({nom:nom,email:email,missatge:msg,assumpte:document.getElementById('f-assumpte').value})
+  }).then(r=>r.json()).then(function(d){
+    if(d.ok){
+      btn.style.display='none';
+      document.getElementById('success-msg').style.display='block';
+    }
+  }).catch(function(){btn.disabled=false;btn.textContent='{% if lang=="ca" %}Enviar missatge{% else %}Enviar mensaje{% endif %}';});
+}
+</script>
+{% endblock %}

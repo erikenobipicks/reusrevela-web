@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Reus Revela — Laboratori Fotogràfic{% endblock %}</title>
+<meta name="description" content="{% block desc %}Laboratori fotogràfic i taller d'emmarcació professional a Reus. Impressió fotogràfica, emmarcació a mida i serveis per a fotògrafs professionals.{% endblock %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F0E0C;--ink2:#3A3830;--muted:#7A7669;--hint:#B8B4AA;
+  --bg:#FAF9F6;--card:#FFFFFF;--border:#E8E4DC;
+  --gold:#B8945A;--gold-l:#F5EDD9;
+  --green:#1A6B45;--green-l:#E8F3EE;
+  --r:10px;--nav-h:68px;--max:1140px;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:var(--sans);cursor:pointer}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:200;background:rgba(250,249,246,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:var(--nav-h);display:flex;align-items:center}
+.nav-inner{max-width:var(--max);margin:0 auto;width:100%;padding:0 2rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--serif);font-size:22px;color:var(--ink);letter-spacing:-.3px}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-cta{background:var(--ink)!important;color:#fff!important;padding:9px 20px;border-radius:7px;font-size:13px;font-weight:600!important;transition:background .2s!important}
+.nav-cta:hover{background:var(--gold)!important}
+.lang-sw{display:flex;gap:3px;background:var(--border);border-radius:6px;padding:3px}
+.lang-sw a{padding:3px 10px;border-radius:4px;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s}
+.lang-sw a.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--ink);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:1.5rem 2rem;z-index:199;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.mobile-menu a{display:block;padding:.75rem 0;font-size:15px;border-bottom:1px solid var(--border);color:var(--ink)}
+.mobile-menu a:last-of-type{border:none}
+
+/* Footer */
+footer{background:var(--ink);color:rgba(255,255,255,.5);padding:4rem 2rem 2rem;margin-top:6rem}
+.footer-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:3rem}
+.footer-brand{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:.75rem}
+.footer-brand span{color:var(--gold)}
+.footer-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.35);margin-bottom:.85rem}
+.footer-col a{display:block;font-size:13px;margin-bottom:.45rem;color:rgba(255,255,255,.5);transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{max-width:var(--max);margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.3)}
+
+/* Utils */
+.container{max-width:var(--max);margin:0 auto;padding:0 2rem}
+.section{padding:5rem 0}
+.tag{display:inline-block;background:var(--gold-l);color:var(--gold);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem}
+.tag-green{background:var(--green-l);color:var(--green)}
+h1.display{font-family:var(--serif);font-size:clamp(40px,5.5vw,68px);font-weight:400;line-height:1.08;letter-spacing:-.5px}
+h2.display{font-family:var(--serif);font-size:clamp(30px,4vw,48px);font-weight:400;line-height:1.15;letter-spacing:-.3px}
+h3.card-title{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:.5rem;line-height:1.3}
+.lead{font-size:17px;color:var(--muted);line-height:1.8}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:13px 28px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:all .2s;cursor:pointer}
+.btn-dark{background:var(--ink);color:#fff}.btn-dark:hover{background:var(--ink2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:#a07840;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--ink)}.btn-outline:hover{border-color:var(--ink);transform:translateY(-1px)}
+.btn-white{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.1)}.btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2rem;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 8px 32px rgba(0,0,0,.07);transform:translateY(-2px)}
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.fade-up.visible{opacity:1;transform:none}
+.img-placeholder{background:linear-gradient(135deg,#E8E4DC 0%,#D4CFC7 100%);display:flex;align-items:center;justify-content:center;color:var(--hint);font-size:13px;font-weight:500;letter-spacing:.5px}
+
+@media(max-width:900px){
+  .grid-3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .footer-inner{grid-template-columns:1fr}
+  .section{padding:3rem 0}
+}
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Reus <span>Revela</span></a>
+    <div class="nav-links">
+      {% if lang=='ca' %}
+      <a href="/" {% if request.endpoint=='index' %}class="active"{% endif %}>Inici</a>
+      <a href="/serveis" {% if request.endpoint=='serveis' %}class="active"{% endif %}>Serveis</a>
+      <a href="/sobre" {% if request.endpoint=='sobre' %}class="active"{% endif %}>Qui som</a>
+      <a href="/contacte" {% if request.endpoint=='contacte' %}class="active"{% endif %}>Contacte</a>
+      <a href="/professionals" class="nav-cta">Àrea professionals</a>
+      {% else %}
+      <a href="/" {% if request.endpoint=='index' %}class="active"{% endif %}>Inicio</a>
+      <a href="/serveis" {% if request.endpoint=='serveis' %}class="active"{% endif %}>Servicios</a>
+      <a href="/sobre" {% if request.endpoint=='sobre' %}class="active"{% endif %}>Quiénes somos</a>
+      <a href="/contacte" {% if request.endpoint=='contacte' %}class="active"{% endif %}>Contacto</a>
+      <a href="/professionals" class="nav-cta">Área profesionales</a>
+      {% endif %}
+      <div class="lang-sw">
+        <a href="/lang/ca" class="{% if lang=='ca' %}on{% endif %}">CA</a>
+        <a href="/lang/es" class="{% if lang=='es' %}on{% endif %}">ES</a>
+      </div>
+    </div>
+    <div class="hamburger" onclick="toggleMenu(this)">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  {% if lang=='ca' %}
+  <a href="/">Inici</a>
+  <a href="/serveis">Serveis</a>
+  <a href="/sobre">Qui som</a>
+  <a href="/contacte">Contacte</a>
+  <a href="/professionals" style="color:var(--gold);font-weight:600">Àrea professionals →</a>
+  {% else %}
+  <a href="/">Inicio</a>
+  <a href="/serveis">Servicios</a>
+  <a href="/sobre">Quiénes somos</a>
+  <a href="/contacte">Contacto</a>
+  <a href="/professionals" style="color:var(--gold);font-weight:600">Área profesionales →</a>
+  {% endif %}
+  <div style="display:flex;gap:.5rem;margin-top:1.25rem">
+    <a href="/lang/ca" style="padding:6px 18px;border-radius:6px;background:{% if lang=='ca' %}var(--ink){% else %}var(--border){% endif %};color:{% if lang=='ca' %}#fff{% else %}var(--ink){% endif %};font-size:13px;font-weight:600">CA</a>
+    <a href="/lang/es" style="padding:6px 18px;border-radius:6px;background:{% if lang=='es' %}var(--ink){% else %}var(--border){% endif %};color:{% if lang=='es' %}#fff{% else %}var(--ink){% endif %};font-size:13px;font-weight:600">ES</a>
+  </div>
+</div>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Reus <span>Revela</span></div>
+      <p style="font-size:13px;line-height:1.75;max-width:280px">
+        {% if lang=='ca' %}Laboratori fotogràfic i taller d'emmarcació professional a Reus des de 1985.{% else %}Laboratorio fotográfico y taller de enmarcación profesional en Reus desde 1985.{% endif %}
+      </p>
+      <p style="font-size:13px;margin-top:1.25rem;line-height:1.8">
+        C/ Mare Molas, 26 · 43201 Reus<br>
+        <a href="tel:+34977316111" style="color:rgba(255,255,255,.6)">977 316 111</a><br>
+        <a href="mailto:reusrevela@gmail.com" style="color:rgba(255,255,255,.6)">reusrevela@gmail.com</a>
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>{% if lang=='ca' %}Serveis{% else %}Servicios{% endif %}</h4>
+      <a href="/serveis#impressio">{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</a>
+      <a href="/serveis#emmarcacio">{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</a>
+      <a href="/serveis#revelat">{% if lang=='ca' %}Revelat digital{% else %}Revelado digital{% endif %}</a>
+      <a href="/serveis#professionals">{% if lang=='ca' %}Serveis per a professionals{% else %}Servicios para profesionales{% endif %}</a>
+    </div>
+    <div class="footer-col">
+      <h4>{% if lang=='ca' %}Més informació{% else %}Más información{% endif %}</h4>
+      <a href="/sobre">{% if lang=='ca' %}Qui som{% else %}Quiénes somos{% endif %}</a>
+      <a href="/contacte">Contacte</a>
+      <a href="/professionals">{% if lang=='ca' %}Àrea professionals{% else %}Área profesionales{% endif %}</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Reus Revela</span>
+    <span>{% if lang=='ca' %}Fet amb ♥ a Reus{% else %}Hecho con ♥ en Reus{% endif %}</span>
+  </div>
+</footer>
+
+<script>
+function toggleMenu(btn){
+  var m=document.getElementById('mobile-menu');
+  var open=m.style.display==='block';
+  m.style.display=open?'none':'block';
+}
+// Fade-up on scroll
+var obs=new IntersectionObserver(function(e){
+  e.forEach(function(el){if(el.isIntersecting)el.target.classList.add('visible');});
+},{threshold:.12});
+document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el);});
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}{% if lang=='ca' %}Reus Revela — Laboratori Fotogràfic i Taller d'Emmarcació{% else %}Reus Revela — Laboratorio Fotográfico y Taller de Enmarcación{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+/* Hero */
+.hero{min-height:calc(100vh - var(--nav-h));display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 2rem;max-width:var(--max);margin:0 auto}
+.hero-text h1{margin-bottom:1.5rem}
+.hero-text h1 em{font-style:italic;color:var(--gold)}
+.hero-text .lead{margin-bottom:2.5rem}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-img{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/5}
+.hero-img .img-placeholder{width:100%;height:100%;border-radius:16px;font-size:14px}
+.hero-badge{position:absolute;bottom:1.5rem;left:1.5rem;background:rgba(250,249,246,.95);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem}
+.hero-badge .num{font-family:var(--serif);font-size:28px;color:var(--gold);line-height:1}
+.hero-badge .lbl{font-size:12px;color:var(--muted);line-height:1.4}
+
+/* Stats */
+.stats{background:var(--ink);padding:4rem 2rem}
+.stats-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.stat-num{font-family:var(--serif);font-size:48px;color:var(--gold);line-height:1}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,.5);margin-top:.4rem}
+
+/* Services preview */
+.srv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+.srv-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;transition:all .25s}
+.srv-card:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(184,148,90,.1);transform:translateY(-3px)}
+.srv-icon{width:48px;height:48px;background:var(--gold-l);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1.25rem}
+.srv-card p{font-size:13px;color:var(--muted);margin-top:.5rem;line-height:1.6}
+
+/* CTA strip */
+.cta-strip{background:linear-gradient(135deg, #0F0E0C 0%, #2A2820 100%);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.cta-strip::before{content:'';position:absolute;top:-50%;left:-20%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(184,148,90,.15) 0%,transparent 70%)}
+.cta-strip h2{color:#fff;margin-bottom:1rem;position:relative}
+.cta-strip p{color:rgba(255,255,255,.6);font-size:16px;margin-bottom:2rem;position:relative}
+.cta-strip .btn{position:relative}
+
+/* Testimonials */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem}
+.test-stars{color:var(--gold);font-size:14px;margin-bottom:.75rem}
+.test-text{font-size:14px;color:var(--muted);line-height:1.7;font-style:italic;margin-bottom:1rem}
+.test-author{font-size:13px;font-weight:600;color:var(--ink)}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:auto;padding-top:3rem}
+  .hero-img{aspect-ratio:16/9}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .srv-grid{grid-template-columns:1fr 1fr}
+  .test-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .srv-grid{grid-template-columns:1fr}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="tag">{% if lang=='ca' %}Des de 1985 a Reus{% else %}Desde 1985 en Reus{% endif %}</div>
+    <h1 class="display">
+      {% if lang=='ca' %}
+      L'art de revelar i <em>emmarcar</em> les teves fotografies
+      {% else %}
+      El arte de revelar y <em>enmarcar</em> tus fotografías
+      {% endif %}
+    </h1>
+    <p class="lead">
+      {% if lang=='ca' %}
+      Laboratori fotogràfic professional i taller d'emmarcació a mida. Qualitat artesanal per als teus projectes més especials.
+      {% else %}
+      Laboratorio fotográfico profesional y taller de enmarcación a medida. Calidad artesanal para tus proyectos más especiales.
+      {% endif %}
+    </p>
+    <div class="hero-btns">
+      <a href="/serveis" class="btn btn-dark">
+        {% if lang=='ca' %}Descobreix els serveis{% else %}Descubre los servicios{% endif %} →
+      </a>
+      <a href="/contacte" class="btn btn-outline">
+        {% if lang=='ca' %}Contacta'ns{% else %}Contáctanos{% endif %}
+      </a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="img-placeholder" style="height:100%">
+      <div style="text-align:center">
+        <div style="font-size:48px;margin-bottom:.5rem">🖼</div>
+        <div>{% if lang=='ca' %}Foto del taller{% else %}Foto del taller{% endif %}</div>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <div class="num">+40</div>
+      <div class="lbl">{% if lang=='ca' %}anys d'experiència{% else %}años de experiencia{% endif %}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="fade-up">
+      <div class="stat-num">1985</div>
+      <div class="stat-lbl">{% if lang=='ca' %}Any de fundació{% else %}Año de fundación{% endif %}</div>
+    </div>
+    <div class="fade-up">
+      <div class="stat-num">+500</div>
+      <div class="stat-lbl">{% if lang=='ca' %}Marcs disponibles{% else %}Marcos disponibles{% endif %}</div>
+    </div>
+    <div class="fade-up">
+      <div class="stat-num">24h</div>
+      <div class="stat-lbl">{% if lang=='ca' %}Servei ràpid disponible{% else %}Servicio rápido disponible{% endif %}</div>
+    </div>
+    <div class="fade-up">
+      <div class="stat-num">100%</div>
+      <div class="stat-lbl">{% if lang=='ca' %}Artesanal i a mida{% else %}Artesanal y a medida{% endif %}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Services -->
+<div class="section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang=='ca' %}Els nostres serveis{% else %}Nuestros servicios{% endif %}</div>
+      <h2 class="display" style="max-width:480px">
+        {% if lang=='ca' %}Tot el que necessita la teva fotografia{% else %}Todo lo que necesita tu fotografía{% endif %}
+      </h2>
+    </div>
+    <div class="srv-grid">
+      <div class="card fade-up">
+        <div class="srv-icon">📸</div>
+        <h3 class="card-title">{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h3>
+        <p>{% if lang=='ca' %}Impressió professional en paper fotogràfic d'alta qualitat. Des de 10×15 fins a formats grans.{% else %}Impresión profesional en papel fotográfico de alta calidad. Desde 10×15 hasta grandes formatos.{% endif %}</p>
+        <a href="/serveis#impressio" style="display:inline-block;margin-top:1rem;font-size:13px;font-weight:600;color:var(--gold)">{% if lang=='ca' %}Veure tarifes{% else %}Ver tarifas{% endif %} →</a>
+      </div>
+      <div class="card fade-up">
+        <div class="srv-icon">🖼</div>
+        <h3 class="card-title">{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</h3>
+        <p>{% if lang=='ca' %}Més de 500 motllures, passpartús i vidres. Fem el marc exacte que busques per a qualsevol obra.{% else %}Más de 500 molduras, passepartouts y vidrios. Fabricamos el marco exacto que buscas para cualquier obra.{% endif %}</p>
+        <a href="/serveis#emmarcacio" style="display:inline-block;margin-top:1rem;font-size:13px;font-weight:600;color:var(--gold)">{% if lang=='ca' %}Saber-ne més{% else %}Saber más{% endif %} →</a>
+      </div>
+      <div class="card fade-up">
+        <div class="srv-icon">💻</div>
+        <h3 class="card-title">{% if lang=='ca' %}Revelat digital{% else %}Revelado digital{% endif %}</h3>
+        <p>{% if lang=='ca' %}Tractament i retoc digital professional. Restauració de fotografies antigues i millora d'imatge.{% else %}Tratamiento y retoque digital profesional. Restauración de fotografías antiguas y mejora de imagen.{% endif %}</p>
+        <a href="/serveis#revelat" style="display:inline-block;margin-top:1rem;font-size:13px;font-weight:600;color:var(--gold)">{% if lang=='ca' %}Descobrir{% else %}Descubrir{% endif %} →</a>
+      </div>
+      <div class="card fade-up" style="border-color:var(--gold);background:var(--gold-l)">
+        <div class="srv-icon" style="background:var(--gold);color:#fff">⭐</div>
+        <h3 class="card-title">{% if lang=='ca' %}Àrea professionals{% else %}Área profesionales{% endif %}</h3>
+        <p>{% if lang=='ca' %}Tarifes especials, calculadora de pressupostos online i gestió de comandes per a fotògrafs i galeries.{% else %}Tarifas especiales, calculadora de presupuestos online y gestión de pedidos para fotógrafos y galerías.{% endif %}</p>
+        <a href="/professionals" style="display:inline-block;margin-top:1rem;font-size:13px;font-weight:600;color:var(--gold)">{% if lang=='ca' %}Accedir{% else %}Acceder{% endif %} →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div class="container">
+    <h2 class="display fade-up" style="color:#fff;margin:0 auto 1rem;max-width:600px;text-align:center">
+      {% if lang=='ca' %}Ets fotògraf o professional?{% else %}¿Eres fotógrafo o profesional?{% endif %}
+    </h2>
+    <p class="fade-up" style="max-width:500px;margin:0 auto 2rem;text-align:center">
+      {% if lang=='ca' %}Accedeix a la nostra àrea privada amb tarifes exclusives, calculadora de pressupostos i gestió de comandes online.{% else %}Accede a nuestra área privada con tarifas exclusivas, calculadora de presupuestos y gestión de pedidos online.{% endif %}
+    </p>
+    <div class="fade-up" style="text-align:center">
+      <a href="/professionals" class="btn btn-gold" style="font-size:15px;padding:15px 32px">
+        {% if lang=='ca' %}Accedir a l'àrea professionals{% else %}Acceder al área profesionales{% endif %} →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div class="section">
+  <div class="container">
+    <div class="fade-up" style="text-align:center;margin-bottom:1rem">
+      <div class="tag">{% if lang=='ca' %}Clients satisfets{% else %}Clientes satisfechos{% endif %}</div>
+      <h2 class="display">{% if lang=='ca' %}El que diuen de nosaltres{% else %}Lo que dicen de nosotros{% endif %}</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card fade-up">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">{% if lang=='ca' %}"Fa anys que porto les meves fotografies aquí. La qualitat d'impressió és excel·lent i l'atenció personal és inigualable."{% else %}"Hace años que traigo mis fotografías aquí. La calidad de impresión es excelente y la atención personal es inigualable."{% endif %}</p>
+        <div class="test-author">Maria G. — {% if lang=='ca' %}Fotògrafa{% else %}Fotógrafa{% endif %}</div>
+      </div>
+      <div class="test-card fade-up">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">{% if lang=='ca' %}"El millor taller d'emmarcació de la zona. Sempre trobo el marc perfecte i els pressupostos online són molt pràctics."{% else %}"El mejor taller de enmarcación de la zona. Siempre encuentro el marco perfecto y los presupuestos online son muy prácticos."{% endif %}</p>
+        <div class="test-author">Jordi M. — {% if lang=='ca' %}Galeria d'art{% else %}Galería de arte{% endif %}</div>
+      </div>
+      <div class="test-card fade-up">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">{% if lang=='ca' %}"Servei ràpid i professional. Restauraren una fotografia antiga de la família que pensàvem perduda per sempre."{% else %}"Servicio rápido y profesional. Restauraron una fotografía antigua de la familia que creíamos perdida para siempre."{% endif %}</p>
+        <div class="test-author">Anna P. — {% if lang=='ca' %}Client particular{% else %}Cliente particular{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact strip -->
+<div class="section" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+      <div class="fade-up">
+        <div class="tag">{% if lang=='ca' %}On som{% else %}Dónde estamos{% endif %}</div>
+        <h2 class="display">{% if lang=='ca' %}Vine a visitar-nos{% else %}Ven a visitarnos{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">C/ Mare Molas, 26 · Reus, Tarragona</p>
+        <p style="color:var(--muted);margin-top:.5rem;font-size:14px">
+          {% if lang=='ca' %}Dl–Dv: 9:30–13:30 / 16:30–20:00 · Ds: 10:00–14:00{% else %}Lun–Vie: 9:30–13:30 / 16:30–20:00 · Sáb: 10:00–14:00{% endif %}
+        </p>
+        <div style="display:flex;gap:1rem;margin-top:2rem">
+          <a href="tel:+34977316111" class="btn btn-dark">📞 977 316 111</a>
+          <a href="/contacte" class="btn btn-outline">{% if lang=='ca' %}Escriu-nos{% else %}Escríbenos{% endif %}</a>
+        </div>
+      </div>
+      <div class="fade-up">
+        <div class="img-placeholder" style="height:280px;border-radius:12px;font-size:14px">
+          <div style="text-align:center">
+            <div style="font-size:40px;margin-bottom:.5rem">📍</div>
+            <div>{% if lang=='ca' %}Mapa / Foto exterior{% else %}Mapa / Foto exterior{% endif %}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
