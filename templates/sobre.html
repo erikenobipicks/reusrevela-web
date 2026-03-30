@@ -1,46 +1,119 @@
 {% extends "base.html" %}
-{% block title %}{% if lang=='ca' %}Qui som — Reus Revela{% else %}Quiénes somos — Reus Revela{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Qui som | Reus Revela, taller fotogràfic a Reus{% else %}Quiénes somos | Reus Revela, taller fotográfico en Reus{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Coneix Reus Revela, taller fotogràfic a Reus amb experiència en àlbums fotogràfics, marcs a mida, impressió de llenços i producció fotogràfica per a Tarragona, Catalunya i Espanya.{% else %}Conoce Reus Revela, taller fotográfico en Reus con experiencia en álbumes fotográficos, marcos a medida, impresión de lienzos y producción fotográfica para Tarragona, Cataluña y España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .about-hero{
+    padding-top:3rem;
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:2rem;
+    align-items:stretch;
+  }
+  .about-copy,
+  .about-stage{
+    padding:2rem;
+  }
+  .about-stage{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    min-height:520px;
+    color:#fff;
+    border-radius:30px;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.16), transparent 32%),
+      linear-gradient(145deg, #19140f 0%, #31271e 48%, #a67843 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+  }
+  .about-stage p{
+    color:rgba(255,255,255,.74);
+    margin-top:.8rem;
+    max-width:34ch;
+  }
+  .values{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:1rem;
+    margin-top:3rem;
+  }
+  .value-card{
+    padding:1.8rem;
+  }
+  .value-card p{
+    color:var(--muted);
+    margin-top:.75rem;
+  }
+
+  @media (max-width: 960px){
+    .about-grid,
+    .values{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="section">
+<section class="section about-hero">
   <div class="container">
-    <div class="grid-2 fade-up" style="align-items:center;gap:5rem">
-      <div>
-        <div class="tag">{% if lang=='ca' %}La nostra història{% else %}Nuestra historia{% endif %}</div>
-        <h1 class="display">{% if lang=='ca' %}Quatre dècades de passió per la fotografia{% else %}Cuatro décadas de pasión por la fotografía{% endif %}</h1>
-        <p class="lead" style="margin-top:1.25rem">
-          {% if lang=='ca' %}Des de 1985, Reus Revela és el laboratori fotogràfic de referència a la comarca del Baix Camp. El que va néixer com un petit laboratori artesanal s'ha convertit en un centre complet de serveis fotogràfics i d'emmarcació.{% else %}Desde 1985, Reus Revela es el laboratorio fotográfico de referencia en la comarca del Baix Camp. Lo que nació como un pequeño laboratorio artesanal se ha convertido en un centro completo de servicios fotográficos y de enmarcación.{% endif %}
+    <div class="about-grid">
+      <article class="surface about-copy fade-up">
+        <div class="tag">{% if lang == 'ca' %}La nostra història{% else %}Nuestra historia{% endif %}</div>
+        <h1 class="display">{% if lang == 'ca' %}Més de quatre dècades treballant la fotografia des de Reus.{% else %}Más de cuatro décadas trabajando la fotografía desde Reus.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Reus Revela neix el 1985 com a laboratori fotogràfic i amb els anys evoluciona cap a un espai més complet: impressió, retoc, emmarcació i servei per a professionals.
+          {% else %}
+            Reus Revela nace en 1985 como laboratorio fotográfico y con los años evoluciona hacia un espacio más completo: impresión, retoque, enmarcación y servicio para profesionales.
+          {% endif %}
         </p>
-        <p style="color:var(--muted);margin-top:1rem;font-size:15px;line-height:1.8">
-          {% if lang=='ca' %}Avui combinem les tècniques tradicionals amb la tecnologia més avançada per oferir el millor resultat en cada projecte. La nostra experiència i el tracte personal fan de Reus Revela un lloc on les teves fotografies estan en bones mans.{% else %}Hoy combinamos las técnicas tradicionales con la tecnología más avanzada para ofrecer el mejor resultado en cada proyecto. Nuestra experiencia y el trato personal hacen de Reus Revela un lugar donde tus fotografías están en buenas manos.{% endif %}
+        <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
+          {% if lang == 'ca' %}
+            Continuem treballant amb la mateixa idea de fons: que cada fotografia mereix una lectura acurada, bons materials i una atenció propera. Per això combinem ofici, criteri visual i un tracte molt directe amb qui confia en nosaltres.
+          {% else %}
+            Seguimos trabajando con la misma idea de fondo: que cada fotografía merece una lectura cuidada, buenos materiales y una atención cercana. Por eso combinamos oficio, criterio visual y un trato muy directo con quien confía en nosotros.
+          {% endif %}
         </p>
-      </div>
-      <div>
-        <div class="img-placeholder" style="height:420px;border-radius:16px">
-          <div style="text-align:center"><div style="font-size:56px">📷</div><div style="margin-top:.5rem">{% if lang=='ca' %}Foto del local{% else %}Foto del local{% endif %}</div></div>
-        </div>
-      </div>
+      </article>
+
+      <article class="about-stage fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}El que ens defineix{% else %}Lo que nos define{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.5rem)">
+          {% if lang == 'ca' %}Més criteri que soroll, més taller que aparador.{% else %}Más criterio que ruido, más taller que escaparate.{% endif %}
+        </h2>
+        <p>
+          {% if lang == 'ca' %}
+            Ens agraden les decisions ben preses: la mida correcta, el paper adequat, el marc que acompanya la peça i no la tapa.
+          {% else %}
+            Nos gustan las decisiones bien tomadas: la medida correcta, el papel adecuado, el marco que acompaña a la pieza y no la tapa.
+          {% endif %}
+        </p>
+      </article>
     </div>
 
-    <div style="margin-top:5rem">
-      <hr class="divider" style="margin-bottom:4rem">
-      <div class="grid-3 fade-up">
-        <div class="card" style="text-align:center">
-          <div style="font-size:40px;margin-bottom:1rem">🎯</div>
-          <h3 class="card-title">{% if lang=='ca' %}Missió{% else %}Misión{% endif %}</h3>
-          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Preservar i potenciar la bellesa de les fotografies amb el màxim nivell de qualitat i professionalitat.{% else %}Preservar y potenciar la belleza de las fotografías con el máximo nivel de calidad y profesionalidad.{% endif %}</p>
-        </div>
-        <div class="card" style="text-align:center">
-          <div style="font-size:40px;margin-bottom:1rem">👁</div>
-          <h3 class="card-title">{% if lang=='ca' %}Visió{% else %}Visión{% endif %}</h3>
-          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Ser el soci de confiança per a fotògrafs i particulars que busquen excel·lència en cada imatge.{% else %}Ser el socio de confianza para fotógrafos y particulares que buscan excelencia en cada imagen.{% endif %}</p>
-        </div>
-        <div class="card" style="text-align:center">
-          <div style="font-size:40px;margin-bottom:1rem">❤️</div>
-          <h3 class="card-title">{% if lang=='ca' %}Valors{% else %}Valores{% endif %}</h3>
-          <p style="font-size:13px;color:var(--muted)">{% if lang=='ca' %}Qualitat, honestedat, tracte proper i compromís amb la satisfacció de cada client.{% else %}Calidad, honestidad, trato cercano y compromiso con la satisfacción de cada cliente.{% endif %}</p>
-        </div>
-      </div>
+    <div class="values">
+      <article class="surface value-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Missió{% else %}Misión{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Fer que cada imatge arribi millor al seu destí.{% else %}Hacer que cada imagen llegue mejor a su destino.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Tant si és una foto familiar com una obra per exposar, treballem perquè la peça final tingui presència i durabilitat.{% else %}Tanto si es una foto familiar como una obra para exponer, trabajamos para que la pieza final tenga presencia y durabilidad.{% endif %}</p>
+      </article>
+
+      <article class="surface value-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Visió{% else %}Visión{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Ser un taller de referència per a qui valora el detall.{% else %}Ser un taller de referencia para quien valora el detalle.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Volem continuar sent un punt de confiança per a particulars, artistes, estudis i galeries del territori.{% else %}Queremos seguir siendo un punto de confianza para particulares, artistas, estudios y galerías del territorio.{% endif %}</p>
+      </article>
+
+      <article class="surface value-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Valors{% else %}Valores{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Honestedat, tracte proper i molt ofici.{% else %}Honestidad, trato cercano y mucho oficio.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Ens importa dir què convé i què no, encara que la solució sigui més simple del que semblava d'entrada.{% else %}Nos importa decir qué conviene y qué no, aunque la solución sea más simple de lo que parecía al principio.{% endif %}</p>
+      </article>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}

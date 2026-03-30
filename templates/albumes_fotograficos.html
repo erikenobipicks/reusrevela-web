@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Àlbums fotogràfics personalitzats | Reus Revela Tarragona{% else %}Álbumes fotográficos personalizados | Reus Revela Tarragona{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Fabricació d'àlbums fotogràfics personalitzats a Reus per a casaments, comunions, estudis i records familiars. Servei per a Tarragona, Catalunya i clients d'arreu d'Espanya.{% else %}Fabricación de álbumes fotográficos personalizados en Reus para bodas, comuniones, estudios y recuerdos familiares. Servicio para Tarragona, Cataluña y clientes de toda España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .service-hero{padding-top:3rem}
+  .service-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:stretch}
+  .service-copy{padding:2rem 0}
+  .service-stage{
+    min-height:540px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+  }
+  .service-stage p{color:rgba(255,255,255,.74);margin-top:.8rem;max-width:36ch}
+  .detail-grid{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .detail-card{padding:1.5rem}
+  .detail-card p{margin-top:.7rem;color:var(--muted)}
+  .process{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .step{padding:1.6rem}
+  .step strong{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:1.25rem}
+  .step h3{margin-top:.9rem;font-size:1rem}
+  .step p{margin-top:.6rem;color:var(--muted)}
+  .faq{display:grid;gap:1rem;margin-top:2rem}
+  .faq-item{padding:1.5rem}
+  .faq-item p{margin-top:.7rem;color:var(--muted)}
+  .cta-box{padding:2.4rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+
+  @media (max-width: 980px){
+    .service-shell,.detail-grid,.process,.cta-box{grid-template-columns:1fr}
+  }
+</style>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Álbumes fotográficos personalizados",
+  "serviceType": "Fabricación de álbumes fotográficos",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Reus Revela",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Reus",
+      "addressRegion": "Tarragona",
+      "addressCountry": "ES"
+    }
+  },
+  "areaServed": ["Tarragona", "Catalunya", "España"],
+  "url": "{{ request.base_url }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="section service-hero">
+  <div class="container service-shell">
+    <div class="service-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Fabricació d'àlbums fotogràfics amb acabat professional i presentació cuidada.{% else %}Fabricación de álbumes fotográficos con acabado profesional y presentación cuidada.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          A Reus Revela fabriquem àlbums fotogràfics pensats per donar valor al reportatge i convertir una selecció d'imatges en una peça final que es vulgui conservar, mostrar i lliurar amb orgull.
+        {% else %}
+          En Reus Revela fabricamos álbumes fotográficos pensados para dar valor al reportaje y convertir una selección de imágenes en una pieza final que apetezca conservar, mostrar y entregar con orgullo.
+        {% endif %}
+      </p>
+      <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
+        {% if lang == 'ca' %}
+          Treballem per a casaments, comunions, sessions familiars, estudis fotogràfics i professionals que necessiten àlbums personalitzats a Tarragona i Catalunya, sense renunciar a atendre projectes d'altres punts d'Espanya.
+        {% else %}
+          Trabajamos para bodas, comuniones, sesiones familiares, estudios fotográficos y profesionales que necesitan álbumes personalizados en Tarragona y Cataluña, sin renunciar a atender proyectos de otros puntos de España.
+        {% endif %}
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
+        <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar informació{% else %}Pedir información{% endif %}</a>
+        <a href="{{ url_for('serveis') }}#albumes" class="btn btn-outline">{% if lang == 'ca' %}Veure més serveis{% else %}Ver más servicios{% endif %}</a>
+      </div>
+    </div>
+
+    <div class="service-stage fade-up">
+      <div class="visual-label">{% if lang == 'ca' %}Pensat per a lliuraments{% else %}Pensado para entregas{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Un àlbum no només guarda fotos: defineix com es recorda la feina.{% else %}Un álbum no solo guarda fotos: define cómo se recuerda el trabajo.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}És especialment valuós per a professionals que volen reforçar percepció de marca i per a famílies que busquen un record sòlid i ben resolt.{% else %}Es especialmente valioso para profesionales que quieren reforzar percepción de marca y para familias que buscan un recuerdo sólido y bien resuelto.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="detail-grid">
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Per a fotografia social{% else %}Para fotografía social{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Casaments, comunions i sessions familiars{% else %}Bodas, comuniones y sesiones familiares{% endif %}</h3>
+        <p>{% if lang == 'ca' %}L'àlbum és el suport natural per convertir un reportatge en un record complet, ordenat i fàcil de reviure amb el temps.{% else %}El álbum es el soporte natural para convertir un reportaje en un recuerdo completo, ordenado y fácil de revivir con el tiempo.{% endif %}</p>
+      </article>
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Per a professionals{% else %}Para profesionales{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Presentació de més valor per al client final{% else %}Presentación de más valor para el cliente final{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Molts fotògrafs de Tarragona i Catalunya busquen un àlbum que estigui a l'altura de la seva feina. Aquí és on una bona fabricació marca diferència.{% else %}Muchos fotógrafos de Tarragona y Cataluña buscan un álbum que esté a la altura de su trabajo. Ahí es donde una buena fabricación marca la diferencia.{% endif %}</p>
+      </article>
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Servei des de Reus{% else %}Servicio desde Reus{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Cobertura local i capacitat per treballar a distància{% else %}Cobertura local y capacidad para trabajar a distancia{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Som a Reus, però podem resoldre projectes per a tota la província de Tarragona, Catalunya i clients que necessitin suport des d'altres zones d'Espanya.{% else %}Estamos en Reus, pero podemos resolver proyectos para toda la provincia de Tarragona, Cataluña y clientes que necesiten soporte desde otras zonas de España.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com treballem{% else %}Cómo trabajamos{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Un procés clar per convertir una selecció d'imatges en un àlbum fotogràfic ben resolt.{% else %}Un proceso claro para convertir una selección de imágenes en un álbum fotográfico bien resuelto.{% endif %}</h2>
+    </div>
+    <div class="process">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Definim l'ús{% else %}Definimos el uso{% endif %}</h3>
+        <p>{% if lang == 'ca' %}No és el mateix un àlbum de casament que una entrega per a estudi o un record familiar. Comencem pel context real.{% else %}No es lo mismo un álbum de boda que una entrega de estudio o un recuerdo familiar. Empezamos por el contexto real.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Triem format i acabat{% else %}Elegimos formato y acabado{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Ajustem mida, estructura i presentació perquè el resultat sigui coherent amb la qualitat del reportatge.{% else %}Ajustamos tamaño, estructura y presentación para que el resultado sea coherente con la calidad del reportaje.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Preparem la producció{% else %}Preparamos la producción{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Revisem que la selecció d'imatges i l'enfocament del lliurament tinguin sentit abans del resultat final.{% else %}Revisamos que la selección de imágenes y el enfoque de la entrega tengan sentido antes del resultado final.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>4</strong>
+        <h3>{% if lang == 'ca' %}Lliurem l'àlbum{% else %}Entregamos el álbum{% endif %}</h3>
+        <p>{% if lang == 'ca' %}L'objectiu és que el producte final sigui tan bo en mà com ho era sobre el paper o la pantalla.{% else %}El objetivo es que el producto final sea tan bueno en mano como lo era sobre el papel o la pantalla.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">FAQ</div>
+      <h2 class="display">{% if lang == 'ca' %}Preguntes habituals sobre àlbums fotogràfics.{% else %}Preguntas habituales sobre álbumes fotográficos.{% endif %}</h2>
+    </div>
+    <div class="faq">
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Per a qui és útil aquest servei?{% else %}¿Para quién es útil este servicio?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}És molt útil per a fotògrafs de casaments, estudis, famílies i qualsevol persona que vulgui convertir una selecció d'imatges en un record físic amb més valor que una simple impressió solta.{% else %}Es muy útil para fotógrafos de bodas, estudios, familias y cualquier persona que quiera convertir una selección de imágenes en un recuerdo físico con más valor que una simple impresión suelta.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Només treballeu a Tarragona?{% else %}¿Solo trabajáis en Tarragona?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}El taller és a Reus i el nostre àmbit natural és Tarragona i Catalunya, però podem valorar treballs per a clients d'altres zones d'Espanya si l'encàrrec encaixa bé amb el servei.{% else %}El taller está en Reus y nuestro ámbito natural es Tarragona y Cataluña, pero podemos valorar trabajos para clientes de otras zonas de España si el encargo encaja bien con el servicio.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Quin valor afegeix un bon àlbum?{% else %}¿Qué valor aporta un buen álbum?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Millora la presentació, la percepció de qualitat i la manera de reviure el reportatge. En fotografia social o professional, això té un impacte clar en com es recorda i es valora la feina.{% else %}Mejora la presentación, la percepción de calidad y la forma de revivir el reportaje. En fotografía social o profesional, eso tiene un impacto claro en cómo se recuerda y se valora el trabajo.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Demanar projecte{% else %}Solicitar proyecto{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si busques fabricar un àlbum fotogràfic, expliquem-nos quin tipus de reportatge tens entre mans.{% else %}Si buscas fabricar un álbum fotográfico, cuéntanos qué tipo de reportaje tienes entre manos.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

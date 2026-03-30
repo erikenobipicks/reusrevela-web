@@ -1,131 +1,373 @@
 {% extends "base.html" %}
-{% block title %}{% if lang=='ca' %}Contacte — Reus Revela{% else %}Contacto — Reus Revela{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Contacte | Reus Revela a Reus, Tarragona{% else %}Contacto | Reus Revela en Reus, Tarragona{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Contacta amb Reus Revela per àlbums fotogràfics, marcs a mida, impressió de llenços, impressió fotogràfica o serveis professionals. Taller a Reus per a Tarragona, Catalunya i Espanya.{% else %}Contacta con Reus Revela para álbumes fotográficos, marcos a medida, impresión de lienzos, impresión fotográfica o servicios profesionales. Taller en Reus para Tarragona, Cataluña y España.{% endif %}{% endblock %}
+
 {% block head %}
 <style>
-.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;align-items:start;margin-top:3rem}
-.contact-info-card{background:var(--ink);border-radius:14px;padding:2.5rem;color:#fff}
-.contact-info-card h3{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:1.5rem;font-weight:400}
-.info-row{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
-.info-icon{width:40px;height:40px;background:rgba(184,148,90,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.info-row h4{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.25rem}
-.info-row p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6}
-.info-row a{color:rgba(255,255,255,.7);transition:color .2s}.info-row a:hover{color:#fff}
-.form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem}
-.f{margin-bottom:1.25rem}
-.f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
-.f input,.f textarea,.f select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
-.f input:focus,.f textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,148,90,.1)}
-.f textarea{resize:vertical;min-height:130px}
-.success-msg{display:none;background:var(--green-l);border:1px solid #B8DCC9;border-radius:8px;padding:1rem;color:var(--green);font-size:14px;font-weight:500;margin-top:1rem}
-@media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+  .contact-layout{
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:1.5rem;
+    align-items:start;
+    margin-top:2.2rem;
+  }
+  .contact-panel,
+  .form-panel{
+    padding:2rem;
+  }
+  .contact-panel{
+    color:#fff;
+    border-radius:28px;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.16), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #2f241b 48%, #9d7143 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+  }
+  .contact-panel p{
+    color:rgba(255,255,255,.74);
+  }
+  .info-list{
+    display:grid;
+    gap:1rem;
+    margin-top:1.8rem;
+  }
+  .info-item{
+    padding-bottom:1rem;
+    border-bottom:1px solid rgba(255,255,255,.12);
+  }
+  .info-item:last-child{border-bottom:none;padding-bottom:0}
+  .info-item strong{
+    display:block;
+    font-size:.78rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.52);
+    margin-bottom:.35rem;
+  }
+  .info-item a{color:#fff}
+  .form-panel form{
+    display:grid;
+    gap:1rem;
+  }
+  .field{
+    display:grid;
+    gap:.45rem;
+  }
+  .field label{
+    font-size:.82rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .field input,
+  .field textarea,
+  .field select{
+    width:100%;
+    min-height:52px;
+    padding:.9rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .field textarea{
+    min-height:150px;
+    resize:vertical;
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(166, 120, 67, 0.12);
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:1rem;
+  }
+  .status{
+    display:none;
+    padding:1rem 1.1rem;
+    border-radius:16px;
+    font-weight:600;
+  }
+  .status.success{
+    background:var(--success-soft);
+    color:var(--success);
+    border:1px solid rgba(28, 106, 75, 0.18);
+  }
+  .status.error{
+    background:#fff1ef;
+    color:#9e3b2b;
+    border:1px solid rgba(158, 59, 43, 0.16);
+  }
+  .status.show{display:block}
+  .pro-callout{
+    margin-top:1.4rem;
+    padding:1rem 1.1rem;
+    border-radius:18px;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .pro-fields{
+    padding:1rem;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:rgba(244, 239, 231, 0.55);
+  }
+
+  @media (max-width: 920px){
+    .contact-layout,
+    .form-grid{
+      grid-template-columns:1fr;
+    }
+  }
 </style>
 {% endblock %}
+
 {% block content %}
-<div class="section">
+<section class="section">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang=='ca' %}Parlem{% else %}Hablemos{% endif %}</div>
-      <h1 class="display">{% if lang=='ca' %}Contacta amb nosaltres{% else %}Contáctanos{% endif %}</h1>
-      <p class="lead" style="margin-top:.75rem">{% if lang=='ca' %}Estem al teu servei de dilluns a divendres i dissabtes al matí.{% else %}Estamos a tu servicio de lunes a viernes y sábados por la mañana.{% endif %}</p>
+      <div class="tag">{% if lang == 'ca' %}Parlem{% else %}Hablemos{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Explica'ns què necessites i et responem amb criteri de taller.{% else %}Cuéntanos qué necesitas y te respondemos con criterio de taller.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          Tant si vols imprimir una fotografia com emmarcar una peça o demanar accés professional, ens pots escriure des d'aquí.
+        {% else %}
+          Tanto si quieres imprimir una fotografía como enmarcar una pieza o pedir acceso profesional, puedes escribirnos desde aquí.
+        {% endif %}
+      </p>
     </div>
 
-    <div class="contact-grid fade-up">
-      <div>
-        <div class="contact-info-card">
-          <h3>{% if lang=='ca' %}On som{% else %}Dónde estamos{% endif %}</h3>
-          <div class="info-row">
-            <div class="info-icon">📍</div>
-            <div>
-              <h4>{% if lang=='ca' %}Adreça{% else %}Dirección{% endif %}</h4>
-              <p>C/ Mare Molas, 26<br>43201 Reus, Tarragona</p>
-            </div>
+    <div class="contact-layout">
+      <aside class="contact-panel fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Dades de contacte{% else %}Datos de contacto{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.3rem);margin-top:.7rem">
+          {% if lang == 'ca' %}Som a Reus, al costat de cada encàrrec.{% else %}Estamos en Reus, al lado de cada encargo.{% endif %}
+        </h2>
+        <p style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Si necessites orientació abans de decidir mida, paper o tipus de marc, també ens pots consultar i t'ajudarem a enfocar-ho.
+          {% else %}
+            Si necesitas orientación antes de decidir tamaño, papel o tipo de marco, también puedes consultarnos y te ayudaremos a enfocarlo.
+          {% endif %}
+        </p>
+
+        <div class="info-list">
+          <div class="info-item">
+            <strong>{% if lang == 'ca' %}Adreça{% else %}Dirección{% endif %}</strong>
+            <div>C/ Mare Molas, 26<br>43202 Reus, Tarragona</div>
           </div>
-          <div class="info-row">
-            <div class="info-icon">📞</div>
-            <div>
-              <h4>{% if lang=='ca' %}Telèfon{% else %}Teléfono{% endif %}</h4>
-              <p><a href="tel:+34977316111">977 316 111</a></p>
-            </div>
+          <div class="info-item">
+            <strong>{% if lang == 'ca' %}Telèfon{% else %}Teléfono{% endif %}</strong>
+            <div><a href="tel:+34977316111">977 316 111</a></div>
           </div>
-          <div class="info-row">
-            <div class="info-icon">✉️</div>
-            <div>
-              <h4>Email</h4>
-              <p><a href="mailto:reusrevela@gmail.com">reusrevela@gmail.com</a></p>
-            </div>
+          <div class="info-item">
+            <strong>Email</strong>
+            <div><a href="mailto:reusrevela@gmail.com">reusrevela@gmail.com</a></div>
           </div>
-          <div class="info-row">
-            <div class="info-icon">🕐</div>
+          <div class="info-item">
+            <strong>{% if lang == 'ca' %}Horari{% else %}Horario{% endif %}</strong>
             <div>
-              <h4>{% if lang=='ca' %}Horari{% else %}Horario{% endif %}</h4>
-              <p>{% if lang=='ca' %}Dl–Dv: 9:30–13:30 / 16:30–20:00<br>Ds: 10:00–14:00{% else %}Lun–Vie: 9:30–13:30 / 16:30–20:00<br>Sáb: 10:00–14:00{% endif %}</p>
+              {% if lang == 'ca' %}
+                Dl-Dv: 9:30-13:30 / 16:30-20:00<br>Ds: 10:00-14:00
+              {% else %}
+                Lun-Vie: 9:30-13:30 / 16:30-20:00<br>Sáb: 10:00-14:00
+              {% endif %}
             </div>
           </div>
         </div>
 
         {% if request.args.get('pro') %}
-        <div style="background:var(--gold-l);border:1px solid var(--gold);border-radius:10px;padding:1.25rem;margin-top:1.5rem">
-          <p style="font-size:13px;color:#7A5020;font-weight:500">⭐ {% if lang=='ca' %}Sol·licites accés a l'àrea de professionals. Indica-ho al missatge i et contactarem en 24h.{% else %}Solicitas acceso al área de profesionales. Indícalo en el mensaje y te contactaremos en 24h.{% endif %}</p>
+        <div class="pro-callout">
+          {% if lang == 'ca' %}
+            Estàs demanant accés a l'àrea de professionals. Indica si ets fotògraf, estudi, galeria o associació, i si pots afegeix web, Instagram, CIF/NIF o dades del projecte expositiu per validar l'alta.
+          {% else %}
+            Estás solicitando acceso al área de profesionales. Indica si eres fotógrafo, estudio, galería o asociación, y si puedes añade web, Instagram, CIF/NIF o datos del proyecto expositivo para validar el alta.
+          {% endif %}
         </div>
         {% endif %}
-      </div>
+      </aside>
 
-      <div class="form-card">
-        <h3 style="font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:1.5rem">
-          {% if lang=='ca' %}Envia'ns un missatge{% else %}Envíanos un mensaje{% endif %}
-        </h3>
-        <div class="f">
-          <label>{% if lang=='ca' %}Nom complet{% else %}Nombre completo{% endif %} *</label>
-          <input type="text" id="f-nom" placeholder="{% if lang=='ca' %}El teu nom{% else %}Tu nombre{% endif %}">
-        </div>
-        <div class="f">
-          <label>Email *</label>
-          <input type="email" id="f-email" placeholder="email@exemple.com">
-        </div>
-        <div class="f">
-          <label>{% if lang=='ca' %}Telèfon (opcional){% else %}Teléfono (opcional){% endif %}</label>
-          <input type="tel" id="f-tel" placeholder="6XX XXX XXX">
-        </div>
-        <div class="f">
-          <label>{% if lang=='ca' %}Assumpte{% else %}Asunto{% endif %}</label>
-          <select id="f-assumpte">
-            <option>{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</option>
-            <option>{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</option>
-            <option>{% if lang=='ca' %}Accés àrea professionals{% else %}Acceso área profesionales{% endif %} {% if request.args.get('pro') %}✓{% endif %}</option>
-            <option>{% if lang=='ca' %}Altra consulta{% else %}Otra consulta{% endif %}</option>
-          </select>
-        </div>
-        <div class="f">
-          <label>{% if lang=='ca' %}Missatge{% else %}Mensaje{% endif %} *</label>
-          <textarea id="f-msg" placeholder="{% if lang=='ca' %}Explica'ns en què et podem ajudar...{% else %}Cuéntanos en qué podemos ayudarte...{% endif %}">{% if request.args.get('pro') %}{% if lang=='ca' %}Hola, m'agradaria sol·licitar accés a l'àrea de professionals.{% else %}Hola, me gustaría solicitar acceso al área de profesionales.{% endif %}{% endif %}</textarea>
-        </div>
-        <button onclick="enviarContacte()" class="btn btn-dark" style="width:100%;justify-content:center;font-size:15px;padding:14px">
-          {% if lang=='ca' %}Enviar missatge{% else %}Enviar mensaje{% endif %}
-        </button>
-        <div class="success-msg" id="success-msg">
-          ✓ {% if lang=='ca' %}Missatge enviat! Ens posarem en contacte aviat.{% else %}¡Mensaje enviado! Nos pondremos en contacto pronto.{% endif %}
-        </div>
+      <div class="surface form-panel fade-up">
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem)">
+          {% if lang == 'ca' %}Envia'ns un missatge{% else %}Envíanos un mensaje{% endif %}
+        </h2>
+        <p class="lead" style="margin-top:.9rem">
+          {% if lang == 'ca' %}
+            Respondrem tan aviat com puguem. Si és una consulta professional, intenta indicar mides, quantitats o tipus de servei.
+          {% else %}
+            Responderemos tan pronto como podamos. Si es una consulta profesional, intenta indicar medidas, cantidades o tipo de servicio.
+          {% endif %}
+        </p>
+
+        <form id="contact-form" novalidate>
+          <input type="hidden" id="f-professional" name="es_professional" value="{% if request.args.get('pro') %}true{% else %}false{% endif %}">
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-nom">{% if lang == 'ca' %}Nom complet{% else %}Nombre completo{% endif %} *</label>
+              <input type="text" id="f-nom" name="nom" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="f-email">Email *</label>
+              <input type="email" id="f-email" name="email" required autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-tel">{% if lang == 'ca' %}Telèfon{% else %}Teléfono{% endif %}</label>
+              <input type="tel" id="f-tel" name="telefon" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="f-assumpte">{% if lang == 'ca' %}Assumpte{% else %}Asunto{% endif %}</label>
+              <select id="f-assumpte" name="assumpte">
+                <option value="photo_print" {% if request.args.get('pro') %}{% else %}selected{% endif %}>{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</option>
+                <option value="albums">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</option>
+                <option value="frames">{% if lang == 'ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</option>
+                <option value="canvas">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</option>
+                <option value="fine_art">{% if lang == 'ca' %}Impressió Hahnemühle / fine art{% else %}Impresión Hahnemühle / fine art{% endif %}</option>
+                <option value="pro_access" {% if request.args.get('pro') %}selected{% endif %}>{% if lang == 'ca' %}Accés àrea professionals{% else %}Acceso área profesionales{% endif %}</option>
+                <option value="association_exhibition">{% if lang == 'ca' %}Associació o exposició fotogràfica{% else %}Asociación o exposición fotográfica{% endif %}</option>
+                <option value="retouch">{% if lang == 'ca' %}Retoc o restauració{% else %}Retoque o restauración{% endif %}</option>
+                <option value="other">{% if lang == 'ca' %}Altra consulta{% else %}Otra consulta{% endif %}</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="professional-fields" class="pro-fields" {% if request.args.get('pro') %}{% else %}style="display:none"{% endif %}>
+            <div class="form-grid">
+              <div class="field">
+                <label for="f-profile-type">{% if lang == 'ca' %}Perfil professional{% else %}Perfil profesional{% endif %}</label>
+                <select id="f-profile-type" name="tipus_professional">
+                  <option value="professional">{% if lang == 'ca' %}Fotògraf / professional{% else %}Fotógrafo / profesional{% endif %}</option>
+                  <option value="studio">{% if lang == 'ca' %}Estudi{% else %}Estudio{% endif %}</option>
+                  <option value="gallery">{% if lang == 'ca' %}Galeria / art{% else %}Galería / arte{% endif %}</option>
+                  <option value="association">{% if lang == 'ca' %}Associació / exposició{% else %}Asociación / exposición{% endif %}</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-business">{% if lang == 'ca' %}Nom comercial o entitat{% else %}Nombre comercial o entidad{% endif %}</label>
+                <input type="text" id="f-business" name="nom_empresa" autocomplete="organization">
+              </div>
+              <div class="field">
+                <label for="f-web">Web</label>
+                <input type="url" id="f-web" name="web_url" placeholder="https://">
+              </div>
+              <div class="field">
+                <label for="f-instagram">Instagram</label>
+                <input type="text" id="f-instagram" name="instagram" placeholder="@perfil">
+              </div>
+              <div class="field">
+                <label for="f-fiscal">{% if lang == 'ca' %}CIF / NIF{% else %}CIF / NIF{% endif %}</label>
+                <input type="text" id="f-fiscal" name="fiscal_id">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-msg">{% if lang == 'ca' %}Missatge{% else %}Mensaje{% endif %} *</label>
+            <textarea id="f-msg" name="missatge" required>{% if request.args.get('pro') %}{% if lang == 'ca' %}Hola, m'agradaria sol·licitar accés a l'àrea de professionals. El meu perfil és: [fotògraf / estudi / galeria / associació]. Web o Instagram: []. CIF/NIF o dades de facturació: []. Tipus de productes que necessito: [].{% else %}Hola, me gustaría solicitar acceso al área de profesionales. Mi perfil es: [fotógrafo / estudio / galería / asociación]. Web o Instagram: []. CIF/NIF o datos de facturación: []. Tipo de productos que necesito: [].{% endif %}{% endif %}</textarea>
+          </div>
+
+          <div id="form-success" class="status success" role="status" aria-live="polite">
+            {% if lang == 'ca' %}
+              Missatge enviat. Ens posarem en contacte aviat.
+            {% else %}
+              Mensaje enviado. Nos pondremos en contacto pronto.
+            {% endif %}
+          </div>
+
+          <div id="form-error" class="status error" role="alert">
+            {% if lang == 'ca' %}
+              No hem pogut enviar el missatge. Revisa els camps i torna-ho a provar.
+            {% else %}
+              No hemos podido enviar el mensaje. Revisa los campos y vuelve a intentarlo.
+            {% endif %}
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-dark">
+            {% if lang == 'ca' %}Enviar missatge{% else %}Enviar mensaje{% endif %}
+          </button>
+        </form>
       </div>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}
+
 {% block scripts %}
 <script>
-function enviarContacte(){
-  var nom=document.getElementById('f-nom').value.trim();
-  var email=document.getElementById('f-email').value.trim();
-  var msg=document.getElementById('f-msg').value.trim();
-  if(!nom||!email||!msg){alert('{% if lang=="ca" %}Omple els camps obligatoris.{% else %}Rellena los campos obligatorios.{% endif %}');return;}
-  var btn=event.currentTarget; btn.disabled=true; btn.textContent='{% if lang=="ca" %}Enviant...{% else %}Enviando...{% endif %}';
-  fetch('/api/contacte',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({nom:nom,email:email,missatge:msg,assumpte:document.getElementById('f-assumpte').value})
-  }).then(r=>r.json()).then(function(d){
-    if(d.ok){
-      btn.style.display='none';
-      document.getElementById('success-msg').style.display='block';
+  const contactForm = document.getElementById("contact-form");
+  const submitButton = document.getElementById("submit-btn");
+  const successMessage = document.getElementById("form-success");
+  const errorMessage = document.getElementById("form-error");
+  const subjectSelect = document.getElementById("f-assumpte");
+  const professionalFields = document.getElementById("professional-fields");
+  const professionalFlag = document.getElementById("f-professional");
+
+  const syncProfessionalFields = () => {
+    if (!subjectSelect || !professionalFields || !professionalFlag) {
+      return;
     }
-  }).catch(function(){btn.disabled=false;btn.textContent='{% if lang=="ca" %}Enviar missatge{% else %}Enviar mensaje{% endif %}';});
-}
+
+    const isProfessional = ["pro_access", "association_exhibition"].includes(subjectSelect.value);
+    professionalFields.style.display = isProfessional ? "block" : "none";
+    professionalFlag.value = isProfessional ? "true" : "false";
+  };
+
+  if (subjectSelect) {
+    subjectSelect.addEventListener("change", syncProfessionalFields);
+    syncProfessionalFields();
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      successMessage.classList.remove("show");
+      errorMessage.classList.remove("show");
+
+      const formData = new FormData(contactForm);
+      const payload = Object.fromEntries(formData.entries());
+
+      if (!payload.nom || !payload.email || !payload.missatge) {
+        errorMessage.classList.add("show");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "{% if lang == 'ca' %}Enviant...{% else %}Enviando...{% endif %}";
+
+      try {
+        const response = await fetch("/api/contacte", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error("request_failed");
+        }
+
+        contactForm.reset();
+        {% if request.args.get('pro') %}
+        document.getElementById("f-assumpte").value = "pro_access";
+        {% endif %}
+        syncProfessionalFields();
+        successMessage.classList.add("show");
+      } catch (error) {
+        errorMessage.classList.add("show");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "{% if lang == 'ca' %}Enviar missatge{% else %}Enviar mensaje{% endif %}";
+      }
+    });
+  }
 </script>
 {% endblock %}

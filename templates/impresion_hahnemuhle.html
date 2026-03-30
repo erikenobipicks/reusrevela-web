@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Impressió Hahnemühle a Tarragona | Reus Revela{% else %}Impresión Hahnemühle en Tarragona | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Impressió fine art en paper Hahnemühle des de Reus per a fotògrafs, artistes, galeries i exposicions de Tarragona, Catalunya i Espanya.{% else %}Impresión fine art en papel Hahnemühle desde Reus para fotógrafos, artistas, galerías y exposiciones de Tarragona, Cataluña y España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .service-hero{padding-top:3rem}
+  .service-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:stretch}
+  .service-copy{padding:2rem 0}
+  .service-stage{
+    min-height:540px;padding:2rem;border-radius:30px;color:#fff;
+    background:radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%), linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);display:flex;flex-direction:column;justify-content:flex-end
+  }
+  .service-stage p{color:rgba(255,255,255,.74);margin-top:.8rem;max-width:38ch}
+  .detail-grid,.faq{display:grid;gap:1rem;margin-top:2rem}
+  .detail-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .detail-card,.faq-item,.cta-box,.step{padding:1.5rem}
+  .detail-card p,.faq-item p,.step p{margin-top:.7rem;color:var(--muted)}
+  .process{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .step strong{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:1.25rem}
+  .step h3{margin-top:.9rem;font-size:1rem}
+  .cta-box{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+  @media (max-width: 980px){.service-shell,.detail-grid,.process,.cta-box{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Impresión Hahnemühle",
+  "serviceType": "Impresión fine art en papel Hahnemühle",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Reus Revela",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Reus",
+      "addressRegion": "Tarragona",
+      "addressCountry": "ES"
+    }
+  },
+  "areaServed": ["Tarragona", "Catalunya", "España"],
+  "url": "{{ request.base_url }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="section service-hero">
+  <div class="container service-shell">
+    <div class="service-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Fine art Hahnemühle{% else %}Fine art Hahnemühle{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Impressió en paper Hahnemühle per a fotografia d'autor, exposició i còpia fina.{% else %}Impresión en papel Hahnemühle para fotografía de autor, exposición y copia fina.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          Si el projecte demana un paper amb més presència, textura i lectura d'arxiu, treballem impressió fine art en papers Hahnemühle pensada per a fotògrafs, artistes, galeries i col·lectius que exposen.
+        {% else %}
+          Si el proyecto pide un papel con más presencia, textura y lectura de archivo, trabajamos impresión fine art en papeles Hahnemühle pensada para fotógrafos, artistas, galerías y colectivos que exponen.
+        {% endif %}
+      </p>
+      <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
+        {% if lang == 'ca' %}
+          Ho produïm des de Reus per a Tarragona i Catalunya, però també és un servei molt rellevant per a encàrrecs d'arreu d'Espanya quan es busca qualitat expositiva o venda d'obra.
+        {% else %}
+          Lo producimos desde Reus para Tarragona y Cataluña, pero también es un servicio muy relevante para encargos de toda España cuando se busca calidad expositiva o venta de obra.
+        {% endif %}
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
+        <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
+        <a href="{{ url_for('professionals') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure àrea professionals{% else %}Ver área profesionales{% endif %}</a>
+      </div>
+    </div>
+    <div class="service-stage fade-up">
+      <div class="visual-label">{% if lang == 'ca' %}Paper fine art{% else %}Papel fine art{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la còpia ha de defensar-se sola, el paper importa molt.{% else %}Cuando la copia tiene que defenderse sola, el papel importa mucho.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}És un servei especialment útil per a sèries d'autor, edicions, exposicions, dossiers per galeria i projectes professionals amb exigència de presentació.{% else %}Es un servicio especialmente útil para series de autor, ediciones, exposiciones, dossieres para galería y proyectos profesionales con exigencia de presentación.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container detail-grid">
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a fotògrafs{% else %}Para fotógrafos{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Venda d'obra, còpia signada i portafoli{% else %}Venta de obra, copia firmada y portfolio{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Una bona base per a qui vol presentar treball amb més nivell perceptiu, millor tacte i un discurs més premium al voltant de la còpia.{% else %}Una buena base para quien quiere presentar trabajo con más nivel perceptivo, mejor tacto y un discurso más premium alrededor de la copia.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a exposicions{% else %}Para exposiciones{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Associacions, sales i col·lectius fotogràfics{% else %}Asociaciones, salas y colectivos fotográficos{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Si organitzeu exposicions, mostres o itineràncies, podem enfocar la producció perquè la presentació sigui coherent, repetible i viable en sèrie.{% else %}Si organizáis exposiciones, muestras o itinerancias, podemos enfocar la producción para que la presentación sea coherente, repetible y viable en serie.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Àmbit geogràfic{% else %}Ámbito geográfico{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Reus, Tarragona, Catalunya i enviaments nacionals{% else %}Reus, Tarragona, Cataluña y envíos nacionales{% endif %}</h3>
+      <p>{% if lang == 'ca' %}La proximitat ens ajuda molt en projectes locals, però aquest tipus d'impressió també pot captar treball qualificat fora del territori immediat.{% else %}La proximidad nos ayuda mucho en proyectos locales, pero este tipo de impresión también puede captar trabajo cualificado fuera del territorio inmediato.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com treballem la còpia{% else %}Cómo trabajamos la copia{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Busquem una impressió que tingui sentit expositiu, no només una bona sortida d'impressora.{% else %}Buscamos una impresión con sentido expositivo, no solo una buena salida de impresora.{% endif %}</h2>
+    </div>
+    <div class="process">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Revisem l'arxiu{% else %}Revisamos el archivo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Valorem resolució, proporció, contrast i viabilitat abans d'anar a producció.{% else %}Valoramos resolución, proporción, contraste y viabilidad antes de entrar en producción.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Triem el suport{% else %}Elegimos el soporte{% endif %}</h3>
+        <p>{% if lang == 'ca' %}El tipus de paper Hahnemühle es decideix segons intenció visual, textura i ús final de la còpia.{% else %}El tipo de papel Hahnemühle se decide según intención visual, textura y uso final de la copia.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Produïm i contrastem{% else %}Producimos y contrastamos{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Ens interessa que la còpia mantingui coherència tonal i una presència cuidada en mà o en paret.{% else %}Nos interesa que la copia mantenga coherencia tonal y una presencia cuidada en mano o en pared.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>4</strong>
+        <h3>{% if lang == 'ca' %}Preparem lliurament o exposició{% else %}Preparamos entrega o exposición{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Podem orientar el projecte cap a carpeta, venda, emmarcació o muntatge expositiu.{% else %}Podemos orientar el proyecto hacia carpeta, venta, enmarcación o montaje expositivo.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">FAQ</div>
+      <h2 class="display">{% if lang == 'ca' %}Preguntes habituals sobre impressió Hahnemühle.{% else %}Preguntas habituales sobre impresión Hahnemühle.{% endif %}</h2>
+    </div>
+    <div class="faq">
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Per a qui està pensat aquest servei?{% else %}¿Para quién está pensado este servicio?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Per a fotògrafs, artistes, galeries, escoles i associacions que necessiten una impressió amb aparença més expositiva o col·leccionable.{% else %}Para fotógrafos, artistas, galerías, escuelas y asociaciones que necesitan una impresión con apariencia más expositiva o coleccionable.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}També serveix per a exposicions temporals?{% else %}¿También sirve para exposiciones temporales?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Sí. És una molt bona opció per a exposicions fotogràfiques, mostres col·lectives, itineràncies i presentacions d'obra amb una lectura més fina del paper.{% else %}Sí. Es una muy buena opción para exposiciones fotográficas, muestras colectivas, itinerancias y presentaciones de obra con una lectura más fina del papel.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Es pot combinar amb marcs a mida?{% else %}¿Se puede combinar con marcos a medida?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Sí, i de fet és una combinació molt natural quan la còpia està pensada per exposar-se o vendre's amb una presentació més completa.{% else %}Sí, y de hecho es una combinación muy natural cuando la copia está pensada para exponerse o venderse con una presentación más completa.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Projecte fine art{% else %}Proyecto fine art{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si tens una sèrie, una exposició o una còpia important, explica'ns el format i l'objectiu.{% else %}Si tienes una serie, una exposición o una copia importante, cuéntanos el formato y el objetivo.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

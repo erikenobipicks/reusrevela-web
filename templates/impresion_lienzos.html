@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Impressió de llenços a Tarragona | Reus Revela{% else %}Impresión de lienzos en Tarragona | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Impressió de llenços a Reus per a decoració, regals i projectes comercials. Servei per a Tarragona, Catalunya i clients d'arreu d'Espanya.{% else %}Impresión de lienzos en Reus para decoración, regalos y proyectos comerciales. Servicio para Tarragona, Cataluña y clientes de toda España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .service-hero{padding-top:3rem}
+  .service-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:stretch}
+  .service-copy{padding:2rem 0}
+  .service-stage{
+    min-height:540px;padding:2rem;border-radius:30px;color:#fff;
+    background:radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%), linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);display:flex;flex-direction:column;justify-content:flex-end
+  }
+  .service-stage p{color:rgba(255,255,255,.74);margin-top:.8rem;max-width:36ch}
+  .detail-grid,.faq{display:grid;gap:1rem;margin-top:2rem}
+  .detail-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .detail-card,.faq-item,.cta-box,.step{padding:1.5rem}
+  .detail-card p,.faq-item p,.step p{margin-top:.7rem;color:var(--muted)}
+  .process{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .step strong{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:1.25rem}
+  .step h3{margin-top:.9rem;font-size:1rem}
+  .cta-box{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+  @media (max-width: 980px){.service-shell,.detail-grid,.process,.cta-box{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Impresión de lienzos",
+  "serviceType": "Impresión de lienzos personalizados",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Reus Revela",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Reus",
+      "addressRegion": "Tarragona",
+      "addressCountry": "ES"
+    }
+  },
+  "areaServed": ["Tarragona", "Catalunya", "España"],
+  "url": "{{ request.base_url }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="section service-hero">
+  <div class="container service-shell">
+    <div class="service-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Llenços impresos amb presència decorativa per a casa, negoci o regal.{% else %}Lienzos impresos con presencia decorativa para casa, negocio o regalo.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          La impressió de llenços és una de les formes més directes de convertir una fotografia en peça decorativa. Funciona molt bé per a interiors, regals i espais comercials que necessiten una imatge amb impacte.
+        {% else %}
+          La impresión de lienzos es una de las formas más directas de convertir una fotografía en pieza decorativa. Funciona muy bien para interiores, regalos y espacios comerciales que necesitan una imagen con impacto.
+        {% endif %}
+      </p>
+      <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
+        {% if lang == 'ca' %}
+          Produïm llenços des de Reus per a clients de Tarragona i Catalunya, i també per a projectes que arriben des d'altres punts d'Espanya quan busquen un acabat més cuidat.
+        {% else %}
+          Producimos lienzos desde Reus para clientes de Tarragona y Cataluña, y también para proyectos que llegan desde otros puntos de España cuando buscan un acabado más cuidado.
+        {% endif %}
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
+        <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
+        <a href="{{ url_for('serveis') }}#lienzos" class="btn btn-outline">{% if lang == 'ca' %}Veure més serveis{% else %}Ver más servicios{% endif %}</a>
+      </div>
+    </div>
+    <div class="service-stage fade-up">
+      <div class="visual-label">{% if lang == 'ca' %}Decoració amb fotografia{% else %}Decoración con fotografía{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la imatge ha d'omplir una paret, el llenç és una solució natural.{% else %}Cuando la imagen tiene que llenar una pared, el lienzo es una solución natural.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}És especialment útil per a habitatges, hotels, restaurants, oficines i regals amb càrrega emocional o visual.{% else %}Es especialmente útil para viviendas, hoteles, restaurantes, oficinas y regalos con carga emocional o visual.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container detail-grid">
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a particulars{% else %}Para particulares{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Fotos familiars, viatges i regals{% else %}Fotos familiares, viajes y regalos{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El llenç és una forma molt efectiva de convertir una foto especial en una peça visible i decorativa, sense complicar massa el procés.{% else %}El lienzo es una forma muy efectiva de convertir una foto especial en una pieza visible y decorativa, sin complicar demasiado el proceso.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a negocis{% else %}Para negocios{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Hotels, restaurants, botigues i oficines{% else %}Hoteles, restaurantes, tiendas y oficinas{% endif %}</h3>
+      <p>{% if lang == 'ca' %}És una opció interessant quan cal decorar espais amb imatge pròpia o construir ambient sense entrar en produccions massa complexes.{% else %}Es una opción interesante cuando hace falta decorar espacios con imagen propia o construir ambiente sin entrar en producciones demasiado complejas.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Àmbit geogràfic{% else %}Ámbito geográfico{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Servei competitiu a Tarragona i Catalunya{% else %}Servicio competitivo en Tarragona y Cataluña{% endif %}</h3>
+      <p>{% if lang == 'ca' %}La nostra base a Reus ens fa especialment rellevants per a recerques locals a Tarragona, però el servei també pot encaixar amb projectes d'altres zones d'Espanya.{% else %}Nuestra base en Reus nos hace especialmente relevantes para búsquedas locales en Tarragona, pero el servicio también puede encajar con proyectos de otras zonas de España.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com enfoquem el llenç{% else %}Cómo enfocamos el lienzo{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Més que imprimir: busquem que la peça funcioni bé un cop penjada.{% else %}Más que imprimir: buscamos que la pieza funcione bien una vez colgada.{% endif %}</h2>
+    </div>
+    <div class="process">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Valorem la imatge{% else %}Valoramos la imagen{% endif %}</h3>
+        <p>{% if lang == 'ca' %}No totes les fotos responen igual en gran format o en un suport decoratiu com el llenç.{% else %}No todas las fotos responden igual en gran formato o en un soporte decorativo como el lienzo.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Ajustem mida i presència{% else %}Ajustamos tamaño y presencia{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La mida correcta depèn molt de la paret, de la distància de lectura i del tipus d'espai on es col·locarà.{% else %}El tamaño correcto depende mucho de la pared, de la distancia de lectura y del tipo de espacio donde se va a colocar.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Produïm el llenç{% else %}Producimos el lienzo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Busquem un acabat net, tensió adequada i una lectura visual agradable un cop la peça està muntada.{% else %}Buscamos un acabado limpio, tensión adecuada y una lectura visual agradable una vez la pieza está montada.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>4</strong>
+        <h3>{% if lang == 'ca' %}Lliurem per exposar{% else %}Entregamos para exponer{% endif %}</h3>
+        <p>{% if lang == 'ca' %}L'objectiu és que el llenç arribi llest per lluir a casa, a l'estudi o en un espai comercial.{% else %}El objetivo es que el lienzo llegue listo para lucir en casa, en el estudio o en un espacio comercial.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">FAQ</div>
+      <h2 class="display">{% if lang == 'ca' %}Preguntes habituals sobre impressió de llenços.{% else %}Preguntas habituales sobre impresión de lienzos.{% endif %}</h2>
+    </div>
+    <div class="faq">
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Per a què serveix més un llenç imprès?{% else %}¿Para qué sirve mejor un lienzo impreso?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Per a decoració de paret, regals visuals, habitatges, negocis i espais on es vulgui una fotografia amb més presència que una còpia simple.{% else %}Para decoración de pared, regalos visuales, viviendas, negocios y espacios donde se quiera una fotografía con más presencia que una copia simple.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}És un servei només per a particulars?{% else %}¿Es un servicio solo para particulares?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}No. També és molt útil per a hotels, restaurants, oficines, botigues i projectes comercials que volen treballar paret i ambient amb fotografia pròpia.{% else %}No. También es muy útil para hoteles, restaurantes, oficinas, tiendas y proyectos comerciales que quieren trabajar pared y ambiente con fotografía propia.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Podeu treballar encàrrecs fora de Tarragona?{% else %}¿Podéis trabajar encargos fuera de Tarragona?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Sí, especialment si és un projecte clar i ben definit. El nostre nucli és Tarragona i Catalunya, però podem estudiar treballs per a altres punts d'Espanya.{% else %}Sí, especialmente si es un proyecto claro y bien definido. Nuestro núcleo es Tarragona y Cataluña, pero podemos estudiar trabajos para otros puntos de España.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Pressupost de llenç{% else %}Presupuesto de lienzo{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si vols imprimir un llenç, digues-nos la mida aproximada i on s'ha de col·locar.{% else %}Si quieres imprimir un lienzo, indícanos el tamaño aproximado y dónde se va a colocar.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

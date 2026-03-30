@@ -1,77 +1,273 @@
 {% extends "base.html" %}
-{% block title %}{% if lang=='ca' %}Serveis — Reus Revela{% else %}Servicios — Reus Revela{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Serveis fotogràfics, àlbums, marcs i impressió fine art | Reus Revela{% else %}Servicios fotográficos, álbumes, marcos e impresión fine art | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Descobreix els serveis de Reus Revela: fabricació d'àlbums fotogràfics, taller de marcs a mida, impressió de llenços, impressió Hahnemühle, impressió fotogràfica i retoc. Servei des de Reus per a Tarragona, Catalunya i Espanya.{% else %}Descubre los servicios de Reus Revela: fabricación de álbumes fotográficos, taller de marcos a medida, impresión de lienzos, impresión Hahnemühle, impresión fotográfica y retoque. Servicio desde Reus para Tarragona, Cataluña y España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .services-intro{
+    padding-top:3rem;
+  }
+  .service-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2rem;
+    align-items:stretch;
+    margin-top:4rem;
+  }
+  .service-copy,
+  .service-visual{
+    padding:2rem;
+  }
+  .service-copy ul{
+    display:grid;
+    gap:.85rem;
+    margin-top:1.4rem;
+  }
+  .service-copy li{
+    padding-left:1.4rem;
+    position:relative;
+    color:var(--muted);
+  }
+  .service-copy li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:.65rem;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--accent);
+  }
+  .service-visual{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    min-height:340px;
+    color:#fff;
+    border-radius:28px;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 28%),
+      linear-gradient(135deg, #1b1610 0%, #413426 55%, #a67843 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+  }
+  .service-visual p{
+    color:rgba(255,255,255,.74);
+    max-width:40ch;
+    margin-top:.75rem;
+  }
+  .pro-banner{
+    margin-top:4rem;
+    padding:2.4rem;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;
+    align-items:end;
+  }
+
+  @media (max-width: 900px){
+    .service-row,
+    .pro-banner{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="section">
+<section class="section services-intro">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang=='ca' %}Els nostres serveis{% else %}Nuestros servicios{% endif %}</div>
-      <h1 class="display">{% if lang=='ca' %}Qualitat professional en cada detall{% else %}Calidad profesional en cada detalle{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Oferim una àmplia gamma de serveis fotogràfics i d'emmarcació per a particulars i professionals.{% else %}Ofrecemos una amplia gama de servicios fotográficos y de enmarcación para particulares y profesionales.{% endif %}</p>
+      <div class="tag">{% if lang == 'ca' %}Els nostres serveis{% else %}Nuestros servicios{% endif %}</div>
+      <h1 class="display" style="max-width:14ch">
+        {% if lang == 'ca' %}Serveis pensats per vendre millor, presentar millor i conservar millor la fotografia.{% else %}Servicios pensados para vender mejor, presentar mejor y conservar mejor la fotografía.{% endif %}
+      </h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          Des del nostre taller de Reus treballem per a particulars, fotògrafs, estudis, galeries i negocis de Tarragona, Catalunya i altres punts d'Espanya.
+        {% else %}
+          Desde nuestro taller de Reus trabajamos para particulares, fotógrafos, estudios, galerías y negocios de Tarragona, Cataluña y otros puntos de España.
+        {% endif %}
+      </p>
     </div>
 
-    <div style="margin-top:4rem" id="impressio">
-      <hr class="divider" style="margin-bottom:4rem">
-      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
-        <div>
-          <div class="tag">01</div>
-          <h2 class="display">{% if lang=='ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h2>
-          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Paper fotogràfic professional Fuji Crystal. Disponible des de 10×15 cm fins a 120×180 cm. Color i blanc i negre.{% else %}Papel fotográfico profesional Fuji Crystal. Disponible desde 10×15 cm hasta 120×180 cm. Color y blanco y negro.{% endif %}</p>
-          <ul style="margin-top:1.5rem;display:flex;flex-direction:column;gap:.6rem">
-            {% for item in [('ca','Acabat brillant, mat i satinat','Acabado brillante, mate y satinado'),('ca','Servei de 24h disponible','Servicio de 24h disponible'),('ca','Gestió de color professional','Gestión de color profesional'),('ca','Formats estàndard i a mida','Formatos estándar y a medida')] %}
-            <li style="display:flex;align-items:center;gap:.6rem;font-size:14px;color:var(--muted)">
-              <span style="color:var(--gold);font-weight:700">✓</span>
-              {{ item[1] if lang=='es' else item[2] if lang=='es' else item[1] }}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <div class="img-placeholder" style="height:320px;border-radius:12px">
-          <div style="text-align:center"><div style="font-size:48px">📸</div></div>
-        </div>
+    <div class="service-row" id="albumes">
+      <div class="surface service-copy fade-up">
+        <div class="tag">01</div>
+        <h2 class="display">{% if lang == 'ca' %}Fabricació d'àlbums fotogràfics{% else %}Fabricación de álbumes fotográficos{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Creem àlbums fotogràfics per a casaments, comunions, sessions familiars, estudis i portafolis. Busquem que el conjunt transmeti valor abans fins i tot d'obrir-lo.
+          {% else %}
+            Creamos álbumes fotográficos para bodas, comuniones, sesiones familiares, estudios y portfolios. Buscamos que el conjunto transmita valor incluso antes de abrirlo.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Formats i acabats adaptats a cada reportatge.{% else %}Formatos y acabados adaptados a cada reportaje.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Àlbums per a lliurament de clients o records personals.{% else %}Álbumes para entrega a clientes o recuerdos personales.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Assessorament sobre estructura, presentació i acabat final.{% else %}Asesoramiento sobre estructura, presentación y acabado final.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Opció ideal per a professionals de Tarragona i Catalunya que vulguin diferenciar millor el seu lliurament.{% else %}Opción ideal para profesionales de Tarragona y Cataluña que quieran diferenciar mejor su entrega.{% endif %}</li>
+        </ul>
+        <a href="{{ url_for('albumes_fotograficos') }}" class="btn btn-gold" style="margin-top:1.5rem">
+          {% if lang == 'ca' %}Veure pàgina d'àlbums{% else %}Ver página de álbumes{% endif %}
+        </a>
+      </div>
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Presentació final{% else %}Presentación final{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Un bon reportatge mereix un àlbum que el faci créixer.{% else %}Un buen reportaje merece un álbum que lo haga crecer.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}L'àlbum no és només un suport: és part del valor percebut del treball i una peça clau en fotografia social i professional.{% else %}El álbum no es solo un soporte: es parte del valor percibido del trabajo y una pieza clave en fotografía social y profesional.{% endif %}</p>
       </div>
     </div>
 
-    <div style="margin-top:5rem" id="emmarcacio">
-      <hr class="divider" style="margin-bottom:4rem">
-      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
-        <div class="img-placeholder" style="height:320px;border-radius:12px;order:0">
-          <div style="text-align:center"><div style="font-size:48px">🖼</div></div>
-        </div>
-        <div>
-          <div class="tag">02</div>
-          <h2 class="display">{% if lang=='ca' %}Emmarcació a mida{% else %}Enmarcación a medida{% endif %}</h2>
-          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Més de 500 motllures de fusta, alumini i materials nobles. Passpartús de tots els colors i gruixos. Vidres normals, UV i de conservació.{% else %}Más de 500 molduras de madera, aluminio y materiales nobles. Passepartouts de todos los colores y grosores. Vidrios normales, UV y de conservación.{% endif %}</p>
-          <a href="/professionals" class="btn btn-gold" style="margin-top:1.5rem">{% if lang=='ca' %}Calcular pressupost{% else %}Calcular presupuesto{% endif %} →</a>
-        </div>
+    <div class="service-row" id="emmarcacio">
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Taller propi{% else %}Taller propio{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida per a fotografia, làmina i obra gràfica.{% else %}Marcos a medida para fotografía, lámina y obra gráfica.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Seleccionem marc, fons i vidre segons la peça, l'espai i el tipus d'acabat que es vol aconseguir.{% else %}Seleccionamos marco, fondo y vidrio según la pieza, el espacio y el tipo de acabado que se quiere conseguir.{% endif %}</p>
+      </div>
+      <div class="surface service-copy fade-up">
+        <div class="tag">02</div>
+        <h2 class="display">{% if lang == 'ca' %}Taller de marcs a mida{% else %}Taller de marcos a medida{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Treballem amb una àmplia selecció de motllures, passpartús i vidres per resoldre des de peces domèstiques fins a treballs per a expositors, estudis i botigues.
+          {% else %}
+            Trabajamos con una amplia selección de molduras, passepartouts y vidrios para resolver desde piezas domésticas hasta trabajos para expositores, estudios y tiendas.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Més de 500 referències de motllura.{% else %}Más de 500 referencias de moldura.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Opcions de vidre normal, UV i conservació.{% else %}Opciones de vidrio normal, UV y conservación.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Acabats per a llars, negocis i projectes professionals.{% else %}Acabados para hogares, negocios y proyectos profesionales.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Servei especialment competitiu a Tarragona i Catalunya amb possibilitat de treballar encàrrecs d'altres punts d'Espanya.{% else %}Servicio especialmente competitivo en Tarragona y Cataluña con posibilidad de trabajar encargos de otros puntos de España.{% endif %}</li>
+        </ul>
+        <a href="{{ url_for('marcos_a_medida') }}" class="btn btn-gold" style="margin-top:1.5rem">
+          {% if lang == 'ca' %}Veure pàgina de marcs{% else %}Ver página de marcos{% endif %}
+        </a>
       </div>
     </div>
 
-    <div style="margin-top:5rem" id="revelat">
-      <hr class="divider" style="margin-bottom:4rem">
-      <div class="grid-2 fade-up" style="align-items:center;gap:4rem">
-        <div>
-          <div class="tag">03</div>
-          <h2 class="display">{% if lang=='ca' %}Revelat i retoc digital{% else %}Revelado y retoque digital{% endif %}</h2>
-          <p class="lead" style="margin-top:1rem">{% if lang=='ca' %}Tractament d'imatge professional, restauració de fotografies antigues i escanejat d'alta resolució. Fem reviure les teves fotografies.{% else %}Tratamiento de imagen profesional, restauración de fotografías antiguas y escaneado de alta resolución. Hacemos revivir tus fotografías.{% endif %}</p>
-        </div>
-        <div class="img-placeholder" style="height:320px;border-radius:12px">
-          <div style="text-align:center"><div style="font-size:48px">💻</div></div>
-        </div>
+    <div class="service-row" id="lienzos">
+      <div class="surface service-copy fade-up">
+        <div class="tag">03</div>
+        <h2 class="display">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Produïm llenços impresos per a decoració, regals, hostaleria, habitatges i projectes comercials que busquen una peça amb presència visual.
+          {% else %}
+            Producimos lienzos impresos para decoración, regalos, hostelería, viviendas y proyectos comerciales que buscan una pieza con presencia visual.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Imatges familiars, paisatges, fotografia artística o decoració d'empresa.{% else %}Imágenes familiares, paisajes, fotografía artística o decoración de empresa.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Acabat preparat per exposar directament a paret.{% else %}Acabado preparado para exponer directamente en pared.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Opció molt demandada a Tarragona per a regals i decoració d'interiors.{% else %}Opción muy demandada en Tarragona para regalos y decoración de interiores.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Servei útil tant per a particulars com per a hotels, restaurants i negocis a Catalunya i Espanya.{% else %}Servicio útil tanto para particulares como para hoteles, restaurantes y negocios en Cataluña y España.{% endif %}</li>
+        </ul>
+        <a href="{{ url_for('impresion_lienzos') }}" class="btn btn-gold" style="margin-top:1.5rem">
+          {% if lang == 'ca' %}Veure pàgina de llenços{% else %}Ver página de lienzos{% endif %}
+        </a>
+      </div>
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Decoració amb imatge{% else %}Decoración con imagen{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}El llenç converteix la fotografia en peça decorativa.{% else %}El lienzo convierte la fotografía en pieza decorativa.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}És un servei molt atractiu per a qui busca impacte visual, bon format i una manera senzilla de vestir parets amb imatges pròpies.{% else %}Es un servicio muy atractivo para quien busca impacto visual, buen formato y una manera sencilla de vestir paredes con imágenes propias.{% endif %}</p>
       </div>
     </div>
 
-    <div style="margin-top:5rem" id="professionals">
-      <hr class="divider" style="margin-bottom:3rem">
-      <div class="fade-up" style="background:var(--ink);border-radius:16px;padding:3rem;color:#fff;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem">
-        <div>
-          <div class="tag" style="background:rgba(184,148,90,.2);color:var(--gold)">{% if lang=='ca' %}Per a professionals{% else %}Para profesionales{% endif %}</div>
-          <h2 class="display" style="color:#fff;margin-bottom:.75rem">{% if lang=='ca' %}Àrea exclusiva per a fotògrafs i galeries{% else %}Área exclusiva para fotógrafos y galerías{% endif %}</h2>
-          <p style="color:rgba(255,255,255,.6);font-size:15px">{% if lang=='ca' %}Tarifes especials, calculadora de pressupostos online i gestió de comandes. Demana accés.{% else %}Tarifas especiales, calculadora de presupuestos online y gestión de pedidos. Solicita acceso.{% endif %}</p>
-        </div>
-        <a href="/professionals" class="btn btn-gold" style="white-space:nowrap">{% if lang=='ca' %}Saber-ne més{% else %}Saber más{% endif %} →</a>
+    <div class="service-row" id="impressio">
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Producció fotogràfica{% else %}Producción fotográfica{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Paper fotogràfic, color ben llegit i formats flexibles.{% else %}Papel fotográfico, color bien leído y formatos flexibles.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Continuem oferint impressió fotogràfica per a qui necessita còpia professional, gran format o treball de laboratori amb criteri.{% else %}Seguimos ofreciendo impresión fotográfica para quien necesita copia profesional, gran formato o trabajo de laboratorio con criterio.{% endif %}</p>
+      </div>
+      <div class="surface service-copy fade-up">
+        <div class="tag">04</div>
+        <h2 class="display">{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Produïm còpies en paper fotogràfic professional amb bona lectura de color i formats adaptats a cada necessitat.
+          {% else %}
+            Producimos copias en papel fotográfico profesional con buena lectura de color y formatos adaptados a cada necesidad.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Acabats brillant, mat i setinat.{% else %}Acabados brillo, mate y satinado.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Des de còpia petita fins a grans formats.{% else %}Desde copia pequeña hasta grandes formatos.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Servei ràpid disponible segons càrrega de taller.{% else %}Servicio rápido disponible según carga de taller.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Revisió prèvia per assegurar proporció i acabat.{% else %}Revisión previa para asegurar proporción y acabado.{% endif %}</li>
+        </ul>
       </div>
     </div>
 
+    <div class="service-row" id="fine-art">
+      <div class="surface service-copy fade-up">
+        <div class="tag">05</div>
+        <h2 class="display">{% if lang == 'ca' %}Impressió Hahnemühle i fine art{% else %}Impresión Hahnemühle y fine art{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Per als projectes que demanen una lectura més expositiva, oferim impressió fine art en paper Hahnemühle per a fotògrafs, artistes, galeries, escoles i associacions fotogràfiques.
+          {% else %}
+            Para los proyectos que piden una lectura más expositiva, ofrecemos impresión fine art en papel Hahnemühle para fotógrafos, artistas, galerías, escuelas y asociaciones fotográficas.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Especialment interessant per a obra, sèries, exposicions i portafolis cuidats.{% else %}Especialmente interesante para obra, series, exposiciones y portfolios cuidados.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Servei amb sentit per a Tarragona i Catalunya, però també amb recorregut comercial a tot Espanya.{% else %}Servicio con sentido para Tarragona y Cataluña, pero también con recorrido comercial en toda España.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Possibilitat de combinar amb emmarcació a mida per exposar o vendre l'obra acabada.{% else %}Posibilidad de combinar con enmarcación a medida para exponer o vender la obra terminada.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Molt alineat amb associacions fotogràfiques que organitzen exposicions i mostres col·lectives.{% else %}Muy alineado con asociaciones fotográficas que organizan exposiciones y muestras colectivas.{% endif %}</li>
+        </ul>
+        <a href="{{ url_for('impresion_hahnemuhle') }}" class="btn btn-gold" style="margin-top:1.5rem">
+          {% if lang == 'ca' %}Veure pàgina fine art{% else %}Ver página fine art{% endif %}
+        </a>
+      </div>
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Impressió expositiva{% else %}Impresión expositiva{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Quan el paper també forma part del discurs de la imatge.{% else %}Cuando el papel también forma parte del discurso de la imagen.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Hahnemühle no es planteja com una simple impressió més, sinó com un servei pensat per a treballs d'autor, exposició i presentació premium.{% else %}Hahnemühle no se plantea como una simple impresión más, sino como un servicio pensado para trabajos de autor, exposición y presentación premium.{% endif %}</p>
+      </div>
+    </div>
+
+    <div class="service-row" id="revelat">
+      <div class="surface service-copy fade-up">
+        <div class="tag">06</div>
+        <h2 class="display">{% if lang == 'ca' %}Retoc, restauració i preparació digital{% else %}Retoque, restauración y preparación digital{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Recuperem fotografies antigues, corregim arxius i preparem imatges perquè quedin a punt per imprimir o arxivar amb garanties.
+          {% else %}
+            Recuperamos fotografías antiguas, corregimos archivos y preparamos imágenes para que queden listas para imprimir o archivar con garantías.
+          {% endif %}
+        </p>
+        <ul>
+          <li>{% if lang == 'ca' %}Restauració de fotografies antigues o malmeses.{% else %}Restauración de fotografías antiguas o dañadas.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Escanejat i digitalització d'originals.{% else %}Escaneado y digitalización de originales.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Correcció bàsica de color i enquadrament.{% else %}Corrección básica de color y encuadre.{% endif %}</li>
+          <li>{% if lang == 'ca' %}Preparació d'arxius per a impressió final.{% else %}Preparación de archivos para impresión final.{% endif %}</li>
+        </ul>
+      </div>
+      <div class="service-visual fade-up">
+        <div class="visual-label">{% if lang == 'ca' %}Servei de detall{% else %}Servicio de detalle{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Quan la foto importa, el fitxer també.{% else %}Cuando la foto importa, el archivo también.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Treballem perquè la imatge arribi neta, equilibrada i preparada per lluir bé tant en pantalla com en paper.{% else %}Trabajamos para que la imagen llegue limpia, equilibrada y preparada para lucir bien tanto en pantalla como en papel.{% endif %}</p>
+      </div>
+    </div>
+
+    <div class="surface pro-banner fade-up" id="professionals">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Per a professionals{% else %}Para profesionales{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Una àrea privada per treballar amb més agilitat.{% else %}Un área privada para trabajar con más agilidad.{% endif %}</h2>
+        <p class="lead" style="margin-top:1rem">
+          {% if lang == 'ca' %}
+            Si ets fotògraf, estudi, galeria o associació fotogràfica, posem a la teva disposició una calculadora de pressupostos, accés a producte i una via més directa per treballar projectes recurrents o expositius.
+          {% else %}
+            Si eres fotógrafo, estudio, galería o asociación fotográfica, ponemos a tu disposición una calculadora de presupuestos, acceso a producto y una vía más directa para trabajar proyectos recurrentes o expositivos.
+          {% endif %}
+        </p>
+      </div>
+      <a href="{{ url_for('professionals') }}" class="btn btn-dark">
+        {% if lang == 'ca' %}Entrar a l'àrea professionals{% else %}Entrar en el área profesionales{% endif %}
+      </a>
+    </div>
   </div>
-</div>
+</section>
 {% endblock %}

@@ -1,141 +1,240 @@
 {% extends "base.html" %}
-{% block title %}{% if lang=='ca' %}Àrea Professionals — Reus Revela{% else %}Área Profesionales — Reus Revela{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Àrea professionals | Reus Revela Tarragona{% else %}Área profesionales | Reus Revela Tarragona{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Àrea professionals de Reus Revela per a fotògrafs, estudis, galeries i associacions amb accés, validació, pressupostos i servei de taller des de Reus per a Tarragona, Catalunya i Espanya.{% else %}Área profesionales de Reus Revela para fotógrafos, estudios, galerías y asociaciones con acceso, validación, presupuestos y servicio de taller desde Reus para Tarragona, Cataluña y España.{% endif %}{% endblock %}
 
 {% block head %}
 <style>
-.pro-hero{background:linear-gradient(135deg,#0F0E0C 0%,#2A2820 60%,#1A1610 100%);padding:6rem 2rem;text-align:center;position:relative;overflow:hidden}
-.pro-hero::before{content:'';position:absolute;top:-30%;left:10%;width:80%;height:160%;background:radial-gradient(ellipse,rgba(184,148,90,.12) 0%,transparent 65%);pointer-events:none}
-.pro-hero h1{color:#fff;position:relative}
-.pro-hero .lead{color:rgba(255,255,255,.6);margin:1.25rem auto 0;max-width:520px;position:relative}
-.pro-hero .tag{position:relative}
+  .pro-hero{
+    padding:3rem 0 2rem;
+  }
+  .pro-shell{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:2rem;
+    align-items:stretch;
+  }
+  .pro-copy{
+    padding:2rem 0;
+  }
+  .pro-stage{
+    min-height:540px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .pro-highlights{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:1rem;
+    margin-top:2rem;
+  }
+  .highlight{
+    padding:1.2rem;
+    border-radius:22px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .highlight h3{
+    font-family:var(--serif);
+    font-size:1.45rem;
+    font-weight:600;
+  }
+  .highlight p{
+    margin-top:.45rem;
+    color:rgba(255,255,255,.7);
+    font-size:.95rem;
+  }
+  .access-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:1rem;
+    margin-top:2.25rem;
+  }
+  .access-card{
+    padding:2rem;
+  }
+  .access-card p{
+    color:var(--muted);
+    margin:1rem 0 1.5rem;
+  }
+  .profiles{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:1rem;
+    margin-top:2rem;
+  }
+  .profile-card{
+    padding:1.6rem;
+  }
+  .profile-card p{
+    margin-top:.7rem;
+    color:var(--muted);
+  }
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:1rem;
+    margin-top:2rem;
+  }
+  .step{
+    padding:1.6rem;
+  }
+  .step strong{
+    display:inline-flex;
+    width:44px;
+    height:44px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:var(--serif);
+    font-size:1.35rem;
+  }
+  .step h4{
+    margin-top:1rem;
+    font-size:1.05rem;
+  }
+  .step p{
+    margin-top:.6rem;
+    color:var(--muted);
+  }
 
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
-.feat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:1.75rem;color:#fff;transition:all .25s;position:relative}
-.feat-card:hover{background:rgba(184,148,90,.1);border-color:rgba(184,148,90,.3)}
-.feat-icon{font-size:28px;margin-bottom:1rem}
-.feat-card h3{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:.5rem;color:#fff}
-.feat-card p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7}
-
-.access-section{padding:5rem 2rem}
-.access-inner{max-width:860px;margin:0 auto}
-.access-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem}
-.access-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2.5rem;text-align:center;transition:all .25s}
-.access-card:hover{border-color:var(--gold);box-shadow:0 12px 40px rgba(184,148,90,.12);transform:translateY(-3px)}
-.access-card .icon{font-size:40px;margin-bottom:1.25rem}
-.access-card h3{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:.75rem}
-.access-card p{font-size:14px;color:var(--muted);margin-bottom:2rem;line-height:1.7}
-
-.steps-pro{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem;counter-reset:step}
-.step-pro{text-align:center;padding:1.5rem}
-.step-pro-num{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#fff;font-family:var(--serif);font-size:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
-.step-pro h4{font-size:15px;font-weight:600;margin-bottom:.4rem}
-.step-pro p{font-size:13px;color:var(--muted);line-height:1.6}
-
-@media(max-width:768px){
-  .features{grid-template-columns:1fr}
-  .access-grid{grid-template-columns:1fr}
-  .steps-pro{grid-template-columns:1fr 1fr}
-}
-@media(max-width:480px){
-  .steps-pro{grid-template-columns:1fr}
-}
+  @media (max-width: 1040px){
+    .pro-shell,
+    .access-grid,
+    .profiles,
+    .steps,
+    .pro-highlights{
+      grid-template-columns:1fr;
+    }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-
-<div class="pro-hero">
-  <div class="container">
-    <div class="tag">{% if lang=='ca' %}Espai exclusiu{% else %}Espacio exclusivo{% endif %}</div>
-    <h1 class="display fade-up">
-      {% if lang=='ca' %}Àrea de professionals{% else %}Área de profesionales{% endif %}
-    </h1>
-    <p class="lead fade-up">
-      {% if lang=='ca' %}Tarifes especials, calculadora de pressupostos i gestió de comandes per a fotògrafs, galeries i professionals del sector.{% else %}Tarifas especiales, calculadora de presupuestos y gestión de pedidos para fotógrafos, galerías y profesionales del sector.{% endif %}
-    </p>
-
-    <div class="features fade-up" style="max-width:860px;margin:3rem auto 0">
-      <div class="feat-card">
-        <div class="feat-icon">🖩</div>
-        <h3>{% if lang=='ca' %}Calculadora online{% else %}Calculadora online{% endif %}</h3>
-        <p>{% if lang=='ca' %}Calcula pressupostos d'emmarcació al moment amb les nostres tarifes actualitzades.{% else %}Calcula presupuestos de enmarcación al momento con nuestras tarifas actualizadas.{% endif %}</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">💶</div>
-        <h3>{% if lang=='ca' %}Tarifes professionals{% else %}Tarifas profesionales{% endif %}</h3>
-        <p>{% if lang=='ca' %}Accedeix als preus de taller i aplica el teu propi marge comercial.{% else %}Accede a los precios de taller y aplica tu propio margen comercial.{% endif %}</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📦</div>
-        <h3>{% if lang=='ca' %}Gestió de comandes{% else %}Gestión de pedidos{% endif %}</h3>
-        <p>{% if lang=='ca' %}Historial de totes les comandes, estat de lliurament i opcions de pagament.{% else %}Historial de todos los pedidos, estado de entrega y opciones de pago.{% endif %}</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Access cards -->
-<div class="access-section">
-  <div class="access-inner">
-    <div style="text-align:center" class="fade-up">
-      <div class="tag">{% if lang=='ca' %}Accés{% else %}Acceso{% endif %}</div>
-      <h2 class="display">{% if lang=='ca' %}Entra al teu espai{% else %}Entra en tu espacio{% endif %}</h2>
-      <p class="lead" style="margin:.75rem auto 0;text-align:center">
-        {% if lang=='ca' %}Si ja tens compte, accedeix directament. Si ets nou, contacta'ns per sol·licitar accés.{% else %}Si ya tienes cuenta, accede directamente. Si eres nuevo, contáctanos para solicitar acceso.{% endif %}
+<section class="section pro-hero">
+  <div class="container pro-shell">
+    <div class="pro-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Espai exclusiu{% else %}Espacio exclusivo{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Una àrea pensada per a qui treballa amb encàrrecs reals, exposicions i producció recurrent.{% else %}Un área pensada para quien trabaja con encargos reales, exposiciones y producción recurrente.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          Si ets fotògraf, estudi, galeria, botiga o associació fotogràfica que organitza exposicions, t'oferim un entorn més pràctic per pressupostar, validar l'alta i centralitzar encàrrecs recurrents.
+        {% else %}
+          Si eres fotógrafo, estudio, galería, tienda o asociación fotográfica que organiza exposiciones, te ofrecemos un entorno más práctico para presupuestar, validar el alta y centralizar encargos recurrentes.
+        {% endif %}
       </p>
+
+      <div class="access-grid">
+        <article class="surface access-card fade-up">
+          <div class="eyebrow">{% if lang == 'ca' %}Ja tens compte{% else %}Ya tienes cuenta{% endif %}</div>
+          <h3 class="card-title">{% if lang == 'ca' %}Entra directament a la calculadora{% else %}Entra directamente en la calculadora{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Accedeix a pressupostos, configuracions habituals i operativa del teu dia a dia.{% else %}Accede a presupuestos, configuraciones habituales y operativa de tu día a día.{% endif %}</p>
+          <a href="{{ CALC_URL }}" class="btn btn-dark" target="_blank" rel="noreferrer">
+            {% if lang == 'ca' %}Obrir calculadora{% else %}Abrir calculadora{% endif %}
+          </a>
+        </article>
+
+        <article class="surface access-card fade-up">
+          <div class="eyebrow">{% if lang == 'ca' %}Encara no tens accés{% else %}Aún no tienes acceso{% endif %}</div>
+          <h3 class="card-title">{% if lang == 'ca' %}Demana alta i validem el perfil{% else %}Solicita alta y validamos el perfil{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Explica'ns qui ets, quins productes necessites i quina documentació professional pots aportar. Validarem l'alta abans d'obrir l'espai privat.{% else %}Cuéntanos quién eres, qué productos necesitas y qué documentación profesional puedes aportar. Validaremos el alta antes de abrir el espacio privado.{% endif %}</p>
+          <a href="{{ url_for('contacte') }}?pro=1" class="btn btn-gold">
+            {% if lang == 'ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %}
+          </a>
+        </article>
+      </div>
     </div>
 
-    <div class="access-grid fade-up">
-      <div class="access-card">
-        <div class="icon">🔑</div>
-        <h3>{% if lang=='ca' %}Ja tinc compte{% else %}Ya tengo cuenta{% endif %}</h3>
-        <p>{% if lang=='ca' %}Accedeix a la calculadora de pressupostos i al teu historial de comandes.{% else %}Accede a la calculadora de presupuestos y a tu historial de pedidos.{% endif %}</p>
-        <a href="{{ CALC_URL }}" class="btn btn-dark" style="width:100%;justify-content:center">
-          {% if lang=='ca' %}Entrar a la calculadora{% else %}Entrar a la calculadora{% endif %} →
-        </a>
+    <div class="pro-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Què hi trobaràs{% else %}Qué encontrarás{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.5rem)">
+          {% if lang == 'ca' %}Accés validat, producte professional i continuïtat de taller.{% else %}Acceso validado, producto profesional y continuidad de taller.{% endif %}
+        </h2>
       </div>
-      <div class="access-card" style="border-color:var(--gold)">
-        <div class="icon">✉️</div>
-        <h3>{% if lang=='ca' %}Vull accés{% else %}Quiero acceso{% endif %}</h3>
-        <p>{% if lang=='ca' %}Ets fotògraf, galeria o professional del sector? Contacta'ns i et creem un compte en 24h.{% else %}¿Eres fotógrafo, galería o profesional del sector? Contáctanos y te creamos una cuenta en 24h.{% endif %}</p>
-        <a href="/contacte?pro=1" class="btn btn-gold" style="width:100%;justify-content:center">
-          {% if lang=='ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %} →
-        </a>
+      <div class="pro-highlights">
+        <article class="highlight">
+          <h3>{% if lang == 'ca' %}Alta validada{% else %}Alta validada{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Revisem perfil professional, web, xarxes o dades fiscals abans de donar accés.{% else %}Revisamos perfil profesional, web, redes o datos fiscales antes de dar acceso.{% endif %}</p>
+        </article>
+        <article class="highlight">
+          <h3>{% if lang == 'ca' %}Producte professional{% else %}Producto profesional{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Impressió fotogràfica, llenços, àlbums i papers Hahnemühle per a treball recurrent o expositiu.{% else %}Impresión fotográfica, lienzos, álbumes y papeles Hahnemühle para trabajo recurrente o expositivo.{% endif %}</p>
+        </article>
+        <article class="highlight">
+          <h3>{% if lang == 'ca' %}Circuit més clar{% else %}Circuito más claro{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Un espai pensat per repetir comandes, demanar pressupost i donar sortida a projectes d'exposició.{% else %}Un espacio pensado para repetir pedidos, pedir presupuesto y dar salida a proyectos de exposición.{% endif %}</p>
+        </article>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- How it works -->
-<div class="section" style="background:var(--card);border-top:1px solid var(--border)">
+<section class="section-tight">
   <div class="container">
-    <div class="fade-up" style="text-align:center">
-      <div class="tag">{% if lang=='ca' %}Com funciona{% else %}Cómo funciona{% endif %}</div>
-      <h2 class="display">{% if lang=='ca' %}Senzill i ràpid{% else %}Sencillo y rápido{% endif %}</h2>
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Perfils que hi encaixen{% else %}Perfiles que encajan{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}No només per a fotògrafs: també per a galeries, escoles i associacions amb activitat real.{% else %}No solo para fotógrafos: también para galerías, escuelas y asociaciones con actividad real.{% endif %}</h2>
     </div>
-    <div class="steps-pro fade-up">
-      <div class="step-pro">
-        <div class="step-pro-num">1</div>
-        <h4>{% if lang=='ca' %}Entra al teu compte{% else %}Entra en tu cuenta{% endif %}</h4>
-        <p>{% if lang=='ca' %}Usuari i contrasenya proporcionats per Reus Revela.{% else %}Usuario y contraseña proporcionados por Reus Revela.{% endif %}</p>
-      </div>
-      <div class="step-pro">
-        <div class="step-pro-num">2</div>
-        <h4>{% if lang=='ca' %}Selecciona el marc{% else %}Selecciona el marco{% endif %}</h4>
-        <p>{% if lang=='ca' %}Cerca per referència entre més de 500 motllures del catàleg.{% else %}Busca por referencia entre más de 500 molduras del catálogo.{% endif %}</p>
-      </div>
-      <div class="step-pro">
-        <div class="step-pro-num">3</div>
-        <h4>{% if lang=='ca' %}Calcula el pressupost{% else %}Calcula el presupuesto{% endif %}</h4>
-        <p>{% if lang=='ca' %}Mides, materials, passpartú i impressió. El preu s'actualitza al moment.{% else %}Medidas, materiales, passepartout e impresión. El precio se actualiza al momento.{% endif %}</p>
-      </div>
-      <div class="step-pro">
-        <div class="step-pro-num">4</div>
-        <h4>{% if lang=='ca' %}Envia la comanda{% else %}Envía el pedido{% endif %}</h4>
-        <p>{% if lang=='ca' %}Genera el PDF per al client o envia'ns la comanda per WhatsApp directament.{% else %}Genera el PDF para el cliente o envíanos el pedido por WhatsApp directamente.{% endif %}</p>
-      </div>
+
+    <div class="profiles">
+      <article class="surface profile-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Fotografia professional{% else %}Fotografía profesional{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Fotògrafs, estudis i creadors visuals{% else %}Fotógrafos, estudios y creadores visuales{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Pensat per a qui necessita producció recurrent, lliurament cuidat, àlbums o còpies per client final.{% else %}Pensado para quien necesita producción recurrente, entrega cuidada, álbumes o copias para cliente final.{% endif %}</p>
+      </article>
+      <article class="surface profile-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Art i exposició{% else %}Arte y exposición{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Galeries, sales i projectes d'obra{% else %}Galerías, salas y proyectos de obra{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Especialment útil per a impressió Hahnemühle, còpia fine art, emmarcació i preparació de peces per exposar o vendre.{% else %}Especialmente útil para impresión Hahnemühle, copia fine art, enmarcación y preparación de piezas para exponer o vender.{% endif %}</p>
+      </article>
+      <article class="surface profile-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Col·lectius i entitats{% else %}Colectivos y entidades{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Associacions fotogràfiques i exposicions{% else %}Asociaciones fotográficas y exposiciones{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Podem orientar l'alta i el servei cap a mostres, sèries, muntatges i treballs col·lectius amb criteri de producció repetible.{% else %}Podemos orientar el alta y el servicio hacia muestras, series, montajes y trabajos colectivos con criterio de producción repetible.{% endif %}</p>
+      </article>
     </div>
   </div>
-</div>
+</section>
 
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com funciona{% else %}Cómo funciona{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Un procés simple per validar l'accés i començar a treballar amb ordre.{% else %}Un proceso simple para validar el acceso y empezar a trabajar con orden.{% endif %}</h2>
+    </div>
+
+    <div class="steps">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h4>{% if lang == 'ca' %}Sol·licites l'alta{% else %}Solicitas el alta{% endif %}</h4>
+        <p>{% if lang == 'ca' %}Ens indiques el teu perfil, productes d'interès i dades bàsiques de contacte o facturació.{% else %}Nos indicas tu perfil, productos de interés y datos básicos de contacto o facturación.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h4>{% if lang == 'ca' %}Validem documentació{% else %}Validamos documentación{% endif %}</h4>
+        <p>{% if lang == 'ca' %}Revisem web, Instagram, CIF/NIF o informació del projecte expositiu abans de donar accés.{% else %}Revisamos web, Instagram, CIF/NIF o información del proyecto expositivo antes de dar acceso.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h4>{% if lang == 'ca' %}T'obrim l'espai{% else %}Te abrimos el espacio{% endif %}</h4>
+        <p>{% if lang == 'ca' %}Quan tot és correcte, actives calculadora, tarifes i canals de comanda adaptats al teu perfil.{% else %}Cuando todo es correcto, activas calculadora, tarifas y canales de pedido adaptados a tu perfil.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>4</strong>
+        <h4>{% if lang == 'ca' %}Comences a fer encàrrecs{% else %}Empiezas a hacer encargos{% endif %}</h4>
+        <p>{% if lang == 'ca' %}Ja pots pressupostar, repetir producte, plantejar exposicions o centralitzar feina recurrent amb el taller.{% else %}Ya puedes presupuestar, repetir producto, plantear exposiciones o centralizar trabajo recurrente con el taller.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
 {% endblock %}

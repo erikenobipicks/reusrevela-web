@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Marcs a mida a Tarragona | Reus Revela{% else %}Marcos a medida en Tarragona | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Taller de marcs a mida a Reus per a fotografia, làmina, obra gràfica i decoració. Servei per a Tarragona, Catalunya i projectes seleccionats a la resta d'Espanya.{% else %}Taller de marcos a medida en Reus para fotografía, lámina, obra gráfica y decoración. Servicio para Tarragona, Cataluña y proyectos seleccionados en el resto de España.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .service-hero{padding-top:3rem}
+  .service-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:stretch}
+  .service-copy{padding:2rem 0}
+  .service-stage{
+    min-height:540px;padding:2rem;border-radius:30px;color:#fff;
+    background:radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%), linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);display:flex;flex-direction:column;justify-content:flex-end
+  }
+  .service-stage p{color:rgba(255,255,255,.74);margin-top:.8rem;max-width:36ch}
+  .detail-grid,.faq{display:grid;gap:1rem;margin-top:2rem}
+  .detail-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .detail-card,.faq-item,.cta-box,.step{padding:1.5rem}
+  .detail-card p,.faq-item p,.step p{margin-top:.7rem;color:var(--muted)}
+  .process{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .step strong{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:1.25rem}
+  .step h3{margin-top:.9rem;font-size:1rem}
+  .cta-box{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+  @media (max-width: 980px){.service-shell,.detail-grid,.process,.cta-box{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Marcos a medida",
+  "serviceType": "Taller de marcos a medida",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Reus Revela",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Reus",
+      "addressRegion": "Tarragona",
+      "addressCountry": "ES"
+    }
+  },
+  "areaServed": ["Tarragona", "Catalunya", "España"],
+  "url": "{{ request.base_url }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="section service-hero">
+  <div class="container service-shell">
+    <div class="service-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Taller de marcs a mida per a fotografia, obra gràfica i decoració amb criteri.{% else %}Taller de marcos a medida para fotografía, obra gráfica y decoración con criterio.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">
+        {% if lang == 'ca' %}
+          A Reus Revela treballem l'emmarcació a mida com una part fonamental de la peça final: no només protegeix, també ordena, dona context i millora la presència visual del que es penja.
+        {% else %}
+          En Reus Revela trabajamos la enmarcación a medida como una parte fundamental de la pieza final: no solo protege, también ordena, da contexto y mejora la presencia visual de lo que se cuelga.
+        {% endif %}
+      </p>
+      <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
+        {% if lang == 'ca' %}
+          Des del nostre taller a Reus atenem encàrrecs de marcs a mida per a Tarragona, Catalunya i clients que necessiten una solució ben resolta des d'altres zones d'Espanya.
+        {% else %}
+          Desde nuestro taller en Reus atendemos encargos de marcos a medida para Tarragona, Cataluña y clientes que necesitan una solución bien resuelta desde otras zonas de España.
+        {% endif %}
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
+        <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
+        <a href="{{ url_for('serveis') }}#emmarcacio" class="btn btn-outline">{% if lang == 'ca' %}Veure més serveis{% else %}Ver más servicios{% endif %}</a>
+      </div>
+    </div>
+    <div class="service-stage fade-up">
+      <div class="visual-label">{% if lang == 'ca' %}Ofici i selecció{% else %}Oficio y selección{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}El marc adequat acompanya la peça; el marc equivocat la desvia.{% else %}El marco adecuado acompaña la pieza; el marco equivocado la desvía.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}Per això treballem l'emmarcació amb criteri estètic, funcional i comercial, tant per a particulars com per a professionals.{% else %}Por eso trabajamos la enmarcación con criterio estético, funcional y comercial, tanto para particulares como para profesionales.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container detail-grid">
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a particulars{% else %}Para particulares{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Fotos, làmines i records familiars{% else %}Fotos, láminas y recuerdos familiares{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Resolem marcs per decorar casa, conservar una peça especial o fer un regal amb més presència i durabilitat.{% else %}Resolvemos marcos para decorar casa, conservar una pieza especial o hacer un regalo con más presencia y durabilidad.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a professionals{% else %}Para profesionales{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Galeries, fotògrafs, estudis i negocis{% else %}Galerías, fotógrafos, estudios y negocios{% endif %}</h3>
+      <p>{% if lang == 'ca' %}És un servei especialment útil quan cal presentar obra, vestir un espai o donar continuïtat visual a un catàleg de treballs.{% else %}Es un servicio especialmente útil cuando hace falta presentar obra, vestir un espacio o dar continuidad visual a un catálogo de trabajos.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Cobertura geogràfica{% else %}Cobertura geográfica{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Servei fort a Tarragona i Catalunya{% else %}Servicio fuerte en Tarragona y Cataluña{% endif %}</h3>
+      <p>{% if lang == 'ca' %}La nostra proximitat a Reus ens fa especialment competitius a Tarragona, però podem valorar projectes d'altres punts d'Espanya si el tipus d'encàrrec encaixa.{% else %}Nuestra proximidad a Reus nos hace especialmente competitivos en Tarragona, pero podemos valorar proyectos de otros puntos de España si el tipo de encargo encaja.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Procés de taller{% else %}Proceso de taller{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Com enfoquem un marc a mida perquè la peça funcioni millor.{% else %}Cómo enfocamos un marco a medida para que la pieza funcione mejor.{% endif %}</h2>
+    </div>
+    <div class="process">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Mirem la peça{% else %}Miramos la pieza{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Valorem què s'ha d'emmarcar, quina lectura ha de tenir i on s'exposarà o es col·locarà.{% else %}Valoramos qué se va a enmarcar, qué lectura debe tener y dónde se expondrá o se colocará.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Triem materials{% else %}Elegimos materiales{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Motllura, fons, passpartú i vidre es decideixen en funció de la peça, no només de la tendència o del color.{% else %}Moldura, fondo, passepartout y vidrio se deciden en función de la pieza, no solo de la tendencia o del color.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Ajustem el pressupost{% else %}Ajustamos el presupuesto{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Busquem una solució coherent amb l'objectiu visual i el marge disponible per al projecte.{% else %}Buscamos una solución coherente con el objetivo visual y el margen disponible para el proyecto.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>4</strong>
+        <h3>{% if lang == 'ca' %}Fabriquem i lliurem{% else %}Fabricamos y entregamos{% endif %}</h3>
+        <p>{% if lang == 'ca' %}L'objectiu final és que el marc elevi la peça i no es converteixi en una distracció o en un compromís tècnic.{% else %}El objetivo final es que el marco eleve la pieza y no se convierta en una distracción o en un compromiso técnico.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">FAQ</div>
+      <h2 class="display">{% if lang == 'ca' %}Preguntes habituals sobre marcs a mida.{% else %}Preguntas habituales sobre marcos a medida.{% endif %}</h2>
+    </div>
+    <div class="faq">
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Què es pot emmarcar?{% else %}¿Qué se puede enmarcar?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Fotografia, làmina, il·lustració, obra gràfica, records i peces decoratives. L'important és entendre què necessita cada peça i quin paper ha de tenir el marc.{% else %}Fotografía, lámina, ilustración, obra gráfica, recuerdos y piezas decorativas. Lo importante es entender qué necesita cada pieza y qué papel debe tener el marco.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}És només un servei local?{% else %}¿Es solo un servicio local?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Treballar des de Reus ens dona una posició forta per a Tarragona i Catalunya, però també podem estudiar encàrrecs d'altres zones d'Espanya segons volum i tipus de projecte.{% else %}Trabajar desde Reus nos da una posición fuerte para Tarragona y Cataluña, pero también podemos estudiar encargos de otras zonas de España según volumen y tipo de proyecto.{% endif %}</p>
+      </article>
+      <article class="surface faq-item fade-up">
+        <h3 class="card-title">{% if lang == 'ca' %}Per què és millor un marc a mida?{% else %}¿Por qué es mejor un marco a medida?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Perquè s'adapta a la peça, al lloc on es mostrarà i a l'efecte visual que es busca. Això millora el resultat respecte a una solució estàndard presa només per mida o preu.{% else %}Porque se adapta a la pieza, al lugar donde se mostrará y al efecto visual que se busca. Eso mejora el resultado respecto a una solución estándar tomada solo por tamaño o precio.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Projecte a mida{% else %}Proyecto a medida{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si necessites un marc a mida, explica'ns què s'ha d'emmarcar i quin tipus d'acabat imagines.{% else %}Si necesitas un marco a medida, cuéntanos qué se va a enmarcar y qué tipo de acabado imaginas.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
