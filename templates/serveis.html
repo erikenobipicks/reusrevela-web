@@ -39,6 +39,8 @@
     background:var(--accent);
   }
   .service-visual{
+    position:relative;
+    overflow:hidden;
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
@@ -49,6 +51,17 @@
       radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 28%),
       linear-gradient(135deg, #1b1610 0%, #413426 55%, #a67843 100%);
     box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+  }
+  .service-visual::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(18, 16, 12, .12), rgba(18, 16, 12, .62));
+    z-index:0;
+  }
+  .service-visual > *{
+    position:relative;
+    z-index:1;
   }
   .service-visual p{
     color:rgba(255,255,255,.74);
@@ -111,7 +124,7 @@
           {% if lang == 'ca' %}Veure pàgina d'àlbums{% else %}Ver página de álbumes{% endif %}
         </a>
       </div>
-      <div class="service-visual fade-up">
+      <div class="service-visual fade-up" style="background:url('{{ url_for('static', filename='img/emmarcacio-album.png') }}') center/cover no-repeat">
         <div class="visual-label">{% if lang == 'ca' %}Presentació final{% else %}Presentación final{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Un bon reportatge mereix un àlbum que el faci créixer.{% else %}Un buen reportaje merece un álbum que lo haga crecer.{% endif %}</h3>
         <p>{% if lang == 'ca' %}L'àlbum no és només un suport: és part del valor percebut del treball i una peça clau en fotografia social i professional.{% else %}El álbum no es solo un soporte: es parte del valor percibido del trabajo y una pieza clave en fotografía social y profesional.{% endif %}</p>
@@ -119,7 +132,7 @@
     </div>
 
     <div class="service-row" id="emmarcacio">
-      <div class="service-visual fade-up">
+      <div class="service-visual fade-up" style="background:url('{{ url_for('static', filename='img/catalogo-marcs.png') }}') center/cover no-repeat">
         <div class="visual-label">{% if lang == 'ca' %}Taller propi{% else %}Taller propio{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida per a fotografia, làmina i obra gràfica.{% else %}Marcos a medida para fotografía, lámina y obra gráfica.{% endif %}</h3>
         <p>{% if lang == 'ca' %}Seleccionem marc, fons i vidre segons la peça, l'espai i el tipus d'acabat que es vol aconseguir.{% else %}Seleccionamos marco, fondo y vidrio según la pieza, el espacio y el tipo de acabado que se quiere conseguir.{% endif %}</p>
@@ -167,7 +180,7 @@
           {% if lang == 'ca' %}Veure pàgina de llenços{% else %}Ver página de lienzos{% endif %}
         </a>
       </div>
-      <div class="service-visual fade-up">
+      <div class="service-visual fade-up" style="background:url('{{ url_for('static', filename='img/hero-laboratori.png') }}') center/cover no-repeat">
         <div class="visual-label">{% if lang == 'ca' %}Decoració amb imatge{% else %}Decoración con imagen{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}El llenç converteix la fotografia en peça decorativa.{% else %}El lienzo convierte la fotografía en pieza decorativa.{% endif %}</h3>
         <p>{% if lang == 'ca' %}És un servei molt atractiu per a qui busca impacte visual, bon format i una manera senzilla de vestir parets amb imatges pròpies.{% else %}Es un servicio muy atractivo para quien busca impacto visual, buen formato y una manera sencilla de vestir paredes con imágenes propias.{% endif %}</p>
@@ -175,7 +188,7 @@
     </div>
 
     <div class="service-row" id="impressio">
-      <div class="service-visual fade-up">
+      <div class="service-visual fade-up" style="background:url('{{ url_for('static', filename='img/impressio-fineart.png') }}') center/cover no-repeat">
         <div class="visual-label">{% if lang == 'ca' %}Producció fotogràfica{% else %}Producción fotográfica{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Paper fotogràfic, color ben llegit i formats flexibles.{% else %}Papel fotográfico, color bien leído y formatos flexibles.{% endif %}</h3>
         <p>{% if lang == 'ca' %}Continuem oferint impressió fotogràfica per a qui necessita còpia professional, gran format o treball de laboratori amb criteri.{% else %}Seguimos ofreciendo impresión fotográfica para quien necesita copia profesional, gran formato o trabajo de laboratorio con criterio.{% endif %}</p>
@@ -220,7 +233,7 @@
           {% if lang == 'ca' %}Veure pàgina fine art{% else %}Ver página fine art{% endif %}
         </a>
       </div>
-      <div class="service-visual fade-up">
+      <div class="service-visual fade-up" style="background:url('{{ url_for('static', filename='img/retoc-digital.png') }}') center/cover no-repeat">
         <div class="visual-label">{% if lang == 'ca' %}Impressió expositiva{% else %}Impresión expositiva{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Quan el paper també forma part del discurs de la imatge.{% else %}Cuando el papel también forma parte del discurso de la imagen.{% endif %}</h3>
         <p>{% if lang == 'ca' %}Hahnemühle no es planteja com una simple impressió més, sinó com un servei pensat per a treballs d'autor, exposició i presentació premium.{% else %}Hahnemühle no se plantea como una simple impresión más, sino como un servicio pensado para trabajos de autor, exposición y presentación premium.{% endif %}</p>

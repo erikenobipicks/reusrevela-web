@@ -7,6 +7,9 @@
   <meta name="description" content="{% block desc %}Laboratori fotogràfic i taller d'emmarcació professional a Reus. Impressió fotogràfica, emmarcació a mida i serveis per a fotògrafs professionals.{% endblock %}">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#12100c">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ self.title()|striptags }}">
   <meta property="og:description" content="{{ self.desc()|striptags }}">
@@ -88,11 +91,19 @@
       gap:2rem;
     }
     .nav-logo{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
       font-family:var(--serif);
       font-size:2rem;
       font-weight:600;
       line-height:1;
       letter-spacing:-0.03em;
+    }
+    .nav-logo img{
+      width:42px;
+      height:42px;
+      object-fit:contain;
     }
     .nav-logo span{color:var(--accent)}
     .nav-links{
@@ -335,11 +346,20 @@
       gap:2rem;
     }
     .footer-brand{
+      display:flex;
+      align-items:center;
+      gap:.85rem;
       font-family:var(--serif);
       font-size:2rem;
       font-weight:600;
       color:#fff;
       margin-bottom:.75rem;
+    }
+    .footer-brand img{
+      width:46px;
+      height:46px;
+      object-fit:contain;
+      filter:brightness(1.08);
     }
     .footer-brand span{color:#d4a160}
     .footer-col h4{
@@ -388,6 +408,21 @@
       .footer-bottom{
         padding-left:1.1rem;
         padding-right:1.1rem;
+      }
+      .nav-logo{
+        gap:.55rem;
+        font-size:1.45rem;
+      }
+      .nav-logo img{
+        width:35px;
+        height:35px;
+      }
+      .footer-brand{
+        font-size:1.7rem;
+      }
+      .footer-brand img{
+        width:40px;
+        height:40px;
       }
       .mobile-menu{
         left:.8rem;
@@ -464,7 +499,10 @@
 
   <nav class="nav" aria-label="{% if lang == 'ca' %}Navegació principal{% else %}Navegación principal{% endif %}">
     <div class="nav-inner">
-      <a href="{{ url_for('index') }}" class="nav-logo">Reus <span>Revela</span></a>
+      <a href="{{ url_for('index') }}" class="nav-logo">
+        <img src="{{ url_for('static', filename='img/logo-reusrevela.png') }}" alt="Logo Reus Revela">
+        <div>Reus <span>Revela</span></div>
+      </a>
 
       <div class="nav-links">
         {% if lang == 'ca' %}
@@ -529,7 +567,10 @@
   <footer>
     <div class="footer-inner">
       <div>
-        <div class="footer-brand">Reus <span>Revela</span></div>
+        <div class="footer-brand">
+          <img src="{{ url_for('static', filename='img/logo-reusrevela.png') }}" alt="Logo Reus Revela">
+          <div>Reus <span>Revela</span></div>
+        </div>
         <p style="max-width:30ch">
           {% if lang == 'ca' %}
             Laboratori fotogràfic i taller d'emmarcació professional a Reus des de 1985.
