@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Àrea privada | Marcs{% else %}Área privada | Marcos{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Mòdul pont de marcs dins l'àrea privada per integrar la calculadora actual sense tocar la informació existent.{% else %}Módulo puente de marcos dentro del área privada para integrar la calculadora actual sin tocar la información existente.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .frames-hero{padding-top:3rem}
+  .frames-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
+  .frames-copy{padding:2rem 0}
+  .frames-stage{
+    min-height:480px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18,16,12,.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .frames-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:40ch}
+  .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
+  .module-chip{
+    padding:.55rem .85rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:.88rem;
+  }
+  .detail-grid,.safety-grid,.step-grid{display:grid;gap:1rem;margin-top:2rem}
+  .detail-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .safety-grid,.step-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .detail-card,.safety-card,.step-card,.cta-box{padding:1.7rem}
+  .detail-card p,.safety-card p,.step-card p{margin-top:.75rem;color:var(--muted)}
+  .step-card strong{
+    display:inline-flex;
+    width:42px;
+    height:42px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:var(--serif);
+    font-size:1.2rem;
+  }
+  .cta-box{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;
+    align-items:end;
+  }
+  .cta-actions{display:flex;flex-wrap:wrap;gap:1rem}
+  @media (max-width: 1080px){
+    .frames-shell,.detail-grid,.safety-grid,.step-grid,.cta-box{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section frames-hero">
+  <div class="container frames-shell">
+    <div class="frames-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Integració segura{% else %}Integración segura{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Marcs queda integrat dins l'àrea privada, però sense tocar la calculadora ni la informació actual que ja us funciona.{% else %}Marcos queda integrado dentro del área privada, pero sin tocar la calculadora ni la información actual que ya os funciona.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest mòdul no reescriu marcs. El que fa és donar-li un lloc correcte dins del privat perquè no quedi penjat. La calculadora actual continua sent la font de veritat, i el pas es fa des d'aquí amb context professional.{% else %}Este módulo no reescribe marcos. Lo que hace es darle un lugar correcto dentro del privado para que no quede colgado. La calculadora actual sigue siendo la fuente de verdad, y el paso se hace desde aquí con contexto profesional.{% endif %}</p>
+      <div class="module-nav">
+        {% for module in private_modules %}
+        <span class="module-chip">{{ module.title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="frames-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Principi d'integració{% else %}Principio de integración{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La calculadora actual de marcs segueix intacta. El que canvia és la manera d'entrar-hi des del privat.{% else %}La calculadora actual de marcos sigue intacta. Lo que cambia es la forma de entrar desde el privado.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això us protegeix el catàleg, les opcions, els càlculs i la informació existent de marcs mentre anem unificant la plataforma sense riscos innecessaris.{% else %}Esto os protege el catálogo, las opciones, los cálculos y la información existente de marcos mientras vamos unificando la plataforma sin riesgos innecesarios.{% endif %}</p>
+      </div>
+      <div class="cta-actions">
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">{% if lang == 'ca' %}Obrir calculadora actual{% else %}Abrir calculadora actual{% endif %}</a>
+        <a href="{{ CALC_REQUEST_URL }}" class="btn btn-outline">{% if lang == 'ca' %}Necessito alta{% else %}Necesito alta{% endif %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container detail-grid">
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Que es manté{% else %}Que se mantiene{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}La calculadora actual de marcs continua sent la font de veritat.{% else %}La calculadora actual de marcos sigue siendo la fuente de verdad.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}No s'ha migrat ni reescrit cap dada, opció o càlcul intern de marcs. Tot el que ja teniu continua on era i amb el mateix funcionament.{% else %}No se ha migrado ni reescrito ningún dato, opción o cálculo interno de marcos. Todo lo que ya tenéis sigue donde estaba y con el mismo funcionamiento.{% endif %}</p>
+    </article>
+    <article class="surface detail-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Que millora{% else %}Que mejora{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Marcs deixa de ser una eina penjada i passa a ser un mòdul visible del privat.{% else %}Marcos deja de ser una herramienta colgada y pasa a ser un módulo visible del privado.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}L'usuari professional entra al mateix ecosistema i, quan necessita marcs, hi accedeix des d'un lloc coherent amb la resta de productes i comandes.{% else %}El usuario profesional entra en el mismo ecosistema y, cuando necesita marcos, accede desde un lugar coherente con el resto de productos y pedidos.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container safety-grid">
+    <article class="surface safety-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Catàleg{% else %}Catálogo{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Sense perdre referències ni opcions{% else %}Sin perder referencias ni opciones{% endif %}</h3>
+      <p>{% if lang == 'ca' %}No hem tocat les dades de marcs ni la seva lògica. Aquesta integració és només de flux i de presentació dins de l'àrea privada.{% else %}No hemos tocado los datos de marcos ni su lógica. Esta integración es solo de flujo y de presentación dentro del área privada.{% endif %}</p>
+    </article>
+    <article class="surface safety-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Càlculs{% else %}Cálculos{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}La calculadora continua sent la mateixa{% else %}La calculadora sigue siendo la misma{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El càlcul de marcs continua vivint on viu ara. No hi ha cap reinterpretació parcial ni una còpia simplificada que us pugui desquadrar preus o configuracions.{% else %}El cálculo de marcos sigue viviendo donde vive ahora. No hay ninguna reinterpretación parcial ni una copia simplificada que os pueda descuadrar precios o configuraciones.{% endif %}</p>
+    </article>
+    <article class="surface safety-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Seguent fase{% else %}Siguiente fase{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Primer integrar, després unificar més a fons{% else %}Primero integrar, después unificar más a fondo{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Quan vulguem fer el pas següent, podrem pensar en retorn cap a comanda o en compartir clients. Però primer calia evitar qualsevol risc sobre la informació existent.{% else %}Cuando queramos dar el siguiente paso, podremos pensar en retorno hacia pedido o en compartir clientes. Pero antes hacía falta evitar cualquier riesgo sobre la información existente.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com queda el flux{% else %}Como queda el flujo{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Mateix privat, mateix context professional, entrada ordenada a la calculadora de marcs i sense migració arriscada.{% else %}Mismo privado, mismo contexto profesional, entrada ordenada a la calculadora de marcos y sin migración arriesgada.{% endif %}</h2>
+    </div>
+    <div class="step-grid">
+      <article class="surface step-card fade-up">
+        <strong>1</strong>
+        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Entres al privat{% else %}Entras al privado{% endif %}</h3>
+        <p>{% if lang == 'ca' %}El client professional arriba al mateix panell on veu tarifari, llenços, impressions, comandes i ara també marcs.{% else %}El cliente profesional llega al mismo panel donde ve tarifario, lienzos, impresiones, pedidos y ahora también marcos.{% endif %}</p>
+      </article>
+      <article class="surface step-card fade-up">
+        <strong>2</strong>
+        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Obre marcs des d'aquí{% else %}Abre marcos desde aquí{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Quan necessita emmarcació, entra a la calculadora actual des d'un mòdul propi del privat, amb el servei ja orientat cap a {{ calc_service.label }}.{% else %}Cuando necesita enmarcación, entra en la calculadora actual desde un módulo propio del privado, con el servicio ya orientado hacia {{ calc_service.label }}.{% endif %}</p>
+      </article>
+      <article class="surface step-card fade-up">
+        <strong>3</strong>
+        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Continuem integrant sense perdre res{% else %}Seguimos integrando sin perder nada{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La informació actual de marcs queda protegida i el següent pas ja podrà ser més funcional: retorn a comanda, clients compartits o fluxos mixtos.{% else %}La información actual de marcos queda protegida y el siguiente paso ya podrá ser más funcional: retorno a pedido, clientes compartidos o flujos mixtos.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Punt important{% else %}Punto importante{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}He integrat Marcs dins del privat sense tocar la seva informació actual. Ara ja no queda penjat, però tampoc no us poso en risc cap dada ni cap càlcul existent.{% else %}He integrado Marcos dentro del privado sin tocar su información actual. Ahora ya no queda colgado, pero tampoco os pongo en riesgo ningún dato ni ningún cálculo existente.{% endif %}</h2>
+      </div>
+      <div class="cta-actions">
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">{% if lang == 'ca' %}Entrar a marcs{% else %}Entrar en marcos{% endif %}</a>
+        <a href="{{ url_for('area_privada') }}" class="btn btn-outline">{% if lang == 'ca' %}Tornar al privat{% else %}Volver al privado{% endif %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

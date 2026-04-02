@@ -510,13 +510,13 @@
           <a href="{{ url_for('serveis') }}" {% if request.endpoint == 'serveis' %}class="active"{% endif %}>Serveis</a>
           <a href="{{ url_for('sobre') }}" {% if request.endpoint == 'sobre' %}class="active"{% endif %}>Qui som</a>
           <a href="{{ url_for('contacte') }}" {% if request.endpoint == 'contacte' %}class="active"{% endif %}>Contacte</a>
-          <a href="{{ url_for('professionals') }}" class="nav-cta {% if request.endpoint == 'professionals' %}active{% endif %}">Àrea professionals</a>
+          <a href="{{ url_for('professionals') }}" class="nav-cta {% if request.endpoint == 'professionals' %}active{% endif %}">Àrea professional</a>
         {% else %}
           <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Inicio</a>
           <a href="{{ url_for('serveis') }}" {% if request.endpoint == 'serveis' %}class="active"{% endif %}>Servicios</a>
           <a href="{{ url_for('sobre') }}" {% if request.endpoint == 'sobre' %}class="active"{% endif %}>Quiénes somos</a>
           <a href="{{ url_for('contacte') }}" {% if request.endpoint == 'contacte' %}class="active"{% endif %}>Contacto</a>
-          <a href="{{ url_for('professionals') }}" class="nav-cta {% if request.endpoint == 'professionals' %}active{% endif %}">Área profesionales</a>
+          <a href="{{ url_for('professionals') }}" class="nav-cta {% if request.endpoint == 'professionals' %}active{% endif %}">Área profesional</a>
         {% endif %}
 
         <div class="lang-sw" aria-label="{% if lang == 'ca' %}Canvi d'idioma{% else %}Cambio de idioma{% endif %}">
@@ -545,13 +545,13 @@
       <a href="{{ url_for('serveis') }}">Serveis</a>
       <a href="{{ url_for('sobre') }}">Qui som</a>
       <a href="{{ url_for('contacte') }}">Contacte</a>
-      <a href="{{ url_for('professionals') }}">Àrea professionals</a>
+      <a href="{{ url_for('professionals') }}">Àrea professional</a>
     {% else %}
       <a href="{{ url_for('index') }}">Inicio</a>
       <a href="{{ url_for('serveis') }}">Servicios</a>
       <a href="{{ url_for('sobre') }}">Quiénes somos</a>
       <a href="{{ url_for('contacte') }}">Contacto</a>
-      <a href="{{ url_for('professionals') }}">Área profesionales</a>
+      <a href="{{ url_for('professionals') }}">Área profesional</a>
     {% endif %}
 
     <div class="mobile-lang">
@@ -592,14 +592,14 @@
         <a href="{{ url_for('impresion_lienzos') }}">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</a>
         <a href="{{ url_for('impresion_hahnemuhle') }}">{% if lang == 'ca' %}Impressió Hahnemühle{% else %}Impresión Hahnemühle{% endif %}</a>
         <a href="{{ url_for('serveis') }}#impressio">{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</a>
-        <a href="{{ url_for('professionals') }}">{% if lang == 'ca' %}Àrea professionals{% else %}Área profesionales{% endif %}</a>
+        <a href="{{ url_for('professionals') }}">{% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}</a>
       </div>
 
       <div class="footer-col">
         <h4>{% if lang == 'ca' %}Informació{% else %}Información{% endif %}</h4>
         <a href="{{ url_for('sobre') }}">{% if lang == 'ca' %}Qui som{% else %}Quiénes somos{% endif %}</a>
         <a href="{{ url_for('contacte') }}">{% if lang == 'ca' %}Contacte{% else %}Contacto{% endif %}</a>
-        <a href="{{ CALC_URL }}" target="_blank" rel="noreferrer">
+        <a href="{{ CALC_ENTRY_URL }}">
           {% if lang == 'ca' %}Calculadora per a professionals{% else %}Calculadora para profesionales{% endif %}
         </a>
       </div>

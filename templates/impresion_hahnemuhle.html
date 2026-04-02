@@ -53,30 +53,30 @@
   <div class="container service-shell">
     <div class="service-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Fine art Hahnemühle{% else %}Fine art Hahnemühle{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Impressió en paper Hahnemühle per a fotografia d'autor, exposició i còpia fina.{% else %}Impresión en papel Hahnemühle para fotografía de autor, exposición y copia fina.{% endif %}</h1>
+      <h1 class="display">{% if lang == 'ca' %}Impressió en paper Hahnemühle per a fotografia d'autor, exposició i còpia fine art.{% else %}Impresión en papel Hahnemühle para fotografía de autor, exposición y copia fine art.{% endif %}</h1>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
-          Si el projecte demana un paper amb més presència, textura i lectura d'arxiu, treballem impressió fine art en papers Hahnemühle pensada per a fotògrafs, artistes, galeries i col·lectius que exposen.
+          Si el projecte demana un paper amb més presència, textura i qualitat de presentació, treballem impressió fine art en papers Hahnemühle per a fotògrafs, artistes, galeries i col·lectius que exposen.
         {% else %}
-          Si el proyecto pide un papel con más presencia, textura y lectura de archivo, trabajamos impresión fine art en papeles Hahnemühle pensada para fotógrafos, artistas, galerías y colectivos que exponen.
+          Si el proyecto pide un papel con más presencia, textura y calidad de presentación, trabajamos impresión fine art en papeles Hahnemühle para fotógrafos, artistas, galerías y colectivos que exponen.
         {% endif %}
       </p>
       <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
         {% if lang == 'ca' %}
-          Ho produïm des de Reus per a Tarragona i Catalunya, però també és un servei molt rellevant per a encàrrecs d'arreu d'Espanya quan es busca qualitat expositiva o venda d'obra.
+          Ho produïm des de Reus per a Tarragona i Catalunya, però també encaixa molt bé en encàrrecs d'arreu d'Espanya quan es busca qualitat expositiva o còpia per a venda.
         {% else %}
-          Lo producimos desde Reus para Tarragona y Cataluña, pero también es un servicio muy relevante para encargos de toda España cuando se busca calidad expositiva o venta de obra.
+          Lo producimos desde Reus para Tarragona y Cataluña, pero también encaja muy bien en encargos de toda España cuando se busca calidad expositiva o copia para venta.
         {% endif %}
       </p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
         <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
-        <a href="{{ url_for('professionals') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure àrea professionals{% else %}Ver área profesionales{% endif %}</a>
+        <a href="{{ url_for('calculadora', service='fine_art') }}" class="btn btn-outline">{% if lang == 'ca' %}Calculadora professional{% else %}Calculadora profesional{% endif %}</a>
       </div>
     </div>
     <div class="service-stage fade-up">
       <div class="visual-label">{% if lang == 'ca' %}Paper fine art{% else %}Papel fine art{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la còpia ha de defensar-se sola, el paper importa molt.{% else %}Cuando la copia tiene que defenderse sola, el papel importa mucho.{% endif %}</h2>
-      <p>{% if lang == 'ca' %}És un servei especialment útil per a sèries d'autor, edicions, exposicions, dossiers per galeria i projectes professionals amb exigència de presentació.{% else %}Es un servicio especialmente útil para series de autor, ediciones, exposiciones, dossieres para galería y proyectos profesionales con exigencia de presentación.{% endif %}</p>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la còpia s'ha de presentar sola, el paper marca la diferència.{% else %}Cuando la copia tiene que presentarse sola, el papel marca la diferencia.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}És un servei especialment útil per a sèries d'autor, edicions, exposicions, dossiers per a galeria i projectes professionals amb molta exigència de presentació.{% else %}Es un servicio especialmente útil para series de autor, ediciones, exposiciones, dossieres para galería y proyectos profesionales con mucha exigencia de presentación.{% endif %}</p>
     </div>
   </div>
 </section>
@@ -86,7 +86,7 @@
     <article class="surface detail-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Per a fotògrafs{% else %}Para fotógrafos{% endif %}</div>
       <h3 class="card-title">{% if lang == 'ca' %}Venda d'obra, còpia signada i portafoli{% else %}Venta de obra, copia firmada y portfolio{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Una bona base per a qui vol presentar treball amb més nivell perceptiu, millor tacte i un discurs més premium al voltant de la còpia.{% else %}Una buena base para quien quiere presentar trabajo con más nivel perceptivo, mejor tacto y un discurso más premium alrededor de la copia.{% endif %}</p>
+      <p>{% if lang == 'ca' %}Una base molt bona per a qui vol presentar treball amb més nivell, millor tacte i una percepció més cuidada de la còpia.{% else %}Una base muy buena para quien quiere presentar trabajo con más nivel, mejor tacto y una percepción más cuidada de la copia.{% endif %}</p>
     </article>
     <article class="surface detail-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Per a exposicions{% else %}Para exposiciones{% endif %}</div>

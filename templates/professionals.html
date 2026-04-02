@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{% if lang == 'ca' %}Àrea professionals | Reus Revela Tarragona{% else %}Área profesionales | Reus Revela Tarragona{% endif %}{% endblock %}
-{% block desc %}{% if lang == 'ca' %}Àrea professionals de Reus Revela per a fotògrafs, estudis, galeries i associacions amb accés, validació, pressupostos i servei de taller des de Reus per a Tarragona, Catalunya i Espanya.{% else %}Área profesionales de Reus Revela para fotógrafos, estudios, galerías y asociaciones con acceso, validación, presupuestos y servicio de taller desde Reus para Tarragona, Cataluña y España.{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Àrea professional | Reus Revela Tarragona{% else %}Área profesional | Reus Revela Tarragona{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Àrea professional de Reus Revela per a fotògrafs, estudis, galeries i associacions amb accés, validació, pressupostos i servei de taller des de Reus per a Tarragona, Catalunya i Espanya.{% else %}Área profesional de Reus Revela para fotógrafos, estudios, galerías y asociaciones con acceso, validación, presupuestos y servicio de taller desde Reus para Tarragona, Cataluña y España.{% endif %}{% endblock %}
 
 {% block head %}
 <style>
@@ -124,7 +124,7 @@
   <div class="container pro-shell">
     <div class="pro-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Espai exclusiu{% else %}Espacio exclusivo{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Una àrea pensada per a qui treballa amb encàrrecs reals, exposicions i producció recurrent.{% else %}Un área pensada para quien trabaja con encargos reales, exposiciones y producción recurrente.{% endif %}</h1>
+      <h1 class="display">{% if lang == 'ca' %}Una àrea pensada per a professionals que necessiten pressupostar, repetir producte i treballar amb ordre.{% else %}Un área pensada para profesionales que necesitan presupuestar, repetir producto y trabajar con orden.{% endif %}</h1>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
           Si ets fotògraf, estudi, galeria, botiga o associació fotogràfica que organitza exposicions, t'oferim un entorn més pràctic per pressupostar, validar l'alta i centralitzar encàrrecs recurrents.
@@ -137,8 +137,8 @@
         <article class="surface access-card fade-up">
           <div class="eyebrow">{% if lang == 'ca' %}Ja tens compte{% else %}Ya tienes cuenta{% endif %}</div>
           <h3 class="card-title">{% if lang == 'ca' %}Entra directament a la calculadora{% else %}Entra directamente en la calculadora{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Accedeix a pressupostos, configuracions habituals i operativa del teu dia a dia.{% else %}Accede a presupuestos, configuraciones habituales y operativa de tu día a día.{% endif %}</p>
-          <a href="{{ CALC_URL }}" class="btn btn-dark" target="_blank" rel="noreferrer">
+          <p>{% if lang == 'ca' %}Accedeix a pressupostos, productes i eines pensades per al teu dia a dia amb el taller.{% else %}Accede a presupuestos, productos y herramientas pensadas para tu día a día con el taller.{% endif %}</p>
+          <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">
             {% if lang == 'ca' %}Obrir calculadora{% else %}Abrir calculadora{% endif %}
           </a>
         </article>
@@ -147,7 +147,7 @@
           <div class="eyebrow">{% if lang == 'ca' %}Encara no tens accés{% else %}Aún no tienes acceso{% endif %}</div>
           <h3 class="card-title">{% if lang == 'ca' %}Demana alta i validem el perfil{% else %}Solicita alta y validamos el perfil{% endif %}</h3>
           <p>{% if lang == 'ca' %}Explica'ns qui ets, quins productes necessites i quina documentació professional pots aportar. Validarem l'alta abans d'obrir l'espai privat.{% else %}Cuéntanos quién eres, qué productos necesitas y qué documentación profesional puedes aportar. Validaremos el alta antes de abrir el espacio privado.{% endif %}</p>
-          <a href="{{ url_for('contacte') }}?pro=1" class="btn btn-gold">
+          <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">
             {% if lang == 'ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %}
           </a>
         </article>
@@ -171,8 +171,8 @@
           <p>{% if lang == 'ca' %}Impressió fotogràfica, llenços, àlbums i papers Hahnemühle per a treball recurrent o expositiu.{% else %}Impresión fotográfica, lienzos, álbumes y papeles Hahnemühle para trabajo recurrente o expositivo.{% endif %}</p>
         </article>
         <article class="highlight">
-          <h3>{% if lang == 'ca' %}Circuit més clar{% else %}Circuito más claro{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Un espai pensat per repetir comandes, demanar pressupost i donar sortida a projectes d'exposició.{% else %}Un espacio pensado para repetir pedidos, pedir presupuesto y dar salida a proyectos de exposición.{% endif %}</p>
+          <h3>{% if lang == 'ca' %}Flux més clar{% else %}Flujo más claro{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Un espai pensat per repetir comandes, preparar pressupostos i donar sortida a projectes d'exposició.{% else %}Un espacio pensado para repetir pedidos, preparar presupuestos y dar salida a proyectos de exposición.{% endif %}</p>
         </article>
       </div>
     </div>
@@ -200,7 +200,7 @@
       <article class="surface profile-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Col·lectius i entitats{% else %}Colectivos y entidades{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Associacions fotogràfiques i exposicions{% else %}Asociaciones fotográficas y exposiciones{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Podem orientar l'alta i el servei cap a mostres, sèries, muntatges i treballs col·lectius amb criteri de producció repetible.{% else %}Podemos orientar el alta y el servicio hacia muestras, series, montajes y trabajos colectivos con criterio de producción repetible.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Podem orientar l'alta i el servei cap a mostres, sèries, muntatges i treballs col·lectius amb una operativa repetible.{% else %}Podemos orientar el alta y el servicio hacia muestras, series, montajes y trabajos colectivos con una operativa repetible.{% endif %}</p>
       </article>
     </div>
   </div>

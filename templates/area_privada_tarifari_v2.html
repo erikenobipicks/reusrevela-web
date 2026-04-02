@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Àrea privada | Tarifari{% else %}Área privada | Tarifario{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Tarifari professional viu de Reus Revela amb filtres per formats, orientacions i grups de mida.{% else %}Tarifario profesional vivo de Reus Revela con filtros por formatos, orientaciones y grupos de medida.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .pricing-hero{padding-top:3rem}
+  .pricing-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
+  .pricing-copy{padding:2rem 0}
+  .pricing-stage{
+    min-height:460px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18,16,12,.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .pricing-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:40ch}
+  .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
+  .module-chip{
+    padding:.55rem .85rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:.88rem;
+  }
+  .intro-grid,.product-grid,.benefit-grid{display:grid;gap:1rem;margin-top:2rem}
+  .intro-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .product-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .benefit-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .intro-card,.product-card,.benefit-card,.cta-box,.filter-shell,.size-card{padding:1.7rem}
+  .intro-card p,.product-card p,.benefit-card p,.size-card p{margin-top:.75rem;color:var(--muted)}
+  .product-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1rem;
+  }
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    padding:.38rem .72rem;
+    border-radius:999px;
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .badge.ready{background:var(--success-soft);color:var(--success)}
+  .badge.planned{background:rgba(166,120,67,.12);color:var(--accent)}
+  .filter-shell{margin-top:2rem}
+  .filter-toolbar{display:grid;gap:1rem;margin-top:1.5rem}
+  .filter-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.75rem;
+    align-items:center;
+  }
+  .filter-label{
+    min-width:110px;
+    font-size:.82rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .filter-chip{
+    appearance:none;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+    border-radius:999px;
+    padding:.7rem 1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .filter-chip.is-active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+  .filter-summary{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:center;
+    margin-top:1.3rem;
+    color:var(--muted);
+  }
+  .view-toggle{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.75rem;
+    align-items:center;
+  }
+  .view-button{
+    appearance:none;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+    border-radius:999px;
+    padding:.75rem 1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .view-button.is-active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+  .profile-select{
+    min-height:48px;
+    padding:.75rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .pricing-note{
+    margin-top:.75rem;
+    color:var(--muted);
+    font-size:.94rem;
+  }
+  .size-grid{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:1rem;margin-top:1.5rem}
+  .size-card.hidden-card{display:none}
+  .size-price-note{display:block;margin-top:.55rem;color:var(--muted);font-size:.84rem}
+  .size-price{
+    display:inline-flex;
+    margin-top:1rem;
+    padding:.42rem .72rem;
+    border-radius:999px;
+    background:rgba(166,120,67,.12);
+    color:var(--accent);
+    font-weight:800;
+    font-size:.82rem;
+  }
+  .cta-box{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;
+    align-items:end;
+  }
+  @media (max-width: 1080px){
+    .pricing-shell,.intro-grid,.product-grid,.benefit-grid,.size-grid,.cta-box{
+      grid-template-columns:1fr;
+    }
+    .filter-row,
+    .filter-summary{
+      align-items:flex-start;
+      flex-direction:column;
+    }
+    .filter-label{
+      min-width:auto;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section pricing-hero">
+  <div class="container pricing-shell">
+    <div class="pricing-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Tarifari professional{% else %}Tarifario profesional{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}La web privada passa a ser el tarifari viu: un sol lloc per consultar preus, filtrar formats i deixar enrere els PDFs.{% else %}La web privada pasa a ser el tarifario vivo: un solo lugar para consultar precios, filtrar formatos y dejar atrás los PDFs.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest apartat és la base bona per anar afegint mòduls de mica en mica. Cada producte tindrà la seva pàgina dedicada, però tots penjaran del mateix tarifari i de la mateixa comanda compartida. Tarifa viva, no PDF estàtic. I, si es vol, també es pot fer una ullada ràpida al PVP final amb IVA.{% else %}Este apartado es la base buena para ir añadiendo módulos poco a poco. Cada producto tendrá su página dedicada, pero todos colgarán del mismo tarifario y del mismo pedido compartido. Tarifa viva, no PDF estático. Y, si hace falta, también se puede echar un vistazo rápido al PVP final con IVA.{% endif %}</p>
+      <div class="module-nav">
+        {% for module in private_modules %}
+        <span class="module-chip">{{ module.title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="pricing-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Nou punt central{% else %}Nuevo punto central{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Els preus ja no viuen en un PDF separat: viuen dins de la plataforma i es poden consultar per grups de mida, formats i orientacions.{% else %}Los precios ya no viven en un PDF separado: viven dentro de la plataforma y se pueden consultar por grupos de medida, formatos y orientaciones.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Així podeu actualitzar tarifes una sola vegada i fer que el fotògraf trobi ràpid el que busca sense perdre temps escanejant una taula llarga.{% else %}Así podéis actualizar tarifas una sola vez y hacer que el fotógrafo encuentre rápido lo que busca sin perder tiempo escaneando una tabla larga.{% endif %}</p>
+      </div>
+      <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir llenços{% else %}Abrir lienzos{% endif %}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container intro-grid">
+    <article class="surface intro-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Consultar{% else %}Consultar{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Veure preus reals{% else %}Ver precios reales{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El fotògraf entra i consulta la tarifa actual sense dependre d'un arxiu PDF que pugui quedar desfasat.{% else %}El fotógrafo entra y consulta la tarifa actual sin depender de un archivo PDF que pueda quedar desfasado.{% endif %}</p>
+    </article>
+    <article class="surface intro-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Filtrar{% else %}Filtrar{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Trobar ràpid el format{% else %}Encontrar rápido el formato{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Estàndard, panoràmics, quadrats o grans formats: la consulta passa a ser visual i molt més ràpida que un PDF lineal.{% else %}Estándar, panorámicos, cuadrados o grandes formatos: la consulta pasa a ser visual y mucho más rápida que un PDF lineal.{% endif %}</p>
+    </article>
+    <article class="surface intro-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Comandar{% else %}Pedir{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Unir preu i comanda{% else %}Unir precio y pedido{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Quan el producte ja existeix dins la plataforma, no cal duplicar feina: el mateix tarifari alimenta pressupost i comanda.{% else %}Cuando el producto ya existe dentro de la plataforma, no hace falta duplicar trabajo: el mismo tarifario alimenta presupuesto y pedido.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Catàleg privat{% else %}Catálogo privado{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Cada mòdul anirà entrant de mica en mica, però tots ja pengen d'una mateixa idea de tarifari viu.{% else %}Cada módulo irá entrando poco a poco, pero todos ya cuelgan de una misma idea de tarifario vivo.{% endif %}</h2>
+    </div>
+    <div class="product-grid">
+      {% for module in private_modules %}
+      <article class="surface product-card fade-up">
+        <div class="product-meta">
+          <div class="eyebrow">{{ module.eyebrow }}</div>
+          <span class="badge {% if module.status == 'ready' %}ready{% else %}planned{% endif %}">
+            {% if module.status == 'ready' %}{% if lang == 'ca' %}actiu{% else %}activo{% endif %}{% else %}{% if lang == 'ca' %}properament{% else %}próximamente{% endif %}{% endif %}
+          </span>
+        </div>
+        <h3 class="card-title">{{ module.title }}</h3>
+        <p>{{ module.summary }}</p>
+        {% if module.href %}
+        <a href="{{ module.href }}" class="btn btn-dark" style="margin-top:1.4rem">{% if module.key == 'pricing' %}{% if lang == 'ca' %}Obrir tarifari{% else %}Abrir tarifario{% endif %}{% else %}{% if lang == 'ca' %}Entrar al producte{% else %}Entrar al producto{% endif %}{% endif %}</a>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Primer producte oficial{% else %}Primer producto oficial{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Llenços ja fa de primer apartat real del tarifari: preus vius, mida real i filtres per trobar ràpid el format que toca.{% else %}Lienzos ya hace de primer apartado real del tarifario: precios vivos, medida real y filtros para encontrar rápido el formato que toca.{% endif %}</h2>
+    </div>
+
+    <div class="surface filter-shell fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Filtres de consulta{% else %}Filtros de consulta{% endif %}</div>
+      <div class="filter-toolbar">
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Vista{% else %}Vista{% endif %}</span>
+          <div class="view-toggle">
+            <button type="button" class="view-button is-active" data-view-mode="cost">{% if lang == 'ca' %}Cost taller{% else %}Coste taller{% endif %}</button>
+            <button type="button" class="view-button" data-view-mode="pvp">{% if lang == 'ca' %}PVP client final amb IVA{% else %}PVP cliente final con IVA{% endif %}</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Perfil comercial{% else %}Perfil comercial{% endif %}</span>
+          <select id="pricing-profile" class="profile-select">
+            {% for profile in pricing_view.profiles %}
+            <option value="{{ profile.id }}" {% if profile.selected %}selected{% endif %}>{{ profile.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Format{% else %}Formato{% endif %}</span>
+          <button type="button" class="filter-chip is-active" data-filter-group="collection" data-filter-value="all">{% if lang == 'ca' %}Tots{% else %}Todos{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="collection" data-filter-value="standard">{% if lang == 'ca' %}Estàndard{% else %}Estándar{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="collection" data-filter-value="panoramic">{% if lang == 'ca' %}Panoràmics{% else %}Panorámicos{% endif %}</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Orientació{% else %}Orientación{% endif %}</span>
+          <button type="button" class="filter-chip is-active" data-filter-group="orientation" data-filter-value="all">{% if lang == 'ca' %}Totes{% else %}Todas{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="square">{% if lang == 'ca' %}Quadrats{% else %}Cuadrados{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="landscape">{% if lang == 'ca' %}Horitzontals{% else %}Horizontales{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="portrait">{% if lang == 'ca' %}Verticals{% else %}Verticales{% endif %}</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Grup de mida{% else %}Grupo de medida{% endif %}</span>
+          <button type="button" class="filter-chip is-active" data-filter-group="sizeRange" data-filter-value="all">{% if lang == 'ca' %}Tots{% else %}Todos{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="sizeRange" data-filter-value="small">{% if lang == 'ca' %}Petit format{% else %}Formato pequeño{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="sizeRange" data-filter-value="medium">{% if lang == 'ca' %}Format mitjà{% else %}Formato medio{% endif %}</button>
+          <button type="button" class="filter-chip" data-filter-group="sizeRange" data-filter-value="large">{% if lang == 'ca' %}Gran format{% else %}Gran formato{% endif %}</button>
+        </div>
+      </div>
+      <div class="filter-summary">
+        <span id="filter-count">{{ canvas_pricing.sizes|length }} {% if lang == 'ca' %}mides visibles{% else %}medidas visibles{% endif %}</span>
+        <span>{% if lang == 'ca' %}Consell: combina format + orientació + mida per trobar ràpid una tarifa concreta.{% else %}Consejo: combina formato + orientación + medida para encontrar rápido una tarifa concreta.{% endif %}</span>
+      </div>
+      <div class="pricing-note" id="pricing-note">
+        {% if lang == 'ca' %}La vista PVP utilitza el marge de llenços del perfil comercial seleccionat i mostra el preu final amb IVA inclòs per a una consulta ràpida.{% else %}La vista PVP utiliza el margen de lienzos del perfil comercial seleccionado y muestra el precio final con IVA incluido para una consulta rápida.{% endif %}
+      </div>
+    </div>
+
+    <div class="size-grid" id="canvas-size-grid">
+      {% for size in canvas_pricing.sizes %}
+      {% set orientation = 'square' if size.final_width == size.final_height else 'landscape' if size.final_width > size.final_height else 'portrait' %}
+      {% set longest = size.final_width if size.final_width > size.final_height else size.final_height %}
+      {% set size_range = 'small' if longest <= 50 else 'medium' if longest <= 90 else 'large' %}
+      <article class="surface size-card fade-up"
+        data-collection="{{ size.group }}"
+        data-orientation="{{ orientation }}"
+        data-size-range="{{ size_range }}"
+        data-base-price="{{ size.price }}">
+        <div class="eyebrow">{% if lang == 'ca' %}Llenços{% else %}Lienzos{% endif %}</div>
+        <h3 class="card-title">{{ size.final_label }}</h3>
+        <p>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</p>
+        <p>
+          {% if size.group == 'panoramic' %}
+            {% if lang == 'ca' %}Panoràmic{% else %}Panorámico{% endif %}
+          {% else %}
+            {% if lang == 'ca' %}Estàndard{% else %}Estándar{% endif %}
+          {% endif %}
+          ·
+          {% if orientation == 'square' %}
+            {% if lang == 'ca' %}Quadrat{% else %}Cuadrado{% endif %}
+          {% elif orientation == 'landscape' %}
+            {% if lang == 'ca' %}Horitzontal{% else %}Horizontal{% endif %}
+          {% else %}
+            {% if lang == 'ca' %}Vertical{% else %}Vertical{% endif %}
+          {% endif %}
+          ·
+          {% if size_range == 'small' %}
+            {% if lang == 'ca' %}Petit format{% else %}Formato pequeño{% endif %}
+          {% elif size_range == 'medium' %}
+            {% if lang == 'ca' %}Format mitjà{% else %}Formato medio{% endif %}
+          {% else %}
+            {% if lang == 'ca' %}Gran format{% else %}Gran formato{% endif %}
+          {% endif %}
+        </p>
+        <span class="size-price" data-price-output>{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
+        <span class="size-price-note" data-price-note>{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}</span>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container benefit-grid">
+    <article class="surface benefit-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a vosaltres{% else %}Para vosotros{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Un sol lloc per actualitzar{% else %}Un solo lugar para actualizar{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Canvieu un preu una vegada i la tarifa privada, el configurador i la comanda parteixen de la mateixa base.{% else %}Cambiais un precio una vez y la tarifa privada, el configurador y el pedido parten de la misma base.{% endif %}</p>
+    </article>
+    <article class="surface benefit-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per al fotògraf{% else %}Para el fotógrafo{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Més clar que un PDF{% else %}Más claro que un PDF{% endif %}</h3>
+      <p>{% if lang == 'ca' %}No ha de buscar documents antics ni versions diferents. Entra al privat, filtra i veu la tarifa vigent.{% else %}No tiene que buscar documentos antiguos ni versiones distintas. Entra al privado, filtra y ve la tarifa vigente.{% endif %}</p>
+    </article>
+    <article class="surface benefit-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a la base futura{% else %}Para la base futura{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Cada mòdul creix des d'aquí{% else %}Cada módulo crece desde aquí{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Foam, impressions, àlbums i la resta podran entrar al tarifari amb aquesta mateixa idea de filtres i consulta ràpida.{% else %}Foam, impresiones, álbumes y el resto podrán entrar al tarifario con esta misma idea de filtros y consulta rápida.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Primer pas real{% else %}Primer paso real{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Fem que llenços sigui ja el primer apartat oficial del tarifari, i a partir d'aquí hi anem penjant la resta de productes.{% else %}Hacemos que lienzos sea ya el primer apartado oficial del tarifario, y a partir de ahí vamos colgando el resto de productos.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir llenços{% else %}Abrir lienzos{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const VAT_RATE = {{ canvas_pricing.vat_rate|tojson }};
+  const marginProfiles = {{ pricing_view.profile_margins|tojson }};
+  const profileSelect = document.getElementById("pricing-profile");
+  const viewButtons = Array.from(document.querySelectorAll(".view-button"));
+  const pricingNote = document.getElementById("pricing-note");
+  const filterState = {
+    collection: "all",
+    orientation: "all",
+    sizeRange: "all",
+  };
+  let pricingViewMode = "cost";
+
+  const filterButtons = Array.from(document.querySelectorAll(".filter-chip"));
+  const sizeCards = Array.from(document.querySelectorAll(".size-card"));
+  const filterCount = document.getElementById("filter-count");
+  const formatCurrency = (value) => `${value.toFixed(2).replace(".", ",")} €`;
+
+  const updateFilterCount = (visibleCount) => {
+    if (!filterCount) return;
+    filterCount.textContent = visibleCount === 1
+      ? `1 {% if lang == 'ca' %}mida visible{% else %}medida visible{% endif %}`
+      : `${visibleCount} {% if lang == 'ca' %}mides visibles{% else %}medidas visibles{% endif %}`;
+  };
+
+  const getCanvasMarginPercent = () => {
+    const selectedId = profileSelect?.value || "{{ pricing_view.selected_profile_id }}";
+    return Number(marginProfiles?.[selectedId]?.canvas ?? {{ pricing_view.margins.canvas|tojson }});
+  };
+
+  const updatePriceView = () => {
+    const marginPercent = getCanvasMarginPercent();
+
+    sizeCards.forEach((card) => {
+      const basePrice = Number(card.dataset.basePrice || 0);
+      const priceOutput = card.querySelector("[data-price-output]");
+      const priceNote = card.querySelector("[data-price-note]");
+      if (!priceOutput || !priceNote) return;
+
+      if (pricingViewMode === "pvp") {
+        const subtotal = basePrice * (1 + marginPercent / 100);
+        const total = subtotal * (1 + VAT_RATE);
+        priceOutput.textContent = `${formatCurrency(total)} {% if lang == 'ca' %}PVP final{% else %}PVP final{% endif %}`;
+        priceNote.textContent = `{% if lang == 'ca' %}Inclou marge de llenços + IVA per a consulta ràpida.{% else %}Incluye margen de lienzos + IVA para consulta rápida.{% endif %}`;
+      } else {
+        priceOutput.textContent = `${formatCurrency(basePrice)} + IVA`;
+        priceNote.textContent = `{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}`;
+      }
+    });
+
+    if (pricingNote) {
+      pricingNote.textContent = pricingViewMode === "pvp"
+        ? `{% if lang == 'ca' %}La vista PVP utilitza el marge de llenços del perfil comercial seleccionat i mostra el preu final amb IVA inclòs per a una consulta ràpida.{% else %}La vista PVP utiliza el margen de lienzos del perfil comercial seleccionado y muestra el precio final con IVA incluido para una consulta rápida.{% endif %}`
+        : `{% if lang == 'ca' %}La vista cost mostra la tarifa base per al fotògraf, abans d'aplicar el marge comercial propi del client.{% else %}La vista coste muestra la tarifa base para el fotógrafo, antes de aplicar el margen comercial propio del cliente.{% endif %}`;
+    }
+  };
+
+  const applyFilters = () => {
+    let visibleCount = 0;
+
+    sizeCards.forEach((card) => {
+      const matchesCollection = filterState.collection === "all" || card.dataset.collection === filterState.collection;
+      const matchesOrientation = filterState.orientation === "all" || card.dataset.orientation === filterState.orientation;
+      const matchesSizeRange = filterState.sizeRange === "all" || card.dataset.sizeRange === filterState.sizeRange;
+      const visible = matchesCollection && matchesOrientation && matchesSizeRange;
+      card.classList.toggle("hidden-card", !visible);
+      if (visible) visibleCount += 1;
+    });
+
+    updateFilterCount(visibleCount);
+  };
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const group = button.dataset.filterGroup;
+      const value = button.dataset.filterValue;
+      filterState[group] = value;
+
+      filterButtons
+        .filter((item) => item.dataset.filterGroup === group)
+        .forEach((item) => item.classList.toggle("is-active", item === button));
+
+      applyFilters();
+    });
+  });
+
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      pricingViewMode = button.dataset.viewMode || "cost";
+      viewButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+      updatePriceView();
+    });
+  });
+
+  profileSelect?.addEventListener("change", updatePriceView);
+
+  applyFilters();
+  updatePriceView();
+</script>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Àrea privada | Impressions{% else %}Área privada | Impresiones{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Mòdul d'impressions per a paper fotogràfic, laminat i foam, amb marc separat a la calculadora específica.{% else %}Módulo de impresiones para papel fotográfico, laminado y foam, con marco separado en la calculadora específica.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .prints-hero{padding-top:3rem}
+  .prints-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
+  .prints-copy{padding:2rem 0}
+  .prints-stage{
+    min-height:460px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18,16,12,.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .prints-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:40ch}
+  .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
+  .module-chip{
+    padding:.55rem .85rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:.88rem;
+  }
+  .paper-grid,.option-grid,.note-grid{display:grid;gap:1rem;margin-top:2rem}
+  .paper-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .option-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .note-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .paper-card,.option-card,.note-card,.cta-box{padding:1.7rem}
+  .paper-card p,.option-card p,.note-card p{margin-top:.75rem;color:var(--muted)}
+  .option-badge{
+    display:inline-flex;
+    padding:.4rem .72rem;
+    border-radius:999px;
+    background:rgba(166,120,67,.12);
+    color:var(--accent);
+    font-size:.78rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .cta-box{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;
+    align-items:end;
+  }
+  @media (max-width: 1080px){
+    .prints-shell,.paper-grid,.option-grid,.note-grid,.cta-box{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section prints-hero">
+  <div class="container prints-shell">
+    <div class="prints-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Següent mòdul{% else %}Siguiente módulo{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Impressions amb la mateixa filosofia que marcs: paper, laminat i foam com a base, i marc derivat a la seva calculadora específica.{% else %}Impresiones con la misma filosofía que marcos: papel, laminado y foam como base, y marco derivado a su calculadora específica.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest mòdul no intenta substituir la calculadora de marcs. Fa una cosa més neta: resoldre impressió, laminat i foam dins del privat, i enviar el client a marcs només quan realment vol afegir marc.{% else %}Este módulo no intenta sustituir la calculadora de marcos. Hace algo más limpio: resolver impresión, laminado y foam dentro del privado, y enviar al cliente a marcos solo cuando realmente quiere añadir marco.{% endif %}</p>
+      <div class="module-nav">
+        {% for module in private_modules %}
+        <span class="module-chip">{{ module.title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="prints-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Principi del mòdul{% else %}Principio del módulo{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}El client pot triar suport i acabat. Si vol marc, surt a una eina a part.{% else %}El cliente puede elegir soporte y acabado. Si quiere marco, sale a una herramienta aparte.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això evita barrejar dos fluxos diferents. Impressió, laminat i foam es queden dins del tarifari. Marc es calcula a la seva calculadora dedicada.{% else %}Esto evita mezclar dos flujos distintos. Impresión, laminado y foam se quedan dentro del tarifario. El marco se calcula en su calculadora dedicada.{% endif %}</p>
+      </div>
+      <a href="{{ prints_module.frames_entry_url }}" class="btn btn-outline">{% if lang == 'ca' %}Anar a marcs{% else %}Ir a marcos{% endif %}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Papers base{% else %}Papeles base{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}La copia pot partir de Lustre o Silk, sempre a la mida que el client necessiti.{% else %}La copia puede partir de Lustre o Silk, siempre a la medida que el cliente necesite.{% endif %}</h2>
+    </div>
+    <div class="paper-grid">
+      {% for paper in prints_module.papers %}
+      <article class="surface paper-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Base d'impressió{% else %}Base de impresión{% endif %}</div>
+        <h3 class="card-title">{{ paper.label }}</h3>
+        <p>{{ paper.description }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Combinacions del producte{% else %}Combinaciones del producto{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Aquestes són les opcions que tindria el client dins del mòdul, seguint la filosofia que m'has marcat.{% else %}Estas son las opciones que tendría el cliente dentro del módulo, siguiendo la filosofía que me has marcado.{% endif %}</h2>
+    </div>
+    <div class="option-grid">
+      {% for option in prints_module.build_options %}
+      <article class="surface option-card fade-up">
+        <span class="option-badge">{{ option.id }}</span>
+        <h3 class="card-title" style="margin-top:1rem">{{ option.label }}</h3>
+        <p>{{ option.summary }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container note-grid">
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Tarifes{% else %}Tarifas{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}No inventem preus abans d'hora{% else %}No inventamos precios antes de tiempo{% endif %}</h3>
+      <p>{% if lang == 'ca' %}He deixat l'estructura preparada sense posar tarifes inventades. Quan em passis la tarifa del laminat, ho podrem aterrar bé i decidir si alguna part s'alimenta de la calculadora de marcs.{% else %}He dejado la estructura preparada sin poner tarifas inventadas. Cuando me pases la tarifa del laminado, lo podremos aterrizar bien y decidir si alguna parte se alimenta de la calculadora de marcos.{% endif %}</p>
+    </article>
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Sense impressió{% else %}Sin impresión{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}El client també pot portar la seva imatge{% else %}El cliente también puede traer su imagen{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Aquest cas queda contemplat com a opció pròpia, perquè el servei pot ser només foam, només suport o algun acabat sense que hi hagi impressió al laboratori.{% else %}Este caso queda contemplado como una opción propia, porque el servicio puede ser solo foam, solo soporte o algún acabado sin que haya impresión en el laboratorio.{% endif %}</p>
+    </article>
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Marc separat{% else %}Marco separado{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Quan hi ha marc, surt a la calculadora de marcs{% else %}Cuando hay marco, sale a la calculadora de marcos{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Això manté l'experiència neta: impressió i suports dins del privat; marc a la calculadora especialitzada.{% else %}Esto mantiene la experiencia limpia: impresión y soportes dentro del privado; marco en la calculadora especializada.{% endif %}</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Següent aterratge{% else %}Siguiente aterrizaje{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Quan tinguem les tarifes, aquest mòdul pot passar de filosofia de producte a tarifari real i, després, a comanda mixta amb llenços.{% else %}Cuando tengamos las tarifas, este módulo puede pasar de filosofía de producto a tarifario real y, después, a pedido mixto con lienzos.{% endif %}</h2>
+      </div>
+      <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Tornar al tarifari{% else %}Volver al tarifario{% endif %}</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

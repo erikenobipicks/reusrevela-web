@@ -53,30 +53,30 @@
   <div class="container service-shell">
     <div class="service-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Taller de marcs a mida per a fotografia, obra gràfica i decoració amb criteri.{% else %}Taller de marcos a medida para fotografía, obra gráfica y decoración con criterio.{% endif %}</h1>
+      <h1 class="display">{% if lang == 'ca' %}Marcs a mida per presentar millor fotografia, làmina i obra gràfica.{% else %}Marcos a medida para presentar mejor fotografía, lámina y obra gráfica.{% endif %}</h1>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
-          A Reus Revela treballem l'emmarcació a mida com una part fonamental de la peça final: no només protegeix, també ordena, dona context i millora la presència visual del que es penja.
+          A Reus Revela treballem l'emmarcació a mida com una part clau del resultat final: protegeix la peça, l'ordena visualment i la fa funcionar millor un cop exposada.
         {% else %}
-          En Reus Revela trabajamos la enmarcación a medida como una parte fundamental de la pieza final: no solo protege, también ordena, da contexto y mejora la presencia visual de lo que se cuelga.
+          En Reus Revela trabajamos la enmarcación a medida como una parte clave del resultado final: protege la pieza, la ordena visualmente y hace que funcione mejor una vez expuesta.
         {% endif %}
       </p>
       <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
         {% if lang == 'ca' %}
-          Des del nostre taller a Reus atenem encàrrecs de marcs a mida per a Tarragona, Catalunya i clients que necessiten una solució ben resolta des d'altres zones d'Espanya.
+          Des del nostre taller a Reus atenem encàrrecs per a Tarragona, Catalunya i projectes d'altres zones d'Espanya que busquen una solució ben resolta i amb criteri.
         {% else %}
-          Desde nuestro taller en Reus atendemos encargos de marcos a medida para Tarragona, Cataluña y clientes que necesitan una solución bien resuelta desde otras zonas de España.
+          Desde nuestro taller en Reus atendemos encargos para Tarragona, Cataluña y proyectos de otras zonas de España que buscan una solución bien resuelta y con criterio.
         {% endif %}
       </p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
         <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
-        <a href="{{ url_for('serveis') }}#emmarcacio" class="btn btn-outline">{% if lang == 'ca' %}Veure més serveis{% else %}Ver más servicios{% endif %}</a>
+        <a href="{{ url_for('calculadora', service='frames') }}" class="btn btn-outline">{% if lang == 'ca' %}Calculadora professional{% else %}Calculadora profesional{% endif %}</a>
       </div>
     </div>
     <div class="service-stage fade-up">
       <div class="visual-label">{% if lang == 'ca' %}Ofici i selecció{% else %}Oficio y selección{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}El marc adequat acompanya la peça; el marc equivocat la desvia.{% else %}El marco adecuado acompaña la pieza; el marco equivocado la desvía.{% endif %}</h2>
-      <p>{% if lang == 'ca' %}Per això treballem l'emmarcació amb criteri estètic, funcional i comercial, tant per a particulars com per a professionals.{% else %}Por eso trabajamos la enmarcación con criterio estético, funcional y comercial, tanto para particulares como para profesionales.{% endif %}</p>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Un bon marc ordena la peça; un de dolent li fa perdre força.{% else %}Un buen marco ordena la pieza; uno malo le hace perder fuerza.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}Per això treballem cada proposta amb criteri estètic, funcional i comercial, tant per a particulars com per a professionals.{% else %}Por eso trabajamos cada propuesta con criterio estético, funcional y comercial, tanto para particulares como para profesionales.{% endif %}</p>
     </div>
   </div>
 </section>
@@ -105,7 +105,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Procés de taller{% else %}Proceso de taller{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Com enfoquem un marc a mida perquè la peça funcioni millor.{% else %}Cómo enfocamos un marco a medida para que la pieza funcione mejor.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Com decidim un marc que funcioni de veritat.{% else %}Cómo decidimos un marco que funcione de verdad.{% endif %}</h2>
     </div>
     <div class="process">
       <article class="surface step fade-up">
@@ -160,7 +160,7 @@
     <div class="surface cta-box fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Projecte a mida{% else %}Proyecto a medida{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Si necessites un marc a mida, explica'ns què s'ha d'emmarcar i quin tipus d'acabat imagines.{% else %}Si necesitas un marco a medida, cuéntanos qué se va a enmarcar y qué tipo de acabado imaginas.{% endif %}</h2>
+        <h2 class="display">{% if lang == 'ca' %}Si necessites un marc a mida, explica'ns què s'ha d'emmarcar i quin resultat t'agradaria aconseguir.{% else %}Si necesitas un marco a medida, cuéntanos qué se va a enmarcar y qué resultado te gustaría conseguir.{% endif %}</h2>
       </div>
       <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
     </div>

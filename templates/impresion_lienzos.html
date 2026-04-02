@@ -53,30 +53,30 @@
   <div class="container service-shell">
     <div class="service-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Llenços impresos amb presència decorativa per a casa, negoci o regal.{% else %}Lienzos impresos con presencia decorativa para casa, negocio o regalo.{% endif %}</h1>
+      <h1 class="display">{% if lang == 'ca' %}Llenços impresos per convertir una imatge en una peça decorativa amb presència.{% else %}Lienzos impresos para convertir una imagen en una pieza decorativa con presencia.{% endif %}</h1>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
-          La impressió de llenços és una de les formes més directes de convertir una fotografia en peça decorativa. Funciona molt bé per a interiors, regals i espais comercials que necessiten una imatge amb impacte.
+          La impressió de llenços és una de les maneres més directes de portar una fotografia a paret. Funciona molt bé per a interiors, regals i espais comercials que necessiten una imatge amb impacte.
         {% else %}
-          La impresión de lienzos es una de las formas más directas de convertir una fotografía en pieza decorativa. Funciona muy bien para interiores, regalos y espacios comerciales que necesitan una imagen con impacto.
+          La impresión de lienzos es una de las formas más directas de llevar una fotografía a pared. Funciona muy bien para interiores, regalos y espacios comerciales que necesitan una imagen con impacto.
         {% endif %}
       </p>
       <p style="margin-top:1rem;color:var(--muted);line-height:1.85">
         {% if lang == 'ca' %}
-          Produïm llenços des de Reus per a clients de Tarragona i Catalunya, i també per a projectes que arriben des d'altres punts d'Espanya quan busquen un acabat més cuidat.
+          Produïm llenços des de Reus per a clients de Tarragona i Catalunya, i també per a projectes d'altres punts d'Espanya que busquen un acabat més cuidat.
         {% else %}
-          Producimos lienzos desde Reus para clientes de Tarragona y Cataluña, y también para proyectos que llegan desde otros puntos de España cuando buscan un acabado más cuidado.
+          Producimos lienzos desde Reus para clientes de Tarragona y Cataluña, y también para proyectos de otros puntos de España que buscan un acabado más cuidado.
         {% endif %}
       </p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem">
         <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
-        <a href="{{ url_for('serveis') }}#lienzos" class="btn btn-outline">{% if lang == 'ca' %}Veure més serveis{% else %}Ver más servicios{% endif %}</a>
+        <a href="{{ url_for('calculadora', service='canvas') }}" class="btn btn-outline">{% if lang == 'ca' %}Flux professional de llenços{% else %}Flujo profesional de lienzos{% endif %}</a>
       </div>
     </div>
     <div class="service-stage fade-up">
       <div class="visual-label">{% if lang == 'ca' %}Decoració amb fotografia{% else %}Decoración con fotografía{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la imatge ha d'omplir una paret, el llenç és una solució natural.{% else %}Cuando la imagen tiene que llenar una pared, el lienzo es una solución natural.{% endif %}</h2>
-      <p>{% if lang == 'ca' %}És especialment útil per a habitatges, hotels, restaurants, oficines i regals amb càrrega emocional o visual.{% else %}Es especialmente útil para viviendas, hoteles, restaurantes, oficinas y regalos con carga emocional o visual.{% endif %}</p>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Quan la imatge ha de tenir presència a paret, el llenç és una solució molt natural.{% else %}Cuando la imagen tiene que tener presencia en pared, el lienzo es una solución muy natural.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}És especialment útil per a habitatges, hotels, restaurants, oficines i regals amb una càrrega visual o emocional clara.{% else %}Es especialmente útil para viviendas, hoteles, restaurantes, oficinas y regalos con una carga visual o emocional clara.{% endif %}</p>
     </div>
   </div>
 </section>
@@ -160,7 +160,7 @@
     <div class="surface cta-box fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Pressupost de llenç{% else %}Presupuesto de lienzo{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Si vols imprimir un llenç, digues-nos la mida aproximada i on s'ha de col·locar.{% else %}Si quieres imprimir un lienzo, indícanos el tamaño aproximado y dónde se va a colocar.{% endif %}</h2>
+        <h2 class="display">{% if lang == 'ca' %}Si vols imprimir un llenç, digues-nos la mida aproximada, l'espai on anirà i el tipus d'imatge que vols treballar.{% else %}Si quieres imprimir un lienzo, indícanos el tamaño aproximado, el espacio donde irá y el tipo de imagen que quieres trabajar.{% endif %}</h2>
       </div>
       <a href="{{ url_for('contacte') }}" class="btn btn-dark">{% if lang == 'ca' %}Contactar{% else %}Contactar{% endif %}</a>
     </div>

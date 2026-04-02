@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Calculadora professional | Reus Revela{% else %}Calculadora profesional | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Accedeix a la calculadora professional de Reus Revela o sol·licita alta per pressupostar àlbums, marcs, impressió fotogràfica, llenços i fine art amb el taller.{% else %}Accede a la calculadora profesional de Reus Revela o solicita alta para presupuestar álbumes, marcos, impresión fotográfica, lienzos y fine art con el taller.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .calc-hero{
+    padding-top:3rem;
+  }
+  .calc-shell{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:2rem;
+    align-items:stretch;
+  }
+  .calc-copy{
+    padding:2rem 0;
+  }
+  .calc-stage{
+    min-height:540px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18, 16, 12, 0.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .calc-stage p{
+    color:rgba(255,255,255,.74);
+    margin-top:.85rem;
+    max-width:38ch;
+  }
+  .calc-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.7rem;
+    margin-top:1.6rem;
+  }
+  .calc-pill{
+    padding:.6rem .9rem;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.08);
+    font-size:.9rem;
+  }
+  .access-grid,
+  .detail-grid,
+  .steps{
+    display:grid;
+    gap:1rem;
+    margin-top:2rem;
+  }
+  .access-grid,
+  .detail-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+  .steps{
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+  }
+  .access-card,
+  .detail-card,
+  .step{
+    padding:1.7rem;
+  }
+  .access-card p,
+  .detail-card p,
+  .step p{
+    margin-top:.75rem;
+    color:var(--muted);
+  }
+  .step strong{
+    display:inline-flex;
+    width:44px;
+    height:44px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:var(--serif);
+    font-size:1.35rem;
+  }
+  .step h3{
+    margin-top:.95rem;
+    font-size:1rem;
+  }
+  .cta-box{
+    padding:2.3rem;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:2rem;
+    align-items:end;
+  }
+  .cta-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1rem;
+  }
+
+  @media (max-width: 980px){
+    .calc-shell,
+    .access-grid,
+    .detail-grid,
+    .steps,
+    .cta-box{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section calc-hero">
+  <div class="container calc-shell">
+    <div class="calc-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Entrada guiada{% else %}Entrada guiada{% endif %}</div>
+      {% if calc_service.key == 'frames' %}
+        <h1 class="display">{% if lang == 'ca' %}Calculadora professional per pressupostar marcs a mida amb més context.{% else %}Calculadora profesional para presupuestar marcos a medida con más contexto.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Si treballes emmarcació recurrent, aquesta entrada et porta a la calculadora i al circuit d'alta professional sense perdre el fil del servei que t'interessa.{% else %}Si trabajas enmarcación recurrente, esta entrada te lleva a la calculadora y al circuito de alta profesional sin perder el hilo del servicio que te interesa.{% endif %}</p>
+      {% elif calc_service.key == 'albums' %}
+        <h1 class="display">{% if lang == 'ca' %}Calculadora professional per pressupostar àlbums fotogràfics amb el taller.{% else %}Calculadora profesional para presupuestar álbumes fotográficos con el taller.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Pensada per a fotògrafs i estudis que necessiten pressupost ràpid, producte recurrent i una manera clara d'obrir o reprendre el flux professional.{% else %}Pensada para fotógrafos y estudios que necesitan presupuesto rápido, producto recurrente y una forma clara de abrir o retomar el flujo profesional.{% endif %}</p>
+      {% elif calc_service.key == 'fine_art' %}
+        <h1 class="display">{% if lang == 'ca' %}Calculadora professional per a projectes fine art, exposició i còpia premium.{% else %}Calculadora profesional para proyectos fine art, exposición y copia premium.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquesta entrada dona continuïtat al servei Hahnemühle: hi accedeixes si ja tens compte o ens passes les dades per validar un perfil professional o expositiu.{% else %}Esta entrada da continuidad al servicio Hahnemühle: accedes si ya tienes cuenta o nos pasas los datos para validar un perfil profesional o expositivo.{% endif %}</p>
+      {% elif calc_service.key == 'photo_print' %}
+        <h1 class="display">{% if lang == 'ca' %}Calculadora professional per a impressió fotogràfica i producció recurrent.{% else %}Calculadora profesional para impresión fotográfica y producción recurrente.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Orienta el pas des de la web cap a un espai de pressupost per a clients professionals que necessiten còpies, repeticions i treball de laboratori amb ordre.{% else %}Orienta el paso desde la web hacia un espacio de presupuesto para clientes profesionales que necesitan copias, repeticiones y trabajo de laboratorio con orden.{% endif %}</p>
+      {% elif calc_service.key == 'canvas' %}
+        <h1 class="display">{% if lang == 'ca' %}Calculadora professional per a llenços, decoració i projectes comercials.{% else %}Calculadora profesional para lienzos, decoración y proyectos comerciales.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Útil per a estudis, interioristes, hotels o negocis que necessiten més agilitat a l'hora de preparar pressupostos i repetir formats.{% else %}Útil para estudios, interioristas, hoteles o negocios que necesitan más agilidad a la hora de preparar presupuestos y repetir formatos.{% endif %}</p>
+      {% else %}
+        <h1 class="display">{% if lang == 'ca' %}Una entrada clara a la calculadora professional de Reus Revela.{% else %}Una entrada clara a la calculadora profesional de Reus Revela.{% endif %}</h1>
+        <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}En lloc d'enviar tothom directament al login, des d'aquí separem accés existent i alta nova perquè el recorregut sigui més clar i converteixi millor.{% else %}En lugar de enviar a todo el mundo directamente al login, desde aquí separamos acceso existente y alta nueva para que el recorrido sea más claro y convierta mejor.{% endif %}</p>
+      {% endif %}
+
+      <div class="calc-pills">
+        <span class="calc-pill">{% if lang == 'ca' %}Accés validat{% else %}Acceso validado{% endif %}</span>
+        <span class="calc-pill">{% if lang == 'ca' %}Pressupost més ràpid{% else %}Presupuesto más rápido{% endif %}</span>
+        <span class="calc-pill">{% if lang == 'ca' %}Continuïtat de taller{% else %}Continuidad de taller{% endif %}</span>
+      </div>
+    </div>
+
+    <div class="calc-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Accés i alta{% else %}Acceso y alta{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}La calculadora és per a professionals validats, no un login genèric per a trànsit fred.{% else %}La calculadora es para profesionales validados, no un login genérico para tráfico frío.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això redueix fricció: qui ja té compte entra directament, i qui encara no en té arriba al formulari correcte amb el servei d'interès ja orientat.{% else %}Esto reduce fricción: quien ya tiene cuenta entra directamente, y quien todavía no la tiene llega al formulario correcto con el servicio de interés ya orientado.{% endif %}</p>
+      </div>
+      <div class="cta-actions">
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">
+          {% if lang == 'ca' %}Ja tinc accés{% else %}Ya tengo acceso{% endif %}
+        </a>
+        <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">
+          {% if lang == 'ca' %}Necessito alta{% else %}Necesito alta{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container access-grid">
+    <article class="surface access-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Si ja ets client{% else %}Si ya eres cliente{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Entra a la calculadora i continua treballant.{% else %}Entra en la calculadora y sigue trabajando.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Mantens l'accés directe al login, però ara des d'un punt d'entrada que també explica el circuit per a nous comptes i serveis professionals.{% else %}Mantienes el acceso directo al login, pero ahora desde un punto de entrada que también explica el circuito para nuevas cuentas y servicios profesionales.{% endif %}</p>
+      <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer" style="margin-top:1.4rem">
+        {% if lang == 'ca' %}Obrir calculadora{% else %}Abrir calculadora{% endif %}
+      </a>
+    </article>
+
+    <article class="surface access-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Si encara no tens compte{% else %}Si aun no tienes cuenta{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Demana l'alta amb el producte ja enfocat.{% else %}Solicita el alta con el producto ya enfocado.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El formulari arriba preorientat cap a {{ calc_service.label }} i activa els camps professionals per validar millor el perfil abans d'obrir la calculadora.{% else %}El formulario llega preorientado hacia {{ calc_service.label }} y activa los campos profesionales para validar mejor el perfil antes de abrir la calculadora.{% endif %}</p>
+      <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold" style="margin-top:1.4rem">
+        {% if lang == 'ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %}
+      </a>
+    </article>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Per què té sentit{% else %}Por qué tiene sentido{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}La web comercial i la calculadora deixen de competir i passen a treballar juntes.{% else %}La web comercial y la calculadora dejan de competir y pasan a trabajar juntas.{% endif %}</h2>
+    </div>
+
+    <div class="detail-grid">
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Missatge{% else %}Mensaje{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Cada servei envia al flux correcte.{% else %}Cada servicio envía al flujo correcto.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Un usuari que arriba des de {{ calc_service.label }} no entra a cegues a un login: veu una entrada relacionada amb allò que estava consultant.{% else %}Un usuario que llega desde {{ calc_service.label }} no entra a ciegas en un login: ve una entrada relacionada con lo que estaba consultando.{% endif %}</p>
+      </article>
+
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Conversió{% else %}Conversión{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Separa accés existent i captació nova.{% else %}Separa acceso existente y captación nueva.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Això evita perdre contactes nous al login i dona als clients validats una via directa i clara per continuar treballant.{% else %}Esto evita perder contactos nuevos en el login y da a los clientes validados una vía directa y clara para seguir trabajando.{% endif %}</p>
+      </article>
+
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Operativa{% else %}Operativa{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}L'alta arriba millor preparada.{% else %}El alta llega mejor preparada.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}El formulari activa dades professionals, producte d'interès i sincronització amb la calculadora per reduir anades i tornades manuals.{% else %}El formulario activa datos profesionales, producto de interés y sincronización con la calculadora para reducir idas y vueltas manuales.{% endif %}</p>
+      </article>
+
+      <article class="surface detail-card fade-up">
+        <div class="eyebrow">{% if lang == 'ca' %}Marca{% else %}Marca{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}La calculadora hereta el context del taller.{% else %}La calculadora hereda el contexto del taller.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La web segueix fent la feina de vendre criteri, i la calculadora entra en joc quan ja toca pressupostar o operar amb més rapidesa.{% else %}La web sigue haciendo el trabajo de vender criterio, y la calculadora entra en juego cuando ya toca presupuestar u operar con más rapidez.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Com funciona{% else %}Como funciona{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Un recorregut curt, però més intel·ligent.{% else %}Un recorrido corto, pero más inteligente.{% endif %}</h2>
+    </div>
+
+    <div class="steps">
+      <article class="surface step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Vens des d'un servei{% else %}Vienes desde un servicio{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La web manté el context de {{ calc_service.label }} i et porta a un punt d'entrada coherent amb la intenció comercial d'aquella pàgina.{% else %}La web mantiene el contexto de {{ calc_service.label }} y te lleva a un punto de entrada coherente con la intención comercial de esa página.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Esculls accés o alta{% else %}Eliges acceso o alta{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Si ja tens compte, obres la calculadora. Si no, el formulari et demana la informació professional necessària des del primer moment.{% else %}Si ya tienes cuenta, abres la calculadora. Si no, el formulario te pide la información profesional necesaria desde el primer momento.{% endif %}</p>
+      </article>
+      <article class="surface step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Entres al circuit privat{% else %}Entras en el circuito privado{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Quan el perfil queda validat, la calculadora passa a ser una eina operativa dins del flux normal amb el taller.{% else %}Cuando el perfil queda validado, la calculadora pasa a ser una herramienta operativa dentro del flujo normal con el taller.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="surface cta-box fade-up">
+      <div>
+        <div class="tag">{% if lang == 'ca' %}Següent pas{% else %}Siguiente paso{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si ja saps que el teu flux passa per {{ calc_service.label }}, entrem pel cami correcte.{% else %}Si ya sabes que tu flujo pasa por {{ calc_service.label }}, entremos por el camino correcto.{% endif %}</h2>
+      </div>
+      <div class="cta-actions">
+        <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">{% if lang == 'ca' %}Demanar alta{% else %}Pedir alta{% endif %}</a>
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">{% if lang == 'ca' %}Entrar{% else %}Entrar{% endif %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

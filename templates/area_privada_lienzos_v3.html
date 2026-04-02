@@ -1,0 +1,481 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Àrea privada | Llenços{% else %}Área privada | Lienzos{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Mòdul simplificat de llenços per a l'àrea privada: configuració neta, ajustos comercials amagats i pas directe a la comanda.{% else %}Módulo simplificado de lienzos para el área privada: configuración limpia, ajustes comerciales ocultos y paso directo al pedido.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .canvas-hero{padding-top:3rem}
+  .canvas-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
+  .canvas-copy{padding:2rem 0}
+  .canvas-stage{
+    min-height:480px;
+    padding:2rem;
+    border-radius:30px;
+    color:#fff;
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);
+    box-shadow:0 24px 70px rgba(18,16,12,.18);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .canvas-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:38ch}
+  .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
+  .module-chip{
+    padding:.55rem .85rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:.88rem;
+  }
+  .canvas-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem;margin-top:2rem}
+  .builder,.summary,.note-card,.size-card,.flow-card{padding:1.7rem}
+  .field{display:grid;gap:.45rem}
+  .field label{
+    font-size:.82rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .field input,.field select{
+    width:100%;
+    min-height:52px;
+    padding:.9rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .builder-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:1rem;margin-top:1.4rem}
+  .option-group{margin-top:1.5rem}
+  .option-group .eyebrow{display:block;margin-bottom:.7rem}
+  .radio-grid{display:grid;gap:.8rem}
+  .radio-row{
+    display:flex;
+    gap:.75rem;
+    align-items:flex-start;
+    padding:1rem;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(255,255,255,.54);
+  }
+  .radio-row input{margin-top:.2rem}
+  .radio-row strong{display:block}
+  .radio-row span{display:block;margin-top:.25rem;color:var(--muted);font-size:.92rem}
+  .builder-note{margin-top:1rem;color:var(--muted)}
+  .summary{position:sticky;top:calc(var(--nav-h) + 1rem)}
+  .summary-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+  .summary-kicker{display:inline-flex;padding:.4rem .7rem;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .summary-total{margin-top:1.25rem;padding:1.35rem;border-radius:24px;background:rgba(166,120,67,.08);border:1px solid rgba(166,120,67,.16)}
+  .summary-total strong{display:block;font-family:var(--serif);font-size:2.8rem;line-height:1;margin-top:.6rem}
+  .summary-list{display:grid;gap:.8rem;margin-top:1.3rem}
+  .summary-line{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.75rem 0;
+    border-bottom:1px solid rgba(18,16,12,.08);
+  }
+  .summary-line:last-child{border-bottom:none}
+  .summary-actions{display:grid;gap:.75rem;margin-top:1.4rem}
+  .summary-tools{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
+  .tool-button{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    font-weight:700;
+    letter-spacing:.04em;
+    cursor:pointer;
+    padding:0;
+  }
+  .tool-button:hover{color:var(--ink)}
+  .panel{
+    display:none;
+    margin-top:1rem;
+    padding:1.1rem 1.15rem;
+    border-radius:22px;
+    background:rgba(255,255,255,.58);
+    border:1px solid var(--line);
+  }
+  .panel.is-open{display:block}
+  .panel-grid{display:grid;gap:.7rem}
+  .panel-line{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    font-size:.95rem;
+  }
+  .panel-line strong{color:var(--ink)}
+  .panel-note{margin-top:.8rem;color:var(--muted);font-size:.92rem}
+  .settings-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+  .size-grid,.note-grid,.flow-grid{display:grid;gap:1rem;margin-top:2rem}
+  .size-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .note-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .flow-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .size-card p,.note-card p,.flow-card p{margin-top:.7rem;color:var(--muted)}
+  .size-price{
+    display:inline-flex;
+    margin-top:1rem;
+    padding:.42rem .72rem;
+    border-radius:999px;
+    background:rgba(166,120,67,.12);
+    color:var(--accent);
+    font-weight:800;
+    font-size:.82rem;
+  }
+  .flow-card strong{
+    display:inline-flex;
+    width:42px;
+    height:42px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:var(--serif);
+    font-size:1.2rem;
+  }
+  .hidden-row{display:none}
+  .hidden-row.show{display:flex}
+  @media (max-width: 1080px){
+    .canvas-shell,.canvas-grid,.builder-grid,.size-grid,.note-grid,.flow-grid{
+      grid-template-columns:1fr;
+    }
+    .summary{position:static}
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section canvas-hero">
+  <div class="container canvas-shell">
+    <div class="canvas-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Primer mòdul real{% else %}Primer módulo real{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Llenços més simples per al fotògraf: producte tancat, pressupost clar i pas directe a la comanda.{% else %}Lienzos más simples para el fotógrafo: producto cerrado, presupuesto claro y paso directo al pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Hem tret soroll del configurador. El client només escull mida, quantitat i tractament del fitxer; el marge comercial queda amagat a ajustos i el detall de cost o PVP només apareix si el vol veure.{% else %}Hemos quitado ruido del configurador. El cliente solo elige medida, cantidad y tratamiento del archivo; el margen comercial queda oculto en ajustes y el detalle de coste o PVP solo aparece si lo quiere ver.{% endif %}</p>
+      <div class="module-nav">
+        {% for module in private_modules %}
+        <span class="module-chip">{{ module.title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="canvas-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Regles fixes{% else %}Reglas fijas{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm, laminat Protter i tarifa viva dins de la web des del primer moment.{% else %}Bastidor de 4 cm, laminado Protter y tarifa viva dentro de la web desde el primer momento.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}La pantalla ja està orientada al que vindrà després: afegir a comanda, preparar pressupost per al client final i generar una ordre clara per al laboratori.{% else %}La pantalla ya está orientada a lo que vendrá después: añadir al pedido, preparar presupuesto para el cliente final y generar una orden clara para el laboratorio.{% endif %}</p>
+      </div>
+      <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure comanda demo{% else %}Ver pedido demo{% endif %}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container canvas-grid">
+    <article class="surface builder fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Configuració del llenç{% else %}Configuración del lienzo{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}El client professional només toca el que realment necessita decidir.{% else %}El cliente profesional solo toca lo que realmente necesita decidir.{% endif %}</h2>
+
+      <div class="builder-grid">
+        <div class="field">
+          <label for="canvas-size">{% if lang == 'ca' %}Mida final muntada{% else %}Medida final montada{% endif %}</label>
+          <select id="canvas-size">
+            {% set current_group = None %}
+            {% for size in canvas_pricing.sizes %}
+              {% if current_group != size.group %}
+                {% if current_group is not none %}</optgroup>{% endif %}
+                <optgroup label="{{ size.group_label }}">
+                {% set current_group = size.group %}
+              {% endif %}
+              <option value="{{ size.id }}"
+                data-final-label="{{ size.final_label }}"
+                data-file-label="{{ size.file_label }}"
+                data-price="{{ size.price }}"
+                {% if loop.first %}selected{% endif %}>
+                {{ size.final_label }} · {{ "%.2f"|format(size.price)|replace(".", ",") }} €
+              </option>
+            {% endfor %}
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="canvas-qty">{% if lang == 'ca' %}Quantitat{% else %}Cantidad{% endif %}</label>
+          <input id="canvas-qty" type="number" min="1" step="1" value="1">
+        </div>
+      </div>
+
+      <div class="option-group">
+        <label class="eyebrow">{% if lang == 'ca' %}Preparació del fitxer{% else %}Preparación del archivo{% endif %}</label>
+        <div class="radio-grid">
+          {% for option in canvas_pricing.edit_options %}
+          <label class="radio-row">
+            <input type="radio" name="canvas-edit" class="canvas-edit"
+              value="{{ option.id }}"
+              data-price="{{ option.price }}"
+              data-includes-preview="{{ option.includes_preview|lower }}"
+              {% if loop.first %}checked{% endif %}>
+            <div>
+              <strong>{{ option.label }} · {{ "%.2f"|format(option.price)|replace(".", ",") }} €</strong>
+              <span>{{ option.description }}</span>
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="option-group">
+        <label class="radio-row">
+          <input type="checkbox" id="show-file-size">
+          <div>
+            <strong>{% if lang == 'ca' %}Mostrar mida del fitxer amb marge de 5 cm per costat{% else %}Mostrar medida del archivo con margen de 5 cm por lado{% endif %}</strong>
+            <span>{% if lang == 'ca' %}Ajuda el fotògraf a saber quina part de la imatge quedarà doblada sobre el bastidor.{% else %}Ayuda al fotógrafo a saber qué parte de la imagen quedará doblada sobre el bastidor.{% endif %}</span>
+          </div>
+        </label>
+      </div>
+
+      <p class="builder-note">{% if lang == 'ca' %}El marge comercial no es barreja amb el producte. Queda guardat als ajustos i només s'utilitza quan es vol veure el PVP o preparar el pressupost del client final.{% else %}El margen comercial no se mezcla con el producto. Queda guardado en ajustes y solo se usa cuando se quiere ver el PVP o preparar el presupuesto del cliente final.{% endif %}</p>
+    </article>
+
+    <aside class="surface summary fade-up">
+      <div class="summary-top">
+        <div>
+          <div class="eyebrow">{% if lang == 'ca' %}Resum principal{% else %}Resumen principal{% endif %}</div>
+          <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Un total clar, i els detalls comercials només quan els necessites.{% else %}Un total claro, y los detalles comerciales solo cuando los necesitas.{% endif %}</h2>
+        </div>
+        <span class="summary-kicker">{% if lang == 'ca' %}Taller{% else %}Taller{% endif %}</span>
+      </div>
+
+      <div class="summary-total">
+        <span>{% if lang == 'ca' %}Total taller + IVA{% else %}Total taller + IVA{% endif %}</span>
+        <strong id="summary-workshop-total">47,80 €</strong>
+        <div class="panel-note">{% if lang == 'ca' %}Inclou bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm i {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% else %}Incluye bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm y {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% endif %}</div>
+      </div>
+
+      <div class="summary-list">
+        <div class="summary-line"><span>{% if lang == 'ca' %}Mida final{% else %}Medida final{% endif %}</span><strong id="summary-final-size">30 x 30 cm</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Quantitat{% else %}Cantidad{% endif %}</span><strong id="summary-qty">1</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Preparació del fitxer{% else %}Preparación del archivo{% endif %}</span><strong id="summary-edit-label">{% if canvas_pricing.edit_options %}{{ canvas_pricing.edit_options[0].label }}{% endif %}</strong></div>
+        <div class="summary-line hidden-row" id="file-size-row"><span>{% if lang == 'ca' %}Fitxer amb marge{% else %}Archivo con margen{% endif %}</span><strong id="summary-file-size">40 x 40 cm</strong></div>
+      </div>
+
+      <div class="summary-tools">
+        <button type="button" class="tool-button" id="toggle-pricing">{% if lang == 'ca' %}Veure cost / PVP{% else %}Ver coste / PVP{% endif %}</button>
+        <button type="button" class="tool-button" id="toggle-settings">{% if lang == 'ca' %}Ajustos comercials{% else %}Ajustes comerciales{% endif %}</button>
+      </div>
+
+      <div class="panel" id="pricing-panel">
+        <div class="panel-grid">
+          <div class="panel-line"><span>{% if lang == 'ca' %}Subtotal professional{% else %}Subtotal profesional{% endif %}</span><strong id="summary-professional-subtotal">39,50 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}IVA taller (21%){% else %}IVA taller (21%){% endif %}</span><strong id="summary-professional-vat">8,30 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}Total taller{% else %}Total taller{% endif %}</span><strong id="summary-professional-total">47,80 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}Marge intern{% else %}Margen interno{% endif %}</span><strong id="summary-margin">11,85 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}PVP sense IVA{% else %}PVP sin IVA{% endif %}</span><strong id="summary-client-subtotal">51,35 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}IVA client final (21%){% else %}IVA cliente final (21%){% endif %}</span><strong id="summary-client-vat">10,78 €</strong></div>
+          <div class="panel-line"><span>{% if lang == 'ca' %}Total client final{% else %}Total cliente final{% endif %}</span><strong id="summary-client-total">62,13 €</strong></div>
+        </div>
+        <div class="panel-note" id="summary-preview-note" style="display:none">{% if lang == 'ca' %}La prova prèvia entra inclosa quan es tria el retoc complet de 15,00 €.{% else %}La prueba previa entra incluida cuando se elige el retoque completo de 15,00 €.{% endif %}</div>
+        <div class="panel-note">{% if lang == 'ca' %}Si el retoc demana molta més feina de la prevista, s'avisarà abans de continuar.{% else %}Si el retoque requiere mucho más trabajo del previsto, se avisará antes de continuar.{% endif %}</div>
+      </div>
+
+      <div class="panel" id="settings-panel">
+        <div class="settings-grid">
+          <div class="field">
+            <label for="margin-percent">{% if lang == 'ca' %}Marge intern per defecte (%) {% else %}Margen interno por defecto (%) {% endif %}</label>
+            <input id="margin-percent" type="number" min="0" step="1" value="{{ canvas_pricing.default_margin_percent }}">
+          </div>
+        </div>
+        <div class="panel-note">{% if lang == 'ca' %}Aquest marge no embruta la pantalla principal. Serveix per calcular el PVP i alimentar el pressupost del client final quan el llenç entra a comanda.{% else %}Este margen no ensucia la pantalla principal. Sirve para calcular el PVP y alimentar el presupuesto del cliente final cuando el lienzo entra en el pedido.{% endif %}</div>
+      </div>
+
+      <div class="summary-actions">
+        <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-dark" id="order-link">{% if lang == 'ca' %}Afegir a la comanda{% else %}Añadir al pedido{% endif %}</a>
+        <button type="button" class="btn btn-outline">{% if lang == 'ca' %}Guardar com a borrador{% else %}Guardar como borrador{% endif %}</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Què passa després{% else %}Qué pasa después{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}El configurador deixa de ser una pantalla aïllada i passa a alimentar la comanda real.{% else %}El configurador deja de ser una pantalla aislada y pasa a alimentar el pedido real.{% endif %}</h2>
+    </div>
+    <div class="flow-grid">
+      <article class="surface flow-card fade-up">
+        <strong>1</strong>
+        <h3 class="card-title">{% if lang == 'ca' %}Configures el llenç{% else %}Configuras el lienzo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Mida, quantitat i tractament del fitxer, sense opcions que al taller ja teniu tancades.{% else %}Medida, cantidad y tratamiento del archivo, sin opciones que en el taller ya teneis cerradas.{% endif %}</p>
+      </article>
+      <article class="surface flow-card fade-up">
+        <strong>2</strong>
+        <h3 class="card-title">{% if lang == 'ca' %}L'afegeixes a comanda{% else %}Lo añades al pedido{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Des d'allà es genera tant el pressupost per al client final com l'ordre interna de producció.{% else %}Desde ahí se genera tanto el presupuesto para el cliente final como la orden interna de producción.{% endif %}</p>
+      </article>
+      <article class="surface flow-card fade-up">
+        <strong>3</strong>
+        <h3 class="card-title">{% if lang == 'ca' %}Associes el fitxer{% else %}Asocias el archivo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Dropbox, enllaç extern o enviar més tard. El sistema es prepara per treballar amb el flux que ja teniu.{% else %}Dropbox, enlace externo o enviar más tarde. El sistema se prepara para trabajar con el flujo que ya tenéis.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Tarifa viva{% else %}Tarifa viva{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Les mides segueixen ancorades al catàleg real, però ara viuen dins del tarifari privat i no en un PDF separat.{% else %}Las medidas siguen ancladas al catálogo real, pero ahora viven dentro del tarifario privado y no en un PDF separado.{% endif %}</h2>
+    </div>
+    <div class="size-grid">
+      {% for size in canvas_pricing.sizes %}
+      <article class="surface size-card fade-up">
+        <div class="eyebrow">{{ size.group_label }}</div>
+        <h3 class="card-title">{{ size.final_label }}</h3>
+        <p>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</p>
+        <span class="size-price">{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container note-grid">
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per al fotògraf{% else %}Para el fotógrafo{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Més ràpid d'usar{% else %}Más rápido de usar{% endif %}</h3>
+      <p>{% if lang == 'ca' %}La pantalla principal queda neta i no sembla una calculadora tècnica. Treballa com una eina de venda i de comanda alhora.{% else %}La pantalla principal queda limpia y no parece una calculadora técnica. Trabaja como una herramienta de venta y de pedido a la vez.{% endif %}</p>
+    </article>
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a taller{% else %}Para taller{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Més control intern{% else %}Más control interno{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El marge comercial continua existint, però sense contaminar la configuració del producte ni confondre el fotògraf mentre treballa.{% else %}El margen comercial sigue existiendo, pero sin contaminar la configuración del producto ni confundir al fotógrafo mientras trabaja.{% endif %}</p>
+    </article>
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Per a la base futura{% else %}Para la base futura{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Reutilitzable per a impressions{% else %}Reutilizable para impresiones{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Aquest mateix esquema de configurador + comanda + enviament de fitxer es pot repetir molt bé a impressions, àlbums i altres apartats del privat.{% else %}Este mismo esquema de configurador + pedido + envío de archivo se puede repetir muy bien en impresiones, álbumes y otros apartados del privado.{% endif %}</p>
+    </article>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const sizeSelect = document.getElementById("canvas-size");
+  const quantityInput = document.getElementById("canvas-qty");
+  const showFileSizeInput = document.getElementById("show-file-size");
+  const editInputs = Array.from(document.querySelectorAll(".canvas-edit"));
+  const marginPercentInput = document.getElementById("margin-percent");
+  const togglePricingButton = document.getElementById("toggle-pricing");
+  const toggleSettingsButton = document.getElementById("toggle-settings");
+  const pricingPanel = document.getElementById("pricing-panel");
+  const settingsPanel = document.getElementById("settings-panel");
+  const orderLink = document.getElementById("order-link");
+
+  const summaryWorkshopTotal = document.getElementById("summary-workshop-total");
+  const summaryFinalSize = document.getElementById("summary-final-size");
+  const summaryQty = document.getElementById("summary-qty");
+  const summaryEditLabel = document.getElementById("summary-edit-label");
+  const summaryFileSize = document.getElementById("summary-file-size");
+  const summaryProfessionalSubtotal = document.getElementById("summary-professional-subtotal");
+  const summaryProfessionalVat = document.getElementById("summary-professional-vat");
+  const summaryProfessionalTotal = document.getElementById("summary-professional-total");
+  const summaryMargin = document.getElementById("summary-margin");
+  const summaryClientSubtotal = document.getElementById("summary-client-subtotal");
+  const summaryClientVat = document.getElementById("summary-client-vat");
+  const summaryClientTotal = document.getElementById("summary-client-total");
+  const summaryPreviewNote = document.getElementById("summary-preview-note");
+  const fileSizeRow = document.getElementById("file-size-row");
+
+  const VAT_RATE = {{ canvas_pricing.vat_rate|tojson }};
+
+  const formatCurrency = (value) => `${value.toFixed(2).replace(".", ",")} €`;
+  const round = (value) => Math.round(value * 100) / 100;
+
+  const getQuantity = () => {
+    const value = Number(quantityInput?.value);
+    return Number.isFinite(value) && value > 0 ? value : 1;
+  };
+
+  const getMarginPercent = () => {
+    const value = Number(marginPercentInput?.value);
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  };
+
+  const getSelectedEdit = () => editInputs.find((input) => input.checked) || editInputs[0];
+  const getSelectedSize = () => sizeSelect?.selectedOptions?.[0];
+
+  const buildOrderLink = ({ sizeId, editId, quantity, marginPercent, showFileSize }) => {
+    const params = new URLSearchParams({
+      size: sizeId,
+      edit: editId,
+      qty: String(quantity),
+      margin: String(marginPercent),
+      show_file_size: showFileSize ? "1" : "0",
+    });
+    orderLink.href = `{{ url_for('area_privada_comanda') }}?${params.toString()}`;
+  };
+
+  const calculateCanvasQuote = () => {
+    const selectedSize = getSelectedSize();
+    const selectedEdit = getSelectedEdit();
+    const quantity = getQuantity();
+    const marginPercent = getMarginPercent();
+    const showFileSize = Boolean(showFileSizeInput?.checked);
+
+    const baseUnit = Number(selectedSize?.dataset.price || 0);
+    const editUnit = Number(selectedEdit?.dataset.price || 0);
+    const professionalSubtotal = round((baseUnit + editUnit) * quantity);
+    const professionalVat = round(professionalSubtotal * VAT_RATE);
+    const professionalTotal = round(professionalSubtotal + professionalVat);
+    const marginAmount = round(professionalSubtotal * (marginPercent / 100));
+    const clientSubtotal = round(professionalSubtotal + marginAmount);
+    const clientVat = round(clientSubtotal * VAT_RATE);
+    const clientTotal = round(clientSubtotal + clientVat);
+
+    summaryWorkshopTotal.textContent = formatCurrency(professionalTotal);
+    summaryFinalSize.textContent = selectedSize?.dataset.finalLabel || "";
+    summaryQty.textContent = String(quantity);
+    summaryEditLabel.textContent = selectedEdit?.parentElement?.querySelector("strong")?.textContent?.split("·")[0]?.trim() || "";
+    summaryFileSize.textContent = selectedSize?.dataset.fileLabel || "";
+    summaryProfessionalSubtotal.textContent = formatCurrency(professionalSubtotal);
+    summaryProfessionalVat.textContent = formatCurrency(professionalVat);
+    summaryProfessionalTotal.textContent = formatCurrency(professionalTotal);
+    summaryMargin.textContent = formatCurrency(marginAmount);
+    summaryClientSubtotal.textContent = formatCurrency(clientSubtotal);
+    summaryClientVat.textContent = formatCurrency(clientVat);
+    summaryClientTotal.textContent = formatCurrency(clientTotal);
+    summaryPreviewNote.style.display = selectedEdit?.dataset.includesPreview === "true" ? "block" : "none";
+    fileSizeRow.classList.toggle("show", showFileSize);
+
+    buildOrderLink({
+      sizeId: selectedSize?.value || "",
+      editId: selectedEdit?.value || "",
+      quantity,
+      marginPercent,
+      showFileSize,
+    });
+  };
+
+  const togglePanel = (panel) => {
+    panel.classList.toggle("is-open");
+  };
+
+  togglePricingButton?.addEventListener("click", () => togglePanel(pricingPanel));
+  toggleSettingsButton?.addEventListener("click", () => togglePanel(settingsPanel));
+
+  [sizeSelect, quantityInput, showFileSizeInput, marginPercentInput, ...editInputs].forEach((element) => {
+    element?.addEventListener("input", calculateCanvasQuote);
+    element?.addEventListener("change", calculateCanvasQuote);
+  });
+
+  calculateCanvasQuote();
+</script>
+{% endblock %}
