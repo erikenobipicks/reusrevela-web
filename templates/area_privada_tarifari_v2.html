@@ -169,8 +169,8 @@
   <div class="container pricing-shell">
     <div class="pricing-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Tarifari professional{% else %}Tarifario profesional{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}La web privada passa a ser el tarifari viu: un sol lloc per consultar preus, filtrar formats i deixar enrere els PDFs.{% else %}La web privada pasa a ser el tarifario vivo: un solo lugar para consultar precios, filtrar formatos y dejar atrás los PDFs.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest apartat és la base bona per anar afegint mòduls de mica en mica. Cada producte tindrà la seva pàgina dedicada, però tots penjaran del mateix tarifari i de la mateixa comanda compartida. Tarifa viva, no PDF estàtic. I, si es vol, també es pot fer una ullada ràpida al PVP final amb IVA.{% else %}Este apartado es la base buena para ir añadiendo módulos poco a poco. Cada producto tendrá su página dedicada, pero todos colgarán del mismo tarifario y del mismo pedido compartido. Tarifa viva, no PDF estático. Y, si hace falta, también se puede echar un vistazo rápido al PVP final con IVA.{% endif %}</p>
+      <h1 class="display">{% if lang == 'ca' %}Consulta preus, filtra formats i mira el PVP final des del mateix tarifari.{% else %}Consulta precios, filtra formatos y mira el PVP final desde el mismo tarifario.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquí tens el punt de consulta ràpid per productes, mides i orientacions. Pots veure cost de taller o PVP amb IVA segons el perfil comercial que toqui.{% else %}Aquí tienes el punto de consulta rápido por productos, medidas y orientaciones. Puedes ver coste de taller o PVP con IVA según el perfil comercial que toque.{% endif %}</p>
       <div class="module-nav">
         {% for module in private_modules %}
         <span class="module-chip">{{ module.title }}</span>
@@ -180,9 +180,9 @@
 
     <div class="pricing-stage fade-up">
       <div>
-        <div class="visual-label">{% if lang == 'ca' %}Nou punt central{% else %}Nuevo punto central{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Els preus ja no viuen en un PDF separat: viuen dins de la plataforma i es poden consultar per grups de mida, formats i orientacions.{% else %}Los precios ya no viven en un PDF separado: viven dentro de la plataforma y se pueden consultar por grupos de medida, formatos y orientaciones.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Així podeu actualitzar tarifes una sola vegada i fer que el fotògraf trobi ràpid el que busca sense perdre temps escanejant una taula llarga.{% else %}Así podéis actualizar tarifas una sola vez y hacer que el fotógrafo encuentre rápido lo que busca sin perder tiempo escaneando una tabla larga.{% endif %}</p>
+        <div class="visual-label">{% if lang == 'ca' %}Consulta ràpida{% else %}Consulta rápida{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Preus ordenats per formats, orientacions i grups de mida perquè sigui fàcil trobar el que toca.{% else %}Precios ordenados por formatos, orientaciones y grupos de medida para que sea fácil encontrar lo que toca.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això permet revisar tarifes d'un cop d'ull i passar després al producte o a la comanda sense sortir del mateix entorn.{% else %}Esto permite revisar tarifas de un vistazo y pasar después al producto o al pedido sin salir del mismo entorno.{% endif %}</p>
       </div>
       <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir llenços{% else %}Abrir lienzos{% endif %}</a>
     </div>
@@ -194,17 +194,17 @@
     <article class="surface intro-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Consultar{% else %}Consultar{% endif %}</div>
       <h3 class="card-title">{% if lang == 'ca' %}Veure preus reals{% else %}Ver precios reales{% endif %}</h3>
-      <p>{% if lang == 'ca' %}El fotògraf entra i consulta la tarifa actual sense dependre d'un arxiu PDF que pugui quedar desfasat.{% else %}El fotógrafo entra y consulta la tarifa actual sin depender de un archivo PDF que pueda quedar desfasado.{% endif %}</p>
+      <p>{% if lang == 'ca' %}El fotògraf entra i consulta la tarifa actual sense haver de buscar documents antics o versions diferents.{% else %}El fotógrafo entra y consulta la tarifa actual sin tener que buscar documentos antiguos o versiones distintas.{% endif %}</p>
     </article>
     <article class="surface intro-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Filtrar{% else %}Filtrar{% endif %}</div>
       <h3 class="card-title">{% if lang == 'ca' %}Trobar ràpid el format{% else %}Encontrar rápido el formato{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Estàndard, panoràmics, quadrats o grans formats: la consulta passa a ser visual i molt més ràpida que un PDF lineal.{% else %}Estándar, panorámicos, cuadrados o grandes formatos: la consulta pasa a ser visual y mucho más rápida que un PDF lineal.{% endif %}</p>
+      <p>{% if lang == 'ca' %}Estàndard, panoràmics, quadrats o grans formats: la consulta passa a ser visual i molt més ràpida que una taula llarga.{% else %}Estándar, panorámicos, cuadrados o grandes formatos: la consulta pasa a ser visual y mucho más rápida que una tabla larga.{% endif %}</p>
     </article>
     <article class="surface intro-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Comandar{% else %}Pedir{% endif %}</div>
       <h3 class="card-title">{% if lang == 'ca' %}Unir preu i comanda{% else %}Unir precio y pedido{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Quan el producte ja existeix dins la plataforma, no cal duplicar feina: el mateix tarifari alimenta pressupost i comanda.{% else %}Cuando el producto ya existe dentro de la plataforma, no hace falta duplicar trabajo: el mismo tarifario alimenta presupuesto y pedido.{% endif %}</p>
+      <p>{% if lang == 'ca' %}Quan el producte ja és aquí, el mateix preu pot servir tant per consultar com per passar després a pressupost o comanda.{% else %}Cuando el producto ya está aquí, el mismo precio puede servir tanto para consultar como para pasar después a presupuesto o pedido.{% endif %}</p>
     </article>
   </div>
 </section>
@@ -213,7 +213,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Catàleg privat{% else %}Catálogo privado{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Cada mòdul anirà entrant de mica en mica, però tots ja pengen d'una mateixa idea de tarifari viu.{% else %}Cada módulo irá entrando poco a poco, pero todos ya cuelgan de una misma idea de tarifario vivo.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Cada família de producte té el seu espai, però la consulta de preus continua sent simple i ordenada.{% else %}Cada familia de producto tiene su espacio, pero la consulta de precios sigue siendo simple y ordenada.{% endif %}</h2>
     </div>
     <div class="product-grid">
       {% for module in private_modules %}
@@ -238,8 +238,8 @@
 <section class="section-tight">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Primer producte oficial{% else %}Primer producto oficial{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Llenços ja fa de primer apartat real del tarifari: preus vius, mida real i filtres per trobar ràpid el format que toca.{% else %}Lienzos ya hace de primer apartado real del tarifario: precios vivos, medida real y filtros para encontrar rápido el formato que toca.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Llenços{% else %}Lienzos{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}La tarifa de llenços ja es pot consultar per mides reals i filtres útils per trobar ràpid el format correcte.{% else %}La tarifa de lienzos ya se puede consultar por medidas reales y filtros útiles para encontrar rápido el formato correcto.{% endif %}</h2>
     </div>
 
     <div class="surface filter-shell fade-up">
@@ -338,18 +338,18 @@
   <div class="container benefit-grid">
     <article class="surface benefit-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Per a vosaltres{% else %}Para vosotros{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Un sol lloc per actualitzar{% else %}Un solo lugar para actualizar{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Canvieu un preu una vegada i la tarifa privada, el configurador i la comanda parteixen de la mateixa base.{% else %}Cambiais un precio una vez y la tarifa privada, el configurador y el pedido parten de la misma base.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Preu únic i actualitzat{% else %}Precio único y actualizado{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Canvieu un preu una vegada i tota la consulta professional parteix d'aquesta mateixa base.{% else %}Cambiáis un precio una vez y toda la consulta profesional parte de esa misma base.{% endif %}</p>
     </article>
     <article class="surface benefit-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Per al fotògraf{% else %}Para el fotógrafo{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Més clar que un PDF{% else %}Más claro que un PDF{% endif %}</h3>
-      <p>{% if lang == 'ca' %}No ha de buscar documents antics ni versions diferents. Entra al privat, filtra i veu la tarifa vigent.{% else %}No tiene que buscar documentos antiguos ni versiones distintas. Entra al privado, filtra y ve la tarifa vigente.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Més ràpid de consultar{% else %}Más rápido de consultar{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Entra al privat, filtra per mida o format i veu de seguida la tarifa que busca.{% else %}Entra en el privado, filtra por medida o formato y ve enseguida la tarifa que busca.{% endif %}</p>
     </article>
     <article class="surface benefit-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Per a la base futura{% else %}Para la base futura{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Cada mòdul creix des d'aquí{% else %}Cada módulo crece desde aquí{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Foam, impressions, àlbums i la resta podran entrar al tarifari amb aquesta mateixa idea de filtres i consulta ràpida.{% else %}Foam, impresiones, álbumes y el resto podrán entrar al tarifario con esta misma idea de filtros y consulta rápida.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Mateix criteri per a tots els productes{% else %}Mismo criterio para todos los productos{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Foam, impressions, àlbums i la resta poden seguir aquesta mateixa manera de consultar preus i formats.{% else %}Foam, impresiones, álbumes y el resto pueden seguir esta misma forma de consultar precios y formatos.{% endif %}</p>
     </article>
   </div>
 </section>
@@ -358,8 +358,8 @@
   <div class="container">
     <div class="surface cta-box fade-up">
       <div>
-        <div class="tag">{% if lang == 'ca' %}Primer pas real{% else %}Primer paso real{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Fem que llenços sigui ja el primer apartat oficial del tarifari, i a partir d'aquí hi anem penjant la resta de productes.{% else %}Hacemos que lienzos sea ya el primer apartado oficial del tarifario, y a partir de ahí vamos colgando el resto de productos.{% endif %}</h2>
+        <div class="tag">{% if lang == 'ca' %}Consulta directa{% else %}Consulta directa{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si vols passar de la tarifa al producte, llenços ja està preparat per entrar-hi directament.{% else %}Si quieres pasar de la tarifa al producto, lienzos ya está preparado para entrar directamente.{% endif %}</h2>
       </div>
       <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir llenços{% else %}Abrir lienzos{% endif %}</a>
     </div>

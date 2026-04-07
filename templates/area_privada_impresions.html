@@ -64,9 +64,9 @@
 <section class="section prints-hero">
   <div class="container prints-shell">
     <div class="prints-copy fade-up">
-      <div class="tag">{% if lang == 'ca' %}Següent mòdul{% else %}Siguiente módulo{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Impressions amb la mateixa filosofia que marcs: paper, laminat i foam com a base, i marc derivat a la seva calculadora específica.{% else %}Impresiones con la misma filosofía que marcos: papel, laminado y foam como base, y marco derivado a su calculadora específica.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest mòdul no intenta substituir la calculadora de marcs. Fa una cosa més neta: resoldre impressió, laminat i foam dins del privat, i enviar el client a marcs només quan realment vol afegir marc.{% else %}Este módulo no intenta sustituir la calculadora de marcos. Hace algo más limpio: resolver impresión, laminado y foam dentro del privado, y enviar al cliente a marcos solo cuando realmente quiere añadir marco.{% endif %}</p>
+      <div class="tag">{% if lang == 'ca' %}Impressions{% else %}Impresiones{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Paper, laminat i foam resolts dins del privat, amb marc només quan realment calgui.{% else %}Papel, laminado y foam resueltos dentro del privado, con marco solo cuando realmente haga falta.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest apartat està pensat per consultar i preparar còpia fotogràfica, laminat i foam sense barrejar-ho amb el càlcul de marcs.{% else %}Este apartado está pensado para consultar y preparar copia fotográfica, laminado y foam sin mezclarlo con el cálculo de marcos.{% endif %}</p>
       <div class="module-nav">
         {% for module in private_modules %}
         <span class="module-chip">{{ module.title }}</span>
@@ -76,9 +76,9 @@
 
     <div class="prints-stage fade-up">
       <div>
-        <div class="visual-label">{% if lang == 'ca' %}Principi del mòdul{% else %}Principio del módulo{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}El client pot triar suport i acabat. Si vol marc, surt a una eina a part.{% else %}El cliente puede elegir soporte y acabado. Si quiere marco, sale a una herramienta aparte.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Això evita barrejar dos fluxos diferents. Impressió, laminat i foam es queden dins del tarifari. Marc es calcula a la seva calculadora dedicada.{% else %}Esto evita mezclar dos flujos distintos. Impresión, laminado y foam se quedan dentro del tarifario. El marco se calcula en su calculadora dedicada.{% endif %}</p>
+        <div class="visual-label">{% if lang == 'ca' %}Criteri de treball{% else %}Criterio de trabajo{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La còpia i el suport es poden pressupostar aquí. El marc continua en la seva calculadora específica.{% else %}La copia y el soporte se pueden presupuestar aquí. El marco sigue en su calculadora específica.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això ajuda a mantenir cada producte al seu lloc i evita complicar una consulta que sovint només necessita paper, laminat o foam.{% else %}Esto ayuda a mantener cada producto en su sitio y evita complicar una consulta que muchas veces solo necesita papel, laminado o foam.{% endif %}</p>
       </div>
       <a href="{{ prints_module.frames_entry_url }}" class="btn btn-outline">{% if lang == 'ca' %}Anar a marcs{% else %}Ir a marcos{% endif %}</a>
     </div>
@@ -107,7 +107,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Combinacions del producte{% else %}Combinaciones del producto{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Aquestes són les opcions que tindria el client dins del mòdul, seguint la filosofia que m'has marcat.{% else %}Estas son las opciones que tendría el cliente dentro del módulo, siguiendo la filosofía que me has marcado.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Opcions clares per pressupostar còpia, suport i acabat segons cada cas.{% else %}Opciones claras para presupuestar copia, soporte y acabado según cada caso.{% endif %}</h2>
     </div>
     <div class="option-grid">
       {% for option in prints_module.build_options %}
@@ -125,8 +125,8 @@
   <div class="container note-grid">
     <article class="surface note-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Tarifes{% else %}Tarifas{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}No inventem preus abans d'hora{% else %}No inventamos precios antes de tiempo{% endif %}</h3>
-      <p>{% if lang == 'ca' %}He deixat l'estructura preparada sense posar tarifes inventades. Quan em passis la tarifa del laminat, ho podrem aterrar bé i decidir si alguna part s'alimenta de la calculadora de marcs.{% else %}He dejado la estructura preparada sin poner tarifas inventadas. Cuando me pases la tarifa del laminado, lo podremos aterrizar bien y decidir si alguna parte se alimenta de la calculadora de marcos.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Pensat per incorporar-hi la tarifa real{% else %}Pensado para incorporar la tarifa real{% endif %}</h3>
+      <p>{% if lang == 'ca' %}La idea és que aquí s'hi consultin les tarifes de paper, laminat i foam amb la mateixa claredat que a la resta del privat.{% else %}La idea es que aquí se consulten las tarifas de papel, laminado y foam con la misma claridad que en el resto del privado.{% endif %}</p>
     </article>
     <article class="surface note-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Sense impressió{% else %}Sin impresión{% endif %}</div>
@@ -145,8 +145,8 @@
   <div class="container">
     <div class="surface cta-box fade-up">
       <div>
-        <div class="tag">{% if lang == 'ca' %}Següent aterratge{% else %}Siguiente aterrizaje{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Quan tinguem les tarifes, aquest mòdul pot passar de filosofia de producte a tarifari real i, després, a comanda mixta amb llenços.{% else %}Cuando tengamos las tarifas, este módulo puede pasar de filosofía de producto a tarifario real y, después, a pedido mixto con lienzos.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Pas següent{% else %}Paso siguiente{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Aquest apartat està pensat perquè, quan hi entri la tarifa bona, pugui passar directament a pressupost i comanda mixta.{% else %}Este apartado está pensado para que, cuando entre la tarifa buena, pueda pasar directamente a presupuesto y pedido mixto.{% endif %}</h2>
       </div>
       <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Tornar al tarifari{% else %}Volver al tarifario{% endif %}</a>
     </div>

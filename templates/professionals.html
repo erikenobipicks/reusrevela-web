@@ -124,20 +124,20 @@
   <div class="container pro-shell">
     <div class="pro-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Espai exclusiu{% else %}Espacio exclusivo{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Una àrea pensada per a professionals que necessiten pressupostar, repetir producte i treballar amb ordre.{% else %}Un área pensada para profesionales que necesitan presupuestar, repetir producto y trabajar con orden.{% endif %}</h1>
+      <h1 class="display">{% if lang == 'ca' %}Un espai privat per a professionals que necessiten tarifes clares i una manera àgil de treballar amb el taller.{% else %}Un espacio privado para profesionales que necesitan tarifas claras y una forma ágil de trabajar con el taller.{% endif %}</h1>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
-          Si ets fotògraf, estudi, galeria, botiga o associació fotogràfica que organitza exposicions, t'oferim un entorn més pràctic per pressupostar, validar l'alta i centralitzar encàrrecs recurrents.
+          Si ets fotògraf, estudi, galeria, botiga o associació fotogràfica, aquí tens una via més pràctica per consultar preus, validar l'alta i repetir encàrrecs sense donar tantes voltes.
         {% else %}
-          Si eres fotógrafo, estudio, galería, tienda o asociación fotográfica que organiza exposiciones, te ofrecemos un entorno más práctico para presupuestar, validar el alta y centralizar encargos recurrentes.
+          Si eres fotógrafo, estudio, galería, tienda o asociación fotográfica, aquí tienes una vía más práctica para consultar precios, validar el alta y repetir encargos sin dar tantas vueltas.
         {% endif %}
       </p>
 
       <div class="access-grid">
         <article class="surface access-card fade-up">
           <div class="eyebrow">{% if lang == 'ca' %}Ja tens compte{% else %}Ya tienes cuenta{% endif %}</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Entra directament a la calculadora{% else %}Entra directamente en la calculadora{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Accedeix a pressupostos, productes i eines pensades per al teu dia a dia amb el taller.{% else %}Accede a presupuestos, productos y herramientas pensadas para tu día a día con el taller.{% endif %}</p>
+          <h3 class="card-title">{% if lang == 'ca' %}Entra al teu espai professional{% else %}Entra en tu espacio profesional{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Consulta tarifes, prepara pressupostos i recupera productes o comandes del teu dia a dia amb el taller.{% else %}Consulta tarifas, prepara presupuestos y recupera productos o pedidos de tu día a día con el taller.{% endif %}</p>
           <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">
             {% if lang == 'ca' %}Obrir calculadora{% else %}Abrir calculadora{% endif %}
           </a>
@@ -146,7 +146,7 @@
         <article class="surface access-card fade-up">
           <div class="eyebrow">{% if lang == 'ca' %}Encara no tens accés{% else %}Aún no tienes acceso{% endif %}</div>
           <h3 class="card-title">{% if lang == 'ca' %}Demana alta i validem el perfil{% else %}Solicita alta y validamos el perfil{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Explica'ns qui ets, quins productes necessites i quina documentació professional pots aportar. Validarem l'alta abans d'obrir l'espai privat.{% else %}Cuéntanos quién eres, qué productos necesitas y qué documentación profesional puedes aportar. Validaremos el alta antes de abrir el espacio privado.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Explica'ns qui ets, què necessites pressupostar i quina activitat professional tens. Revisarem l'alta abans d'obrir-te l'accés.{% else %}Cuéntanos quién eres, qué necesitas presupuestar y qué actividad profesional tienes. Revisaremos el alta antes de abrirte el acceso.{% endif %}</p>
           <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">
             {% if lang == 'ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %}
           </a>
@@ -158,7 +158,7 @@
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Què hi trobaràs{% else %}Qué encontrarás{% endif %}</div>
         <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.5rem)">
-          {% if lang == 'ca' %}Accés validat, producte professional i continuïtat de taller.{% else %}Acceso validado, producto profesional y continuidad de taller.{% endif %}
+          {% if lang == 'ca' %}Accés validat, tarifes a mà i una manera més còmoda de repetir feina amb el taller.{% else %}Acceso validado, tarifas a mano y una forma más cómoda de repetir trabajo con el taller.{% endif %}
         </h2>
       </div>
       <div class="pro-highlights">
@@ -168,11 +168,11 @@
         </article>
         <article class="highlight">
           <h3>{% if lang == 'ca' %}Producte professional{% else %}Producto profesional{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Impressió fotogràfica, llenços, àlbums i papers Hahnemühle per a treball recurrent o expositiu.{% else %}Impresión fotográfica, lienzos, álbumes y papeles Hahnemühle para trabajo recurrente o expositivo.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Impressió fotogràfica, llenços, àlbums i papers Hahnemühle per a treball recurrent, exposicions o entrega final a client.{% else %}Impresión fotográfica, lienzos, álbumes y papeles Hahnemühle para trabajo recurrente, exposiciones o entrega final a cliente.{% endif %}</p>
         </article>
         <article class="highlight">
           <h3>{% if lang == 'ca' %}Flux més clar{% else %}Flujo más claro{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Un espai pensat per repetir comandes, preparar pressupostos i donar sortida a projectes d'exposició.{% else %}Un espacio pensado para repetir pedidos, preparar presupuestos y dar salida a proyectos de exposición.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Un espai pensat perquè consultar preus o repetir una feina sigui ràpid i poc feixuc.{% else %}Un espacio pensado para que consultar precios o repetir un trabajo sea rápido y poco pesado.{% endif %}</p>
         </article>
       </div>
     </div>
@@ -183,14 +183,14 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Perfils que hi encaixen{% else %}Perfiles que encajan{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}No només per a fotògrafs: també per a galeries, escoles i associacions amb activitat real.{% else %}No solo para fotógrafos: también para galerías, escuelas y asociaciones con actividad real.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Pensat sobretot per a qui treballa fotografia de manera habitual, però també útil per a projectes expositius i col·lectius.{% else %}Pensado sobre todo para quien trabaja fotografía de forma habitual, pero también útil para proyectos expositivos y colectivos.{% endif %}</h2>
     </div>
 
     <div class="profiles">
       <article class="surface profile-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Fotografia professional{% else %}Fotografía profesional{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Fotògrafs, estudis i creadors visuals{% else %}Fotógrafos, estudios y creadores visuales{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Pensat per a qui necessita producció recurrent, lliurament cuidat, àlbums o còpies per client final.{% else %}Pensado para quien necesita producción recurrente, entrega cuidada, álbumes o copias para cliente final.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Ideal per a qui necessita preus a mà, producció recurrent i una entrega cuidada per al client final.{% else %}Ideal para quien necesita precios a mano, producción recurrente y una entrega cuidada para el cliente final.{% endif %}</p>
       </article>
       <article class="surface profile-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Art i exposició{% else %}Arte y exposición{% endif %}</div>
@@ -200,7 +200,7 @@
       <article class="surface profile-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Col·lectius i entitats{% else %}Colectivos y entidades{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Associacions fotogràfiques i exposicions{% else %}Asociaciones fotográficas y exposiciones{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Podem orientar l'alta i el servei cap a mostres, sèries, muntatges i treballs col·lectius amb una operativa repetible.{% else %}Podemos orientar el alta y el servicio hacia muestras, series, montajes y trabajos colectivos con una operativa repetible.{% endif %}</p>
+        <p>{% if lang == 'ca' %}També ens encaixa quan cal treballar mostres, sèries, muntatges o projectes col·lectius amb una dinàmica repetible.{% else %}También nos encaja cuando hace falta trabajar muestras, series, montajes o proyectos colectivos con una dinámica repetible.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -210,7 +210,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Com funciona{% else %}Cómo funciona{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Un procés simple per validar l'accés i començar a treballar amb ordre.{% else %}Un proceso simple para validar el acceso y empezar a trabajar con orden.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}L'accés es valida ràpid i després ja pots treballar amb més comoditat.{% else %}El acceso se valida rápido y después ya puedes trabajar con más comodidad.{% endif %}</h2>
     </div>
 
     <div class="steps">
@@ -227,7 +227,7 @@
       <article class="surface step fade-up">
         <strong>3</strong>
         <h4>{% if lang == 'ca' %}T'obrim l'espai{% else %}Te abrimos el espacio{% endif %}</h4>
-        <p>{% if lang == 'ca' %}Quan tot és correcte, actives calculadora, tarifes i canals de comanda adaptats al teu perfil.{% else %}Cuando todo es correcto, activas calculadora, tarifas y canales de pedido adaptados a tu perfil.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Quan tot és correcte, entres a tarifes, productes i canals de comanda adaptats al teu perfil.{% else %}Cuando todo es correcto, entras en tarifas, productos y canales de pedido adaptados a tu perfil.{% endif %}</p>
       </article>
       <article class="surface step fade-up">
         <strong>4</strong>

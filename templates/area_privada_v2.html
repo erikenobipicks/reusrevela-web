@@ -92,9 +92,9 @@
 <section class="section private-hero">
   <div class="container private-shell">
     <div class="private-copy fade-up">
-      <div class="tag">{% if lang == 'ca' %}Arquitectura proposada{% else %}Arquitectura propuesta{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}La calculadora evoluciona cap a una àrea privada amb tarifari viu, productes dedicats i una sola lògica de comanda.{% else %}La calculadora evoluciona hacia un área privada con tarifario vivo, productos dedicados y una sola lógica de pedido.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest plantejament permet eliminar el PDF com a eina principal. El mateix compte professional entra a veure tarifes, configurar productes i acabar preparant una comanda completa dins del mateix entorn.{% else %}Este planteamiento permite eliminar el PDF como herramienta principal. La misma cuenta profesional entra a ver tarifas, configurar productos y acabar preparando un pedido completo dentro del mismo entorno.{% endif %}</p>
+      <div class="tag">{% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Un sol espai per consultar tarifes, preparar producte i gestionar comandes amb el taller.{% else %}Un solo espacio para consultar tarifas, preparar producto y gestionar pedidos con el taller.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}El mateix compte professional serveix per veure preus, entrar a cada producte i acabar agrupant-ho tot en una sola comanda.{% else %}La misma cuenta profesional sirve para ver precios, entrar en cada producto y acabar agrupándolo todo en un solo pedido.{% endif %}</p>
       <div class="private-kpis">
         <div class="kpi">
           <strong>1</strong>
@@ -102,20 +102,20 @@
         </div>
         <div class="kpi">
           <strong>6</strong>
-          <span>{% if lang == 'ca' %}blocs principals de l'àrea{% else %}bloques principales del área{% endif %}</span>
+          <span>{% if lang == 'ca' %}apartats principals actius{% else %}apartados principales activos{% endif %}</span>
         </div>
         <div class="kpi">
           <strong>Tarifari</strong>
-          <span>{% if lang == 'ca' %}nou punt central{% else %}nuevo punto central{% endif %}</span>
+          <span>{% if lang == 'ca' %}consulta ràpida de preus{% else %}consulta rápida de precios{% endif %}</span>
         </div>
       </div>
     </div>
 
     <div class="private-stage fade-up">
       <div>
-        <div class="visual-label">{% if lang == 'ca' %}Visio global{% else %}Vision global{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Un login, un tarifari viu, diversos productes i una sola lògica de comanda.{% else %}Un login, un tarifario vivo, varios productos y una sola lógica de pedido.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}La web pública ven context i l'àrea privada resol tarifa, pressupost, configuració i repetició de feina. Cada producte tindrà la seva pàgina dedicada, però tots compartiran base de dades i una comanda comuna.{% else %}La web pública vende contexto y el área privada resuelve tarifa, presupuesto, configuración y repetición de trabajo. Cada producto tendrá su página dedicada, pero todos compartirán base de datos y un pedido común.{% endif %}</p>
+        <div class="visual-label">{% if lang == 'ca' %}Visió general{% else %}Visión general{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.4rem)">{% if lang == 'ca' %}Tarifes, productes i comandes dins del mateix entorn professional.{% else %}Tarifas, productos y pedidos dentro del mismo entorno profesional.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Cada producte té la seva pàgina i la seva lògica, però tot queda connectat perquè sigui fàcil consultar, pressupostar i repetir feina.{% else %}Cada producto tiene su página y su lógica, pero todo queda conectado para que sea fácil consultar, presupuestar y repetir trabajo.{% endif %}</p>
       </div>
       <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-gold">{% if lang == 'ca' %}Obrir tarifari{% else %}Abrir tarifario{% endif %}</a>
     </div>
@@ -126,7 +126,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Blocs del privat{% else %}Bloques del privado{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}El tarifari és el centre, i des d'aquí pengen els productes i les comandes.{% else %}El tarifario es el centro, y desde aquí cuelgan los productos y los pedidos.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Tria què vols consultar o preparar i entra directament al punt que toca.{% else %}Elige qué quieres consultar o preparar y entra directamente en el punto adecuado.{% endif %}</h2>
     </div>
     <div class="module-grid">
       {% for module in private_modules %}
@@ -134,7 +134,7 @@
         <div class="module-meta">
           <div class="eyebrow">{{ module.eyebrow }}</div>
           <span class="badge {% if module.status == 'ready' %}ready{% else %}planned{% endif %}">
-            {% if module.status == 'ready' %}{% if lang == 'ca' %}llest per revisar{% else %}listo para revisar{% endif %}{% else %}{% if lang == 'ca' %}a continuació{% else %}a continuación{% endif %}{% endif %}
+            {% if module.status == 'ready' %}{% if lang == 'ca' %}disponible{% else %}disponible{% endif %}{% else %}{% if lang == 'ca' %}properament{% else %}próximamente{% endif %}{% endif %}
           </span>
         </div>
         <h3 class="card-title">{{ module.title }}</h3>
@@ -152,7 +152,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Flux base{% else %}Flujo base{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}La mateixa estructura pot servir per a tots els productes privats sense dependre de PDFs externs.{% else %}La misma estructura puede servir para todos los productos privados sin depender de PDFs externos.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Una mateixa manera de treballar per consultar, pressupostar i repetir producte sense anar buscant informació fora.{% else %}Una misma forma de trabajar para consultar, presupuestar y repetir producto sin ir buscando información fuera.{% endif %}</h2>
     </div>
     <div class="flow-grid">
       <article class="surface flow-card fade-up">
@@ -163,17 +163,17 @@
       <article class="surface flow-card fade-up">
         <strong>2</strong>
         <h3 class="card-title">{% if lang == 'ca' %}Consultes o configures{% else %}Consultas o configuras{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Cada pàgina de producte pot començar com a tarifari i evolucionar cap a configurador quan aquell mòdul ja estigui llest.{% else %}Cada página de producto puede empezar como tarifario y evolucionar hacia configurador cuando ese módulo ya esté listo.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Cada pàgina pot servir primer per consultar tarifa i després per preparar el producte quan ja toca concretar la feina.{% else %}Cada página puede servir primero para consultar tarifa y después para preparar el producto cuando ya toca concretar el trabajo.{% endif %}</p>
       </article>
       <article class="surface flow-card fade-up">
         <strong>3</strong>
         <h3 class="card-title">{% if lang == 'ca' %}Ho portes a comanda{% else %}Lo llevas al pedido{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Quan cal, la tarifa passa directament a pressupost o comanda sense recalcular res fora de la plataforma.{% else %}Cuando hace falta, la tarifa pasa directamente a presupuesto o pedido sin recalcular nada fuera de la plataforma.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Quan cal, el preu passa directament a pressupost o comanda sense haver de recalcular res a mà.{% else %}Cuando hace falta, el precio pasa directamente a presupuesto o pedido sin tener que recalcular nada a mano.{% endif %}</p>
       </article>
       <article class="surface flow-card fade-up">
         <strong>4</strong>
         <h3 class="card-title">{% if lang == 'ca' %}Recuperes l'històric{% else %}Recuperas el histórico{% endif %}</h3>
-        <p>{% if lang == 'ca' %}La mateixa àrea recupera clients, comandes, proves i producte recurrent sense separar cada família en una app diferent.{% else %}La misma área recupera clientes, pedidos, pruebas y producto recurrente sin separar cada familia en una app distinta.{% endif %}</p>
+        <p>{% if lang == 'ca' %}La mateixa àrea ajuda a recuperar clients, comandes i feina recurrent sense obrir eines diferents per a cada cosa.{% else %}La misma área ayuda a recuperar clientes, pedidos y trabajo recurrente sin abrir herramientas distintas para cada cosa.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -183,7 +183,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Dades comunes{% else %}Datos comunes{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}La base que convé compartir entre tarifari, productes i comandes des del primer dia.{% else %}La base que conviene compartir entre tarifario, productos y pedidos desde el primer dia.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}El que convé tenir unificat perquè el dia a dia sigui més còmode i més consistent.{% else %}Lo que conviene tener unificado para que el día a día sea más cómodo y más consistente.{% endif %}</h2>
     </div>
     <div class="data-grid">
       <article class="surface data-card fade-up">
@@ -199,7 +199,7 @@
       <article class="surface data-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Operativa{% else %}Operativa{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Clients i comandes{% else %}Clientes y pedidos{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Guardar clients, repetir comandes i tenir històric sense duplicar la informació entre PDFs, correus i carpetes disperses.{% else %}Guardar clientes, repetir pedidos y tener histórico sin duplicar la información entre PDFs, correos y carpetas dispersas.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Guardar clients, repetir comandes i tenir històric sense duplicar la informació entre correus, notes i carpetes disperses.{% else %}Guardar clientes, repetir pedidos y tener histórico sin duplicar la información entre correos, notas y carpetas dispersas.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -209,8 +209,8 @@
   <div class="container">
     <div class="surface cta-box fade-up">
       <div>
-        <div class="tag">{% if lang == 'ca' %}Primer pas real{% else %}Primer paso real{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Comencem pel tarifari i fem que llenços sigui el primer producte oficial que substitueix el PDF.{% else %}Empezamos por el tarifario y hacemos que lienzos sea el primer producto oficial que sustituye al PDF.{% endif %}</h2>
+        <div class="tag">{% if lang == 'ca' %}Entrada recomanada{% else %}Entrada recomendada{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Si vols començar per una consulta ràpida de preus, entra al tarifari i des d'allà salta al producte que toqui.{% else %}Si quieres empezar por una consulta rápida de precios, entra en el tarifario y desde ahí salta al producto que toque.{% endif %}</h2>
       </div>
       <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Entrar al tarifari{% else %}Entrar al tarifario{% endif %}</a>
     </div>

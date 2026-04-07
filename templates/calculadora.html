@@ -167,8 +167,8 @@
   <div class="container access-grid">
     <article class="surface access-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Si ja ets client{% else %}Si ya eres cliente{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Entra a la calculadora i continua treballant.{% else %}Entra en la calculadora y sigue trabajando.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Mantens l'accés directe al login, però ara des d'un punt d'entrada que també explica el circuit per a nous comptes i serveis professionals.{% else %}Mantienes el acceso directo al login, pero ahora desde un punto de entrada que también explica el circuito para nuevas cuentas y servicios profesionales.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Si ja tens accés, entra i continua treballant.{% else %}Si ya tienes acceso, entra y sigue trabajando.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Accedeix directament al teu espai per consultar tarifes, pressupostar i preparar comandes segons el producte que necessites.{% else %}Accede directamente a tu espacio para consultar tarifas, presupuestar y preparar pedidos según el producto que necesitas.{% endif %}</p>
       <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer" style="margin-top:1.4rem">
         {% if lang == 'ca' %}Obrir calculadora{% else %}Abrir calculadora{% endif %}
       </a>
@@ -176,8 +176,8 @@
 
     <article class="surface access-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Si encara no tens compte{% else %}Si aun no tienes cuenta{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Demana l'alta amb el producte ja enfocat.{% else %}Solicita el alta con el producto ya enfocado.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}El formulari arriba preorientat cap a {{ calc_service.label }} i activa els camps professionals per validar millor el perfil abans d'obrir la calculadora.{% else %}El formulario llega preorientado hacia {{ calc_service.label }} y activa los campos profesionales para validar mejor el perfil antes de abrir la calculadora.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Si encara no tens compte, demana l'alta.{% else %}Si todavía no tienes cuenta, solicita el alta.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}El formulari ja arriba orientat cap a {{ calc_service.label }} perquè puguem validar millor el teu perfil i obrir-te l'accés adequat.{% else %}El formulario ya llega orientado hacia {{ calc_service.label }} para que podamos validar mejor tu perfil y abrirte el acceso adecuado.{% endif %}</p>
       <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold" style="margin-top:1.4rem">
         {% if lang == 'ca' %}Sol·licitar accés{% else %}Solicitar acceso{% endif %}
       </a>
@@ -188,33 +188,33 @@
 <section class="section-tight">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Per què té sentit{% else %}Por qué tiene sentido{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}La web comercial i la calculadora deixen de competir i passen a treballar juntes.{% else %}La web comercial y la calculadora dejan de competir y pasan a trabajar juntas.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Accés professional{% else %}Acceso profesional{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Un sol punt d'entrada per passar de la consulta al pressupost sense salts estranys.{% else %}Un solo punto de entrada para pasar de la consulta al presupuesto sin saltos raros.{% endif %}</h2>
     </div>
 
     <div class="detail-grid">
       <article class="surface detail-card fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Missatge{% else %}Mensaje{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Cada servei envia al flux correcte.{% else %}Cada servicio envía al flujo correcto.{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Un usuari que arriba des de {{ calc_service.label }} no entra a cegues a un login: veu una entrada relacionada amb allò que estava consultant.{% else %}Un usuario que llega desde {{ calc_service.label }} no entra a ciegas en un login: ve una entrada relacionada con lo que estaba consultando.{% endif %}</p>
+        <div class="eyebrow">{% if lang == 'ca' %}Context{% else %}Contexto{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Arribes pel producte que t'interessa.{% else %}Llegas por el producto que te interesa.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Si vens de {{ calc_service.label }}, l'entrada ja queda enfocada al tipus de treball que vols pressupostar.{% else %}Si vienes de {{ calc_service.label }}, la entrada ya queda enfocada al tipo de trabajo que quieres presupuestar.{% endif %}</p>
       </article>
 
       <article class="surface detail-card fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Conversió{% else %}Conversión{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Separa accés existent i captació nova.{% else %}Separa acceso existente y captación nueva.{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Això evita perdre contactes nous al login i dona als clients validats una via directa i clara per continuar treballant.{% else %}Esto evita perder contactos nuevos en el login y da a los clientes validados una vía directa y clara para seguir trabajando.{% endif %}</p>
+        <div class="eyebrow">{% if lang == 'ca' %}Claredat{% else %}Claridad{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}No barregem clients validats i altes noves.{% else %}No mezclamos clientes validados y altas nuevas.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Qui ja treballa amb vosaltres entra directe. Qui encara no té compte sap exactament què ha de demanar.{% else %}Quien ya trabaja con vosotros entra directo. Quien todavía no tiene cuenta sabe exactamente qué tiene que pedir.{% endif %}</p>
       </article>
 
       <article class="surface detail-card fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Operativa{% else %}Operativa{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}L'alta arriba millor preparada.{% else %}El alta llega mejor preparada.{% endif %}</h3>
-        <p>{% if lang == 'ca' %}El formulari activa dades professionals, producte d'interès i sincronització amb la calculadora per reduir anades i tornades manuals.{% else %}El formulario activa datos profesionales, producto de interés y sincronización con la calculadora para reducir idas y vueltas manuales.{% endif %}</p>
+        <div class="eyebrow">{% if lang == 'ca' %}Alta{% else %}Alta{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}La sol·licitud ja arriba orientada.{% else %}La solicitud ya llega orientada.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Això us ajuda a rebre millor el perfil, el producte d'interès i la informació mínima per validar l'accés.{% else %}Esto os ayuda a recibir mejor el perfil, el producto de interés y la información mínima para validar el acceso.{% endif %}</p>
       </article>
 
       <article class="surface detail-card fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Marca{% else %}Marca{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}La calculadora hereta el context del taller.{% else %}La calculadora hereda el contexto del taller.{% endif %}</h3>
-        <p>{% if lang == 'ca' %}La web segueix fent la feina de vendre criteri, i la calculadora entra en joc quan ja toca pressupostar o operar amb més rapidesa.{% else %}La web sigue haciendo el trabajo de vender criterio, y la calculadora entra en juego cuando ya toca presupuestar u operar con más rapidez.{% endif %}</p>
+        <div class="eyebrow">{% if lang == 'ca' %}Continuïtat{% else %}Continuidad{% endif %}</div>
+        <h3 class="card-title">{% if lang == 'ca' %}Del taller al pressupost, sense trencar el fil.{% else %}Del taller al presupuesto, sin romper el hilo.{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La part comercial orienta i la calculadora entra quan ja toca consultar preu o preparar una comanda.{% else %}La parte comercial orienta y la calculadora entra cuando ya toca consultar precio o preparar un pedido.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -223,8 +223,8 @@
 <section class="section-tight">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Com funciona{% else %}Como funciona{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Un recorregut curt, però més intel·ligent.{% else %}Un recorrido corto, pero más inteligente.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Com funciona{% else %}Cómo funciona{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Tres passos clars per entrar al canal professional adequat.{% else %}Tres pasos claros para entrar al canal profesional adecuado.{% endif %}</h2>
     </div>
 
     <div class="steps">
@@ -241,7 +241,7 @@
       <article class="surface step fade-up">
         <strong>3</strong>
         <h3>{% if lang == 'ca' %}Entres al circuit privat{% else %}Entras en el circuito privado{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Quan el perfil queda validat, la calculadora passa a ser una eina operativa dins del flux normal amb el taller.{% else %}Cuando el perfil queda validado, la calculadora pasa a ser una herramienta operativa dentro del flujo normal con el taller.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Quan el perfil queda validat, ja pots treballar tarifes, pressupostos i comandes des del canal que et toca.{% else %}Cuando el perfil queda validado, ya puedes trabajar tarifas, presupuestos y pedidos desde el canal que te corresponde.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -252,7 +252,7 @@
     <div class="surface cta-box fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Següent pas{% else %}Siguiente paso{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Si ja saps que el teu flux passa per {{ calc_service.label }}, entrem pel cami correcte.{% else %}Si ya sabes que tu flujo pasa por {{ calc_service.label }}, entremos por el camino correcto.{% endif %}</h2>
+        <h2 class="display">{% if lang == 'ca' %}Si ja saps que treballaràs {{ calc_service.label }}, aquí tens l'entrada bona per començar.{% else %}Si ya sabes que vas a trabajar {{ calc_service.label }}, aquí tienes la entrada buena para empezar.{% endif %}</h2>
       </div>
       <div class="cta-actions">
         <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">{% if lang == 'ca' %}Demanar alta{% else %}Pedir alta{% endif %}</a>

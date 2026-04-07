@@ -50,7 +50,7 @@
     overflow:hidden;
     background:
       linear-gradient(140deg, rgba(23, 18, 15, .38) 0%, rgba(45, 36, 29, .58) 45%, rgba(143, 103, 63, .72) 100%),
-      url("{{ url_for('static', filename='img/hero-laboratori.png') }}") center/cover no-repeat;
+      url("{{ url_for('static', filename='img/hero-portada-2026.png') }}") center/cover no-repeat;
     box-shadow:0 28px 80px rgba(18, 16, 12, 0.22);
   }
   .hero-frame{
@@ -253,16 +253,16 @@
       <div class="tag">{% if lang == 'ca' %}Reus · Tarragona · Catalunya{% else %}Reus · Tarragona · Cataluña{% endif %}</div>
       <h1 class="display">
         {% if lang == 'ca' %}
-          El taller on la fotografia es converteix en <em>àlbums</em>, <em>marcs</em> i peces per durar.
+          El taller on la fotografia acaba bé: <em>impresa</em>, <em>emmarcada</em> o preparada per lliurar.
         {% else %}
-          El taller donde la fotografía se convierte en <em>álbumes</em>, <em>marcos</em> y piezas para durar.
+          El taller donde la fotografía acaba bien: <em>impresa</em>, <em>enmarcada</em> o preparada para entregar.
         {% endif %}
       </h1>
       <p class="lead" style="margin-top:1.15rem">
         {% if lang == 'ca' %}
-          Fem àlbums fotogràfics, marcs a mida, impressió de llenç i producció fotogràfica des del nostre taller de Reus per a clients de Tarragona, Catalunya i projectes d'arreu d'Espanya.
+          Som laboratori i taller fotogràfic a Reus. Fem àlbums, marcs a mida, llenços i còpia fotogràfica per a particulars, fotògrafs i negocis que volen un resultat ben acabat.
         {% else %}
-          Hacemos álbumes fotográficos, marcos a medida, impresión en lienzo y producción fotográfica desde nuestro taller de Reus para clientes de Tarragona, Cataluña y proyectos de toda España.
+          Somos laboratorio y taller fotográfico en Reus. Hacemos álbumes, marcos a medida, lienzos y copia fotográfica para particulares, fotógrafos y negocios que quieren un resultado bien acabado.
         {% endif %}
       </p>
 
@@ -298,13 +298,13 @@
           {% if lang == 'ca' %}Àlbums · marcs · llenços{% else %}Álbumes · marcos · lienzos{% endif %}
         </div>
         <h2 class="display" style="margin-top:1rem;font-size:clamp(2rem, 4vw, 3.4rem)">
-          {% if lang == 'ca' %}Fotografia acabada, presentada i llesta per lliurar.{% else %}Fotografía acabada, presentada y lista para entregar.{% endif %}
+          {% if lang == 'ca' %}Del fitxer a la peça final, sense perdre criteri pel camí.{% else %}Del archivo a la pieza final, sin perder criterio por el camino.{% endif %}
         </h2>
         <p>
           {% if lang == 'ca' %}
-            No ens quedem en la impressió: treballem el resultat final perquè la peça arribi ben presentada, duri i tingui sentit per a qui la rep.
+            No ens quedem en treure una còpia. Ens importa com quedarà a les mans del client, a la paret o dins d'un àlbum.
           {% else %}
-            No nos quedamos en la impresión: trabajamos el resultado final para que la pieza llegue bien presentada, dure y tenga sentido para quien la recibe.
+            No nos quedamos en sacar una copia. Nos importa cómo quedará en las manos del cliente, en la pared o dentro de un álbum.
           {% endif %}
         </p>
       </div>
@@ -316,18 +316,18 @@
   <div class="container split-band-inner">
     <article class="surface split-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Per a casaments, comunions, estudis i records familiars.{% else %}Para bodas, comuniones, estudios y recuerdos familiares.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Dissenyem i fabriquem àlbums amb acabat professional, pensats per presentar i conservar millor cada reportatge.{% else %}Diseñamos y fabricamos álbumes con acabado profesional, pensados para presentar y conservar mejor cada reportaje.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Àlbums per a casaments, comunions, estudis i entregues amb més pes.{% else %}Álbumes para bodas, comuniones, estudios y entregas con más peso.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Perquè un bon reportatge no es perdi en una carpeta: també ha de quedar ben resolt quan s'entrega.{% else %}Porque un buen reportaje no debería quedarse en una carpeta: también tiene que quedar bien resuelto cuando se entrega.{% endif %}</p>
     </article>
     <article class="surface split-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Taller propi per resoldre formats, obres i encàrrecs personalitzats.{% else %}Taller propio para resolver formatos, obras y encargos personalizados.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Triem motllura, vidre i acabat segons l'espai, el pressupost i el tipus de peça que s'ha de presentar.{% else %}Elegimos moldura, vidrio y acabado según el espacio, el presupuesto y el tipo de pieza que se va a presentar.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida per quan la peça demana una presentació bona de veritat.{% else %}Marcos a medida para cuando la pieza pide una presentación de verdad.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}No es tracta només d'encaixar una mida: es tracta que el marc acompanyi la peça i no li robi protagonisme.{% else %}No se trata solo de encajar una medida: se trata de que el marco acompañe a la pieza y no le robe protagonismo.{% endif %}</p>
     </article>
     <article class="surface split-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Llenços impresos{% else %}Lienzos impresos{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Una opció decorativa amb presència per a llars, negocis i regals.{% else %}Una opción decorativa con presencia para hogares, negocios y regalos.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Imprimim llenços amb bon color, tensió correcta i acabat pensat per exposar directament o combinar amb marc.{% else %}Imprimimos lienzos con buen color, tensión correcta y acabado pensado para exponer directamente o combinar con marco.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Llenços per portar una imatge a paret amb força i sense complicacions.{% else %}Lienzos para llevar una imagen a pared con fuerza y sin complicaciones.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Una opció molt clara per a decoració, regal o negoci quan la imatge ha de tenir cos i presència.{% else %}Una opción muy clara para decoración, regalo o negocio cuando la imagen tiene que tener cuerpo y presencia.{% endif %}</p>
     </article>
   </div>
 </section>
@@ -337,7 +337,7 @@
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Serveis principals{% else %}Servicios principales{% endif %}</div>
       <h2 class="display" style="max-width:12ch">
-        {% if lang == 'ca' %}Cada servei amb la seva pàgina, el seu missatge i el seu pas següent.{% else %}Cada servicio con su propia página, su mensaje y su siguiente paso.{% endif %}
+        {% if lang == 'ca' %}Serveis clars per trobar ràpid què necessites i parlar de feina concreta.{% else %}Servicios claros para encontrar rápido lo que necesitas y hablar de trabajo concreto.{% endif %}
       </h2>
     </div>
 
@@ -346,7 +346,7 @@
         <div>
           <div class="service-index">01</div>
           <h3 class="card-title">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Fabricació d'àlbums per a reportatges, esdeveniments i presentacions professionals o personals.{% else %}Fabricación de álbumes para reportajes, eventos y presentaciones profesionales o personales.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Àlbums per a casaments, sessions, estudis i entregues que han de quedar ben presentades.{% else %}Álbumes para bodas, sesiones, estudios y entregas que tienen que quedar bien presentadas.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('albumes_fotograficos') }}">{% if lang == 'ca' %}Veure pàgina{% else %}Ver página{% endif %}</a>
       </article>
@@ -355,7 +355,7 @@
         <div>
           <div class="service-index">02</div>
           <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Solucions a mida per a fotografia, làmina, obra gràfica i decoració comercial o domèstica.{% else %}Soluciones a medida para fotografía, lámina, obra gráfica y decoración comercial o doméstica.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Marcs per a fotografia, làmina i obra gràfica, resolts segons la peça i l'espai on aniran.{% else %}Marcos para fotografía, lámina y obra gráfica, resueltos según la pieza y el espacio donde irán.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('marcos_a_medida') }}">{% if lang == 'ca' %}Explorar servei{% else %}Explorar servicio{% endif %}</a>
       </article>
@@ -364,7 +364,7 @@
         <div>
           <div class="service-index">03</div>
           <h3 class="card-title">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Impressió en llenç per a paret, regals, hostaleria, negocis o decoració amb impacte visual.{% else %}Impresión en lienzo para pared, regalos, hostelería, negocios o decoración con impacto visual.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Llenços per a paret, regals i espais comercials que demanen una imatge amb presència.{% else %}Lienzos para pared, regalos y espacios comerciales que piden una imagen con presencia.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('impresion_lienzos') }}">{% if lang == 'ca' %}Saber-ne més{% else %}Saber más{% endif %}</a>
       </article>
@@ -373,7 +373,7 @@
         <div>
           <div class="service-index">04</div>
           <h3 class="card-title">{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Acabats professionals, papers de qualitat i formats adaptats a cada projecte.{% else %}Acabados profesionales, papeles de calidad y formatos adaptados a cada proyecto.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Còpies en paper fotogràfic amb bon color, bon format i acabat pensat per al tipus de treball.{% else %}Copias en papel fotográfico con buen color, buen formato y acabado pensado para el tipo de trabajo.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('serveis') }}#impressio">{% if lang == 'ca' %}Veure detall{% else %}Ver detalle{% endif %}</a>
       </article>
@@ -382,7 +382,7 @@
         <div>
           <div class="service-index">05</div>
           <h3 class="card-title">{% if lang == 'ca' %}Impressió Hahnemühle{% else %}Impresión Hahnemühle{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Paper fine art per a fotografia d'autor, venda d'obra, exposicions i presentacions amb acabat premium.{% else %}Papel fine art para fotografía de autor, venta de obra, exposiciones y presentaciones con acabado premium.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Fine art per a obra, exposició i còpia d'autor quan el paper també importa.{% else %}Fine art para obra, exposición y copia de autor cuando el papel también importa.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('impresion_hahnemuhle') }}">{% if lang == 'ca' %}Veure servei{% else %}Ver servicio{% endif %}</a>
       </article>
@@ -391,7 +391,7 @@
         <div>
           <div class="service-index">06</div>
           <h3 class="card-title">{% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Pensada per a professionals que necessiten pressupostar ràpid, repetir producte i treballar directament amb el taller.{% else %}Pensada para profesionales que necesitan presupuestar rápido, repetir producto y trabajar directamente con el taller.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Accés a tarifes, productes i comandes per a qui treballa sovint amb el taller.{% else %}Acceso a tarifas, productos y pedidos para quien trabaja a menudo con el taller.{% endif %}</p>
         </div>
         <a class="service-link" href="{{ url_for('calculadora') }}">{% if lang == 'ca' %}Accedir{% else %}Acceder{% endif %}</a>
       </article>
@@ -402,13 +402,13 @@
 <section class="section-tight">
   <div class="container proof-grid">
     <article class="panel proof-panel fade-up">
-      <div class="tag">{% if lang == 'ca' %}SEO local + abast ampli{% else %}SEO local + alcance amplio{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Arrelats a Reus, útils per a Tarragona, Catalunya i projectes d'arreu d'Espanya.{% else %}Arraigados en Reus, útiles para Tarragona, Cataluña y proyectos de toda España.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Com treballem{% else %}Cómo trabajamos{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Som a Reus i treballem amb tracte directe, tant si vens de prop com si el projecte arriba de fora.{% else %}Estamos en Reus y trabajamos con trato directo, tanto si vienes de cerca como si el proyecto llega desde fuera.{% endif %}</h2>
       <p class="lead" style="margin-top:1rem">
         {% if lang == 'ca' %}
-          Aquesta web es reforça al voltant de serveis molt concrets perquè cada necessitat tingui la seva pàgina, el seu missatge i la seva intenció de cerca.
+          Ens és fàcil treballar de prop a Reus i Tarragona, però també atenem encàrrecs d'altres zones quan el tipus de feina encaixa amb el que fem al taller.
         {% else %}
-          Esta web se refuerza alrededor de servicios muy concretos para que cada necesidad tenga su propia página, su propio mensaje y su propia intención de búsqueda.
+          Nos resulta fácil trabajar de cerca en Reus y Tarragona, pero también atendemos encargos de otras zonas cuando el tipo de trabajo encaja con lo que hacemos en el taller.
         {% endif %}
       </p>
       <div class="proof-metrics">
@@ -429,16 +429,16 @@
 
     <ul class="surface proof-list fade-up">
       <li>
-        <strong>{% if lang == 'ca' %}Pàgines específiques per servei{% else %}Páginas específicas por servicio{% endif %}</strong>
-        <span>{% if lang == 'ca' %}Àlbums, marcs i llenços ja no depenen d'una sola pàgina genèrica, sinó que tenen context propi per posicionar millor.{% else %}Álbumes, marcos y lienzos ya no dependen de una sola página genérica, sino que tienen contexto propio para posicionar mejor.{% endif %}</span>
+        <strong>{% if lang == 'ca' %}Tracte de taller{% else %}Trato de taller{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Ens agrada resoldre cada feina segons la peça, no empènyer tothom cap al mateix producte.{% else %}Nos gusta resolver cada trabajo según la pieza, no empujar a todo el mundo hacia el mismo producto.{% endif %}</span>
       </li>
       <li>
-        <strong>{% if lang == 'ca' %}Missatge local amb cobertura àmplia{% else %}Mensaje local con cobertura amplia{% endif %}</strong>
-        <span>{% if lang == 'ca' %}Parlem de Reus, Tarragona i Catalunya sense perdre l'abast d'Espanya quan el servei també hi pot arribar.{% else %}Hablamos de Reus, Tarragona y Cataluña sin perder el alcance nacional cuando el servicio también puede llegar a toda España.{% endif %}</span>
+        <strong>{% if lang == 'ca' %}Criteri abans que soroll{% else %}Criterio antes que ruido{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Si una imatge demana un àlbum, un marc o una còpia fine art, volem poder dir-ho clarament i fer-ho bé.{% else %}Si una imagen pide un álbum, un marco o una copia fine art, queremos poder decirlo claramente y hacerlo bien.{% endif %}</span>
       </li>
       <li>
-        <strong>{% if lang == 'ca' %}Enllaçat intern més clar{% else %}Enlazado interno más claro{% endif %}</strong>
-        <span>{% if lang == 'ca' %}La portada i la pàgina de serveis porten trànsit intern cap a les pàgines que més interessa fer créixer a cercadors.{% else %}La portada y la página de servicios llevan tráfico interno hacia las páginas que más interesa hacer crecer en buscadores.{% endif %}</span>
+        <strong>{% if lang == 'ca' %}Ofici i continuïtat{% else %}Oficio y continuidad{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Venim de laboratori fotogràfic i continuem treballant amb aquesta mirada de detall, material i acabat final.{% else %}Venimos de laboratorio fotográfico y seguimos trabajando con esa mirada de detalle, material y acabado final.{% endif %}</span>
       </li>
     </ul>
   </div>

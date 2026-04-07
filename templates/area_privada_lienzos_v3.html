@@ -153,9 +153,9 @@
 <section class="section canvas-hero">
   <div class="container canvas-shell">
     <div class="canvas-copy fade-up">
-      <div class="tag">{% if lang == 'ca' %}Primer mòdul real{% else %}Primer módulo real{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Llenços més simples per al fotògraf: producte tancat, pressupost clar i pas directe a la comanda.{% else %}Lienzos más simples para el fotógrafo: producto cerrado, presupuesto claro y paso directo al pedido.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Hem tret soroll del configurador. El client només escull mida, quantitat i tractament del fitxer; el marge comercial queda amagat a ajustos i el detall de cost o PVP només apareix si el vol veure.{% else %}Hemos quitado ruido del configurador. El cliente solo elige medida, cantidad y tratamiento del archivo; el margen comercial queda oculto en ajustes y el detalle de coste o PVP solo aparece si lo quiere ver.{% endif %}</p>
+      <div class="tag">{% if lang == 'ca' %}Llenços{% else %}Lienzos{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Configura un llenç de manera ràpida i passa'l directament a comanda.{% else %}Configura un lienzo de forma rápida y pásalo directamente a pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}La pantalla se centra en el que cal decidir: mida, quantitat i preparació del fitxer. La resta queda resolta perquè pressupostar sigui àgil i clar.{% else %}La pantalla se centra en lo que hace falta decidir: medida, cantidad y preparación del archivo. El resto queda resuelto para que presupuestar sea ágil y claro.{% endif %}</p>
       <div class="module-nav">
         {% for module in private_modules %}
         <span class="module-chip">{{ module.title }}</span>
@@ -165,9 +165,9 @@
 
     <div class="canvas-stage fade-up">
       <div>
-        <div class="visual-label">{% if lang == 'ca' %}Regles fixes{% else %}Reglas fijas{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm, laminat Protter i tarifa viva dins de la web des del primer moment.{% else %}Bastidor de 4 cm, laminado Protter y tarifa viva dentro de la web desde el primer momento.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}La pantalla ja està orientada al que vindrà després: afegir a comanda, preparar pressupost per al client final i generar una ordre clara per al laboratori.{% else %}La pantalla ya está orientada a lo que vendrá después: añadir al pedido, preparar presupuesto para el cliente final y generar una orden clara para el laboratorio.{% endif %}</p>
+        <div class="visual-label">{% if lang == 'ca' %}Condicions del producte{% else %}Condiciones del producto{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm, laminat Protter i preu base clar des del primer moment.{% else %}Bastidor de 4 cm, laminado Protter y precio base claro desde el primer momento.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Des d'aquí ja pots passar el llenç a comanda, preparar el pressupost del client final o deixar-lo en esborrany per més endavant.{% else %}Desde aquí ya puedes pasar el lienzo al pedido, preparar el presupuesto del cliente final o dejarlo en borrador para más adelante.{% endif %}</p>
       </div>
       <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure comanda demo{% else %}Ver pedido demo{% endif %}</a>
     </div>
@@ -178,7 +178,7 @@
   <div class="container canvas-grid">
     <article class="surface builder fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Configuració del llenç{% else %}Configuración del lienzo{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}El client professional només toca el que realment necessita decidir.{% else %}El cliente profesional solo toca lo que realmente necesita decidir.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}Tria la mida, la quantitat i com voleu preparar l'arxiu.{% else %}Elige la medida, la cantidad y cómo queréis preparar el archivo.{% endif %}</h2>
 
       <div class="builder-grid">
         <div class="field">
@@ -238,14 +238,14 @@
         </label>
       </div>
 
-      <p class="builder-note">{% if lang == 'ca' %}El marge comercial no es barreja amb el producte. Queda guardat als ajustos i només s'utilitza quan es vol veure el PVP o preparar el pressupost del client final.{% else %}El margen comercial no se mezcla con el producto. Queda guardado en ajustes y solo se usa cuando se quiere ver el PVP o preparar el presupuesto del cliente final.{% endif %}</p>
+      <p class="builder-note">{% if lang == 'ca' %}El marge comercial queda apartat dels camps principals perquè la configuració del producte sigui més neta i més ràpida.{% else %}El margen comercial queda aparte de los campos principales para que la configuración del producto sea más limpia y más rápida.{% endif %}</p>
     </article>
 
     <aside class="surface summary fade-up">
       <div class="summary-top">
         <div>
           <div class="eyebrow">{% if lang == 'ca' %}Resum principal{% else %}Resumen principal{% endif %}</div>
-          <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Un total clar, i els detalls comercials només quan els necessites.{% else %}Un total claro, y los detalles comerciales solo cuando los necesitas.{% endif %}</h2>
+          <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Un total clar, amb el detall comercial només quan el vols consultar.{% else %}Un total claro, con el detalle comercial solo cuando lo quieres consultar.{% endif %}</h2>
         </div>
         <span class="summary-kicker">{% if lang == 'ca' %}Taller{% else %}Taller{% endif %}</span>
       </div>
@@ -303,8 +303,8 @@
 <section class="section-tight">
   <div class="container">
     <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Què passa després{% else %}Qué pasa después{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}El configurador deixa de ser una pantalla aïllada i passa a alimentar la comanda real.{% else %}El configurador deja de ser una pantalla aislada y pasa a alimentar el pedido real.{% endif %}</h2>
+      <div class="tag">{% if lang == 'ca' %}Després del pressupost{% else %}Después del presupuesto{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Quan el llenç està clar, el següent pas és portar-lo a comanda i decidir com es lliura la feina.{% else %}Cuando el lienzo está claro, el siguiente paso es llevarlo al pedido y decidir cómo se entrega el trabajo.{% endif %}</h2>
     </div>
     <div class="flow-grid">
       <article class="surface flow-card fade-up">
