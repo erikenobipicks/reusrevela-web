@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{% if lang == 'ca' %}Acc&eacute;s professional | Reus Revela{% else %}Acceso profesional | Reus Revela{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Acc&eacute;s professional unificat per entrar a la calculadora i al privat des de Reus Revela.{% else %}Acceso profesional unificado para entrar en la calculadora y el privado desde Reus Revela.{% endif %}{% endblock %}
+
+{% block head %}
+<style>
+  .access-hero{padding-top:3rem}
+  .access-shell{display:grid;grid-template-columns:1.02fr .98fr;gap:2rem;align-items:stretch}
+  .access-copy{padding:2rem 0}
+  .access-stage,.access-form{padding:2rem}
+  .access-stage{min-height:520px;border-radius:30px;color:#fff;background:radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 30%),linear-gradient(145deg, #17120f 0%, #30251c 52%, #9b6f41 100%);box-shadow:0 24px 70px rgba(18,16,12,.18);display:flex;flex-direction:column;justify-content:space-between}
+  .access-stage p{margin-top:.9rem;color:rgba(255,255,255,.74);max-width:40ch}
+  .access-points{display:grid;gap:1rem;margin-top:2rem}
+  .access-point{padding:1.15rem;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+  .access-point strong{display:block;font-size:1rem}
+  .access-point span{display:block;margin-top:.35rem;color:rgba(255,255,255,.68)}
+  .access-form{align-self:center}
+  .form-box{padding:1.8rem}
+  .form-box p{color:var(--muted);margin-top:.75rem}
+  .form-grid{display:grid;gap:1rem;margin-top:1.5rem}
+  .field label{display:block;font-size:.9rem;font-weight:700;margin-bottom:.4rem;color:var(--ink)}
+  .field input{width:100%;min-height:52px;padding:.85rem 1rem;border-radius:16px;border:1px solid var(--line);background:#fff}
+  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(166,120,67,.12)}
+  .notice{margin-top:1.2rem;padding:1rem 1.1rem;border-radius:18px;border:1px solid rgba(166,120,67,.18);background:rgba(166,120,67,.08);color:var(--ink)}
+  .notice.error{border-color:rgba(184,64,64,.18);background:rgba(184,64,64,.08)}
+  .actions{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:1.5rem}
+  .helper{margin-top:1rem;font-size:.95rem;color:var(--muted)}
+  @media (max-width: 980px){.access-shell{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section access-hero">
+  <div class="container access-shell">
+    <div class="access-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Acc&eacute;s professional{% else %}Acceso profesional{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Entra a {{ calc_service.label }} des del mateix entorn de Reus Revela.{% else %}Entra en {{ calc_service.label }} desde el mismo entorno de Reus Revela.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest acc&eacute;s fa de pont amb la calculadora real perqu&egrave; el client no senti que surt a una eina separada. Mant&eacute; el mateix usuari professional que ja tens validat.{% else %}Este acceso hace de puente con la calculadora real para que el cliente no sienta que sale a una herramienta separada. Mantiene el mismo usuario profesional que ya tienes validado.{% endif %}</p>
+    </div>
+    <div class="access-stage fade-up">
+      <div>
+        <div class="visual-label">{% if lang == 'ca' %}Entrada unificada{% else %}Entrada unificada{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.35rem)">{% if lang == 'ca' %}La calculadora continua sent la font bona de marcs, per&ograve; ara l'entrada pot sortir des del privat de la web.{% else %}La calculadora sigue siendo la fuente buena de marcos, pero ahora la entrada puede salir desde el privado de la web.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Aquesta primera integraci&oacute; unifica l'acc&eacute;s i mant&eacute; la l&ograve;gica actual de marcs intacta. El seg&uuml;ent pas ja ser&agrave; compartir millor comandes, clients i retorns entre m&ograve;duls.{% else %}Esta primera integraci&oacute;n unifica el acceso y mantiene la l&oacute;gica actual de marcos intacta. El siguiente paso ya ser&aacute; compartir mejor pedidos, clientes y retornos entre m&oacute;dulos.{% endif %}</p>
+      </div>
+      <div class="access-points">
+        <div class="access-point">
+          <strong>{% if lang == 'ca' %}Mateix compte professional{% else %}Misma cuenta profesional{% endif %}</strong>
+          <span>{% if lang == 'ca' %}Fem servir el teu usuari validat de la calculadora actual.{% else %}Usamos tu usuario validado de la calculadora actual.{% endif %}</span>
+        </div>
+        <div class="access-point">
+          <strong>{% if lang == 'ca' %}Sense tocar marcs{% else %}Sin tocar marcos{% endif %}</strong>
+          <span>{% if lang == 'ca' %}La l&ograve;gica, tarifes i dades continuen vivint on ja funcionen b&eacute;.{% else %}La l&oacute;gica, tarifas y datos siguen viviendo donde ya funcionan bien.{% endif %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container access-form">
+    <div class="surface form-box fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Validaci&oacute; de compte{% else %}Validaci&oacute;n de cuenta{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem)">{% if lang == 'ca' %}Accedeix amb les mateixes credencials de la calculadora.{% else %}Accede con las mismas credenciales de la calculadora.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}Si ja tens acc&eacute;s professional aprovat, des d'aqu&iacute; t'obrim directament la sessi&oacute; a la calculadora. Si encara no tens alta, te la preparem des del formulari de contacte.{% else %}Si ya tienes acceso profesional aprobado, desde aqu&iacute; te abrimos directamente la sesi&oacute;n en la calculadora. Si todav&iacute;a no tienes alta, te la preparamos desde el formulario de contacto.{% endif %}</p>
+      {% if access_error_message %}<div class="notice error">{{ access_error_message }}</div>{% endif %}
+      <form method="post" class="form-grid">
+        <input type="hidden" name="service" value="{{ service }}">
+        <input type="hidden" name="source" value="{{ source }}">
+        <div class="field">
+          <label for="username">{% if lang == 'ca' %}Correu o usuari professional{% else %}Correo o usuario profesional{% endif %}</label>
+          <input id="username" name="username" type="text" value="{{ username }}" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">{% if lang == 'ca' %}Contrasenya{% else %}Contrase&ntilde;a{% endif %}</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-dark">{% if lang == 'ca' %}Entrar a l'espai professional{% else %}Entrar en el espacio profesional{% endif %}</button>
+          <a href="{{ CALC_DIRECT_URL }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir login cl&agrave;ssic{% else %}Abrir login cl&aacute;sico{% endif %}</a>
+          <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">{% if lang == 'ca' %}Necessito alta{% else %}Necesito alta{% endif %}</a>
+        </div>
+      </form>
+      <div class="helper">{% if lang == 'ca' %}Primer objectiu d'aquesta fase: una sola porta d'entrada. Despr&eacute;s podrem unificar encara millor navegaci&oacute;, comandes i retorns entre m&ograve;duls.{% else %}Primer objetivo de esta fase: una sola puerta de entrada. Despu&eacute;s podremos unificar todav&iacute;a mejor navegaci&oacute;n, pedidos y retornos entre m&oacute;dulos.{% endif %}</div>
+    </div>
+  </div>
+</section>
+{% endblock %}
