@@ -987,6 +987,7 @@ def build_frames_order_context():
     glass = (request.args.get("glass") or "").strip()
     interior = (request.args.get("interior") or "").strip()
     print_label = (request.args.get("print_label") or "").strip()
+    notes = (request.args.get("notes") or "").strip()
 
     materials = []
     if frame_main:
@@ -1064,6 +1065,7 @@ def build_frames_order_context():
         "piece_type_label": piece_type_label,
         "piece_measure": piece_measure,
         "final_size_label": final_size or missing_size_label,
+        "notes": notes,
         "line_count": 1,
         "quantity_total": 1,
         "lines": [line],
