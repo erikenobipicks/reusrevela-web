@@ -82,7 +82,7 @@
         <p>{% if lang == 'ca' %}Des d'aquí hi entres amb el mateix context professional que a la resta del privat, però mantenint la seva manera pròpia de treballar.{% else %}Desde aquí entras con el mismo contexto profesional que en el resto del privado, pero manteniendo su propia forma de trabajar.{% endif %}</p>
       </div>
       <div class="cta-actions">
-        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">{% if lang == 'ca' %}Obrir calculadora actual{% else %}Abrir calculadora actual{% endif %}</a>
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir calculadora actual{% else %}Abrir calculadora actual{% endif %}</a>
         <a href="{{ CALC_REQUEST_URL }}" class="btn btn-outline">{% if lang == 'ca' %}Necessito alta{% else %}Necesito alta{% endif %}</a>
       </div>
     </div>
@@ -158,7 +158,7 @@
         <h2 class="display">{% if lang == 'ca' %}Si necessites marcs, aquí tens l'entrada bona per obrir la calculadora de sempre sense perdre context ni opcions.{% else %}Si necesitas marcos, aquí tienes la entrada buena para abrir la calculadora de siempre sin perder contexto ni opciones.{% endif %}</h2>
       </div>
       <div class="cta-actions">
-        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark" target="_blank" rel="noopener noreferrer">{% if lang == 'ca' %}Entrar a marcs{% else %}Entrar en marcos{% endif %}</a>
+        <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark">{% if lang == 'ca' %}Entrar a marcs{% else %}Entrar en marcos{% endif %}</a>
         <a href="{{ url_for('area_privada') }}" class="btn btn-outline">{% if lang == 'ca' %}Tornar al privat{% else %}Volver al privado{% endif %}</a>
       </div>
     </div>

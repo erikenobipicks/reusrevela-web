@@ -16,6 +16,8 @@ app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 CALC_URL = os.environ.get("CALC_URL", "https://calculadora.reusrevela.cat")
 CALC_SIGNUP_URL = os.environ.get("CALC_SIGNUP_URL", f"{CALC_URL.rstrip('/')}/api/public/professional-signup")
 CALC_SIGNUP_TOKEN = os.environ.get("CALC_SIGNUP_TOKEN", "")
+CALC_BRIDGE_LOGIN_URL = os.environ.get("CALC_BRIDGE_LOGIN_URL", f"{CALC_URL.rstrip('/')}/api/public/bridge-login")
+CALC_BRIDGE_TOKEN = os.environ.get("CALC_BRIDGE_TOKEN", "")
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "reusrevela@gmail.com")
 SMTP_HOST = os.environ.get("SMTP_HOST")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
@@ -361,7 +363,7 @@ def get_calc_service(value, lang=None):
     }
 
 
-def build_calc_login_url(service=None, lang=None, source="web"):
+def build_direct_calc_url(service=None, lang=None, source="web"):
     lang = lang or get_lang()
     service = normalize_calc_service(service)
     query = {
@@ -371,6 +373,102 @@ def build_calc_login_url(service=None, lang=None, source="web"):
     if service != "general":
         query["service"] = service
     return f"{CALC_URL.rstrip('/')}?{urlencode(query)}"
+
+
+def build_calc_login_url(service=None, lang=None, source="web"):
+    lang = lang or get_lang()
+    service = normalize_calc_service(service)
+    params = {
+        "lang": lang,
+        "source": source,
+    }
+    if service != "general":
+        params["service"] = service
+    return url_for("area_privada_acces", **params)
+
+
+def build_calc_target_path(service=None):
+    service = normalize_calc_service(service)
+    if service == "frames":
+        return "/calculadora"
+    return "/"
+
+
+def get_bridge_error_message(code, lang=None):
+    lang = lang or get_lang()
+    messages = {
+        "invalid_credentials": {
+            "ca": "No hem pogut validar l'usuari o la contrasenya. Revisa les dades i torna-ho a provar.",
+            "es": "No hemos podido validar el usuario o la contrasena. Revisa los datos y vuelve a intentarlo.",
+        },
+        "pending": {
+            "ca": "El teu acces encara esta pendent de validacio. Si ho necessites, t'ho revisem.",
+            "es": "Tu acceso todavia esta pendiente de validacion. Si lo necesitas, lo revisamos contigo.",
+        },
+        "blocked": {
+            "ca": "Aquest acces esta bloquejat. Contacta amb nosaltres i ho revisem.",
+            "es": "Este acceso esta bloqueado. Contacta con nosotros y lo revisamos.",
+        },
+        "bridge_not_configured": {
+            "ca": "L'acces unificat encara no esta configurat del tot. Pots entrar igualment a la calculadora classica.",
+            "es": "El acceso unificado todavia no esta configurado del todo. Puedes entrar igualmente en la calculadora clasica.",
+        },
+        "network_error": {
+            "ca": "No hem pogut connectar amb la calculadora ara mateix. Torna-ho a provar d'aqui un moment.",
+            "es": "No hemos podido conectar con la calculadora ahora mismo. Vuelve a intentarlo dentro de un momento.",
+        },
+        "forbidden": {
+            "ca": "L'acces unificat no esta disponible ara mateix. Pots entrar des del login habitual.",
+            "es": "El acceso unificado no esta disponible ahora mismo. Puedes entrar desde el login habitual.",
+        },
+        "missing_credentials": {
+            "ca": "Introdueix l'usuari i la contrasenya per continuar.",
+            "es": "Introduce el usuario y la contrasena para continuar.",
+        },
+        "unknown": {
+            "ca": "No s'ha pogut completar l'acces. Torna-ho a provar o entra des del login habitual.",
+            "es": "No se ha podido completar el acceso. Vuelve a intentarlo o entra desde el login habitual.",
+        },
+    }
+    return messages.get(code, messages["unknown"]).get(lang, messages["unknown"]["ca"])
+
+
+def request_calc_bridge_login(username, password, service=None, lang=None, source="web"):
+    if not CALC_BRIDGE_LOGIN_URL or not CALC_BRIDGE_TOKEN:
+        return {"ok": False, "error": "bridge_not_configured"}
+
+    payload = {
+        "username": (username or "").strip().lower(),
+        "password": password or "",
+        "service": normalize_calc_service(service),
+        "lang": lang or get_lang(),
+        "source": source or "web",
+        "next": build_calc_target_path(service),
+    }
+    req = urllib_request.Request(
+        CALC_BRIDGE_LOGIN_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Bridge-Token": CALC_BRIDGE_TOKEN,
+        },
+        method="POST",
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=12) as resp:
+            body = resp.read().decode("utf-8")
+            return json.loads(body or "{}")
+    except urllib_error.HTTPError as exc:
+        try:
+            body = exc.read().decode("utf-8")
+            data = json.loads(body or "{}")
+            if isinstance(data, dict) and data.get("error"):
+                return data
+        except Exception:
+            pass
+        return {"ok": False, "error": "unknown"}
+    except (urllib_error.URLError, TimeoutError, ValueError):
+        return {"ok": False, "error": "network_error"}
 
 
 def build_calc_request_url(service=None):
@@ -423,6 +521,7 @@ def build_calc_page_context(service=None):
     return {
         "calc_service": calc_service,
         "CALC_LOGIN_URL": build_calc_login_url(calc_service["key"]),
+        "CALC_DIRECT_URL": build_direct_calc_url(calc_service["key"]),
         "CALC_REQUEST_URL": build_calc_request_url(calc_service["key"]),
     }
 
@@ -1024,6 +1123,35 @@ def area_privada():
         "area_privada_v2.html",
         lang=get_lang(),
         private_modules=build_private_modules(),
+    )
+
+
+@app.route("/area-privada/acces", methods=["GET", "POST"])
+def area_privada_acces():
+    lang = get_lang()
+    service = normalize_calc_service(request.values.get("service"))
+    source = (request.values.get("source") or "web").strip() or "web"
+    username = (request.form.get("username") or "").strip()
+    access_error = ""
+
+    if request.method == "POST":
+        password = request.form.get("password") or ""
+        result = request_calc_bridge_login(username, password, service=service, lang=lang, source=source)
+        if result.get("ok") and result.get("redirect_url"):
+            return redirect(result["redirect_url"])
+        access_error = result.get("error") or "unknown"
+
+    return render_template(
+        "area_privada_login.html",
+        lang=lang,
+        calc_service=get_calc_service(service, lang),
+        service=service,
+        source=source,
+        username=username,
+        access_error=access_error,
+        access_error_message=get_bridge_error_message(access_error, lang) if access_error else "",
+        CALC_DIRECT_URL=build_direct_calc_url(service, lang, source),
+        CALC_REQUEST_URL=build_calc_request_url(service),
     )
 
 
