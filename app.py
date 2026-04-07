@@ -931,6 +931,161 @@ def build_canvas_order_context():
     }
 
 
+
+def build_frames_order_context():
+    lang = get_lang()
+    vat_rate = CANVAS_PRICING["vat_rate"]
+
+    total = round(parse_non_negative_float(request.args.get("total"), default=0.0), 2)
+    deposit = round(parse_non_negative_float(request.args.get("deposit"), default=0.0), 2)
+    pending_arg = request.args.get("pending")
+    pending = round(
+        parse_non_negative_float(pending_arg, default=max(total - deposit, 0.0)),
+        2,
+    )
+    if not pending_arg and total:
+        pending = round(max(total - deposit, 0.0), 2)
+
+    client_subtotal = round(total / (1 + vat_rate), 2) if total else 0.0
+    client_vat = round(total - client_subtotal, 2)
+
+    piece_type_id = (request.args.get("piece_type") or "").strip().lower()
+    piece_labels = {
+        "fotografia": {"ca": "Fotografia", "es": "Fotografia"},
+        "lamina": {"ca": "Lamina", "es": "Lamina"},
+        "pintura_sense_bastidor": {"ca": "Pintura sense bastidor", "es": "Pintura sin bastidor"},
+        "pintura_amb_bastidor": {"ca": "Pintura amb bastidor", "es": "Pintura con bastidor"},
+        "puzzle": {"ca": "Puzzle", "es": "Puzzle"},
+        "default": {"ca": "Peca emmarcada", "es": "Pieza enmarcada"},
+    }
+    piece_type_label = piece_labels.get(piece_type_id, piece_labels["default"])[lang]
+
+    piece_width = round(parse_non_negative_float(request.args.get("piece_width"), default=0.0), 2)
+    piece_height = round(parse_non_negative_float(request.args.get("piece_height"), default=0.0), 2)
+
+    def format_measure(value):
+        if not value:
+            return ""
+        rounded = round(value, 2)
+        if abs(rounded - round(rounded)) < 0.01:
+            return str(int(round(rounded)))
+        return ("%.2f" % rounded).rstrip("0").rstrip(".")
+
+    piece_measure = (
+        f"{format_measure(piece_width)} x {format_measure(piece_height)} cm"
+        if piece_width and piece_height
+        else ""
+    )
+    final_size = (request.args.get("final_size") or "").strip() or piece_measure
+
+    quote_ref = (request.args.get("quote_ref") or "").strip()
+    quote_display = quote_ref or f"MARCS-{datetime.now():%d%m%y}"
+    client_name = (request.args.get("client_name") or "").strip()
+    client_phone = (request.args.get("client_phone") or "").strip()
+    frame_main = (request.args.get("frame_main") or "").strip()
+    frame_pre = (request.args.get("frame_pre") or "").strip()
+    glass = (request.args.get("glass") or "").strip()
+    interior = (request.args.get("interior") or "").strip()
+    print_label = (request.args.get("print_label") or "").strip()
+
+    materials = []
+    if frame_main:
+        materials.append({"label": {"ca": "Marc principal", "es": "Marco principal"}[lang], "value": frame_main})
+    if frame_pre:
+        materials.append({"label": {"ca": "Pre-marc", "es": "Pre-marco"}[lang], "value": frame_pre})
+    if glass:
+        materials.append({"label": {"ca": "Proteccio", "es": "Proteccion"}[lang], "value": glass})
+    if interior:
+        materials.append({"label": {"ca": "Interior", "es": "Interior"}[lang], "value": interior})
+    if print_label:
+        materials.append({"label": {"ca": "Impressio", "es": "Impresion"}[lang], "value": print_label})
+    if not materials:
+        materials.append(
+            {
+                "label": {"ca": "Configuracio", "es": "Configuracion"}[lang],
+                "value": {"ca": "Sense detalls importats", "es": "Sin detalles importados"}[lang],
+            }
+        )
+
+    imported_label = {
+        "ca": "Pressupost importat des de la calculadora de marcs",
+        "es": "Presupuesto importado desde la calculadora de marcos",
+    }[lang]
+    missing_size_label = {"ca": "Mesura pendent", "es": "Medida pendiente"}[lang]
+    missing_client_label = {"ca": "Client pendent", "es": "Cliente pendiente"}[lang]
+    missing_phone_label = {"ca": "Telefon pendent", "es": "Telefono pendiente"}[lang]
+
+    line = {
+        "reference": quote_display,
+        "is_imported": True,
+        "quantity": 1,
+        "final_label": final_size or missing_size_label,
+        "edit_label": imported_label,
+        "client_total": total,
+        "deposit_total": deposit,
+        "pending_total": pending,
+        "piece_label": piece_type_label,
+        "piece_measure": piece_measure,
+        "frame_main": frame_main,
+        "frame_pre": frame_pre,
+        "glass": glass,
+        "interior": interior,
+        "print_label": print_label,
+        "materials": materials,
+    }
+
+    recent_orders = [
+        {
+            "reference": quote_display,
+            "date": datetime.now().strftime("%d/%m/%Y"),
+            "status": {"ca": "Importada des de marcs", "es": "Importada desde marcos"}[lang],
+            "total": total,
+        }
+    ]
+
+    client_entry = {
+        "id": "client_imported",
+        "name": client_name or missing_client_label,
+        "company": piece_type_label,
+        "email": "",
+        "phone": client_phone or missing_phone_label,
+        "city": {"ca": "Arriba des de marcs", "es": "Llega desde marcos"}[lang],
+        "last_order": quote_display,
+        "selected": True,
+    }
+
+    return {
+        "generated_at": datetime.now(),
+        "origin": "frames",
+        "origin_label": {"ca": "Importada des de marcs", "es": "Importada desde marcos"}[lang],
+        "quote_ref": quote_display,
+        "client_name": client_name or missing_client_label,
+        "client_phone": client_phone or missing_phone_label,
+        "piece_type_label": piece_type_label,
+        "piece_measure": piece_measure,
+        "final_size_label": final_size or missing_size_label,
+        "line_count": 1,
+        "quantity_total": 1,
+        "lines": [line],
+        "professional_subtotal": 0.0,
+        "professional_vat": 0.0,
+        "professional_total": 0.0,
+        "margin_percent": 0.0,
+        "margin_amount": 0.0,
+        "client_subtotal": client_subtotal,
+        "client_vat": client_vat,
+        "client_total": total,
+        "deposit_total": deposit,
+        "pending_total": pending,
+        "vat_rate_percent": int(vat_rate * 100),
+        "delivery_options": [],
+        "selected_delivery": "",
+        "clients": [client_entry],
+        "selected_client_id": client_entry["id"],
+        "recent_orders": recent_orders,
+        "has_internal_costs": False,
+        "frames_entry_url": build_calc_login_url("frames", source="private_area"),
+    }
 def clean_profile_type(value):
     allowed = {"professional", "studio", "gallery", "association"}
     value = (value or "").strip().lower()
@@ -1200,11 +1355,14 @@ def area_privada_marcos():
 
 @app.route("/area-privada/comanda")
 def area_privada_comanda():
+    source = (request.args.get("source") or "").strip().lower()
+    order_data = build_frames_order_context() if source == "frames" else build_canvas_order_context()
+    template_name = "area_privada_comanda_marcs.html" if source == "frames" else "area_privada_comanda_v2.html"
     return render_template(
-        "area_privada_comanda_v2.html",
+        template_name,
         lang=get_lang(),
         private_modules=build_private_modules(),
-        order_data=build_canvas_order_context(),
+        order_data=order_data,
     )
 
 
