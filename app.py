@@ -3,6 +3,7 @@ import os
 import secrets
 import smtplib
 from datetime import datetime
+from pathlib import Path
 from email.mime.text import MIMEText
 from urllib import error as urllib_error
 from urllib import request as urllib_request
@@ -25,6 +26,7 @@ SMTP_USER = os.environ.get("SMTP_USER")
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
 SMTP_FROM = os.environ.get("SMTP_FROM", CONTACT_EMAIL)
 SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "true").lower() != "false"
+PRIVATE_AREA_DB_PATH = os.environ.get("PRIVATE_AREA_DB_PATH", os.path.join(os.path.dirname(__file__), "private_area_store.json"))
 
 CALC_SERVICE_CONFIG = {
     "general": {
@@ -333,6 +335,163 @@ PRINT_PRODUCTS_CONFIG = {
         },
     ],
 }
+
+
+FRAME_ORDER_FIELDS = [
+    "quote_ref",
+    "client_name",
+    "client_phone",
+    "piece_type",
+    "piece_width",
+    "piece_height",
+    "final_size",
+    "frame_main",
+    "frame_pre",
+    "glass",
+    "interior",
+    "print_label",
+    "total",
+    "pending",
+    "deposit",
+    "notes",
+]
+
+
+
+def get_private_area_db():
+    return PRIVATE_AREA_DB_PATH
+
+
+
+def init_private_area_db():
+    try:
+        store_path = Path(PRIVATE_AREA_DB_PATH)
+        if store_path.parent:
+            store_path.parent.mkdir(parents=True, exist_ok=True)
+        if not store_path.exists():
+            store_path.write_text(
+                json.dumps({"frames_order_drafts": {}}, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        return True
+    except OSError:
+        return False
+
+
+
+def _normalize_frame_order_payload(payload=None):
+    payload = payload or {}
+    normalized = {}
+    for key in FRAME_ORDER_FIELDS:
+        value = payload.get(key, "")
+        normalized[key] = "" if value is None else str(value).strip()
+    return normalized
+
+
+
+def _format_saved_timestamp(value):
+    if not value:
+        return ""
+    try:
+        dt = datetime.fromisoformat(str(value))
+    except ValueError:
+        return str(value)
+    return dt.strftime("%d/%m/%Y %H:%M")
+
+
+
+def _read_private_area_store():
+    if not init_private_area_db():
+        return {"frames_order_drafts": {}}
+    store_path = Path(PRIVATE_AREA_DB_PATH)
+    try:
+        data = json.loads(store_path.read_text(encoding="utf-8") or "{}")
+    except (OSError, ValueError, TypeError):
+        data = {}
+    if not isinstance(data, dict):
+        data = {}
+    drafts = data.get("frames_order_drafts")
+    if not isinstance(drafts, dict):
+        data["frames_order_drafts"] = {}
+    return data
+
+
+
+def _write_private_area_store(data):
+    if not init_private_area_db():
+        return False
+    store_path = Path(PRIVATE_AREA_DB_PATH)
+    try:
+        store_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    except OSError:
+        return False
+
+
+
+def _draft_sort_key(item):
+    return item.get("updated_at") or ""
+
+
+
+def _store_to_saved_order(row):
+    return {
+        "draft_id": row.get("draft_id", ""),
+        "quote_ref": row.get("quote_ref", ""),
+        "client_name": row.get("client_name", ""),
+        "final_size_label": row.get("final_size_label", ""),
+        "total": float(row.get("total") or 0.0),
+        "updated_at": row.get("updated_at", ""),
+        "updated_at_label": _format_saved_timestamp(row.get("updated_at", "")),
+    }
+
+
+
+def list_saved_frames_orders(limit=8):
+    drafts = _read_private_area_store().get("frames_order_drafts", {})
+    rows = sorted(drafts.values(), key=_draft_sort_key, reverse=True)
+    return [_store_to_saved_order(row) for row in rows[: max(int(limit or 1), 1)]]
+
+
+
+def get_saved_frames_order(draft_id):
+    draft_id = str(draft_id or "").strip()
+    if not draft_id:
+        return None
+
+    drafts = _read_private_area_store().get("frames_order_drafts", {})
+    row = drafts.get(draft_id)
+    if not isinstance(row, dict):
+        return None
+    return _normalize_frame_order_payload(row.get("payload") or {})
+
+
+
+def save_frames_order_draft(payload):
+    normalized = _normalize_frame_order_payload(payload)
+    draft_id = str((payload or {}).get("draft_id") or "").strip() or secrets.token_urlsafe(8)
+    updated_at = datetime.utcnow().isoformat(timespec="seconds")
+    total = parse_non_negative_float(normalized.get("total"), default=0.0)
+
+    store = _read_private_area_store()
+    drafts = store.setdefault("frames_order_drafts", {})
+    drafts[draft_id] = {
+        "draft_id": draft_id,
+        "quote_ref": normalized.get("quote_ref", ""),
+        "client_name": normalized.get("client_name", ""),
+        "client_phone": normalized.get("client_phone", ""),
+        "final_size_label": normalized.get("final_size", ""),
+        "total": total,
+        "updated_at": updated_at,
+        "payload": normalized,
+    }
+    if not _write_private_area_store(store):
+        raise RuntimeError("private_area_db_unavailable")
+    return {
+        "draft_id": draft_id,
+        "updated_at": updated_at,
+        "payload": normalized,
+    }
 
 
 def get_lang():
@@ -932,24 +1091,35 @@ def build_canvas_order_context():
 
 
 
-def build_frames_order_context():
+def _build_frames_source_data(base_payload=None):
+    source_data = _normalize_frame_order_payload(base_payload)
+    for key in FRAME_ORDER_FIELDS:
+        value = request.args.get(key)
+        if value is not None:
+            source_data[key] = str(value).strip()
+    return source_data
+
+
+
+def build_frames_order_context(base_payload=None, draft_id=""):
     lang = get_lang()
     vat_rate = CANVAS_PRICING["vat_rate"]
+    source_data = _build_frames_source_data(base_payload)
 
-    total = round(parse_non_negative_float(request.args.get("total"), default=0.0), 2)
-    deposit = round(parse_non_negative_float(request.args.get("deposit"), default=0.0), 2)
-    pending_arg = request.args.get("pending")
+    total = round(parse_non_negative_float(source_data.get("total"), default=0.0), 2)
+    deposit = round(parse_non_negative_float(source_data.get("deposit"), default=0.0), 2)
+    pending_value = source_data.get("pending")
     pending = round(
-        parse_non_negative_float(pending_arg, default=max(total - deposit, 0.0)),
+        parse_non_negative_float(pending_value, default=max(total - deposit, 0.0)),
         2,
     )
-    if not pending_arg and total:
+    if not pending_value and total:
         pending = round(max(total - deposit, 0.0), 2)
 
     client_subtotal = round(total / (1 + vat_rate), 2) if total else 0.0
     client_vat = round(total - client_subtotal, 2)
 
-    piece_type_id = (request.args.get("piece_type") or "").strip().lower()
+    piece_type_id = (source_data.get("piece_type") or "").strip().lower()
     piece_labels = {
         "fotografia": {"ca": "Fotografia", "es": "Fotografia"},
         "lamina": {"ca": "Lamina", "es": "Lamina"},
@@ -960,8 +1130,8 @@ def build_frames_order_context():
     }
     piece_type_label = piece_labels.get(piece_type_id, piece_labels["default"])[lang]
 
-    piece_width = round(parse_non_negative_float(request.args.get("piece_width"), default=0.0), 2)
-    piece_height = round(parse_non_negative_float(request.args.get("piece_height"), default=0.0), 2)
+    piece_width = round(parse_non_negative_float(source_data.get("piece_width"), default=0.0), 2)
+    piece_height = round(parse_non_negative_float(source_data.get("piece_height"), default=0.0), 2)
 
     def format_measure(value):
         if not value:
@@ -976,18 +1146,18 @@ def build_frames_order_context():
         if piece_width and piece_height
         else ""
     )
-    final_size = (request.args.get("final_size") or "").strip() or piece_measure
+    final_size = (source_data.get("final_size") or "").strip() or piece_measure
 
-    quote_ref = (request.args.get("quote_ref") or "").strip()
+    quote_ref = (source_data.get("quote_ref") or "").strip()
     quote_display = quote_ref or f"MARCS-{datetime.now():%d%m%y}"
-    client_name = (request.args.get("client_name") or "").strip()
-    client_phone = (request.args.get("client_phone") or "").strip()
-    frame_main = (request.args.get("frame_main") or "").strip()
-    frame_pre = (request.args.get("frame_pre") or "").strip()
-    glass = (request.args.get("glass") or "").strip()
-    interior = (request.args.get("interior") or "").strip()
-    print_label = (request.args.get("print_label") or "").strip()
-    notes = (request.args.get("notes") or "").strip()
+    client_name = (source_data.get("client_name") or "").strip()
+    client_phone = (source_data.get("client_phone") or "").strip()
+    frame_main = (source_data.get("frame_main") or "").strip()
+    frame_pre = (source_data.get("frame_pre") or "").strip()
+    glass = (source_data.get("glass") or "").strip()
+    interior = (source_data.get("interior") or "").strip()
+    print_label = (source_data.get("print_label") or "").strip()
+    notes = (source_data.get("notes") or "").strip()
 
     materials = []
     if frame_main:
@@ -1066,6 +1236,9 @@ def build_frames_order_context():
         "piece_measure": piece_measure,
         "final_size_label": final_size or missing_size_label,
         "notes": notes,
+        "draft_id": draft_id,
+        "save_payload": source_data,
+        "saved_drafts": list_saved_frames_orders(),
         "line_count": 1,
         "quantity_total": 1,
         "lines": [line],
@@ -1358,13 +1531,48 @@ def area_privada_marcos():
 @app.route("/area-privada/comanda")
 def area_privada_comanda():
     source = (request.args.get("source") or "").strip().lower()
-    order_data = build_frames_order_context() if source == "frames" else build_canvas_order_context()
+    draft_id = (request.args.get("draft") or "").strip()
+    saved_payload = get_saved_frames_order(draft_id) if source == "frames" and draft_id else None
+    order_data = (
+        build_frames_order_context(saved_payload, draft_id=draft_id if saved_payload else "")
+        if source == "frames"
+        else build_canvas_order_context()
+    )
     template_name = "area_privada_comanda_marcs.html" if source == "frames" else "area_privada_comanda_v2.html"
     return render_template(
         template_name,
         lang=get_lang(),
         private_modules=build_private_modules(),
         order_data=order_data,
+    )
+
+
+@app.route("/api/private-orders/frames/save", methods=["POST"])
+def api_private_orders_frames_save():
+    data = request.get_json(silent=True) or {}
+    payload = _normalize_frame_order_payload(data)
+
+    if not any(payload.get(key) for key in ("quote_ref", "client_name", "frame_main", "frame_pre", "final_size")):
+        return jsonify({"ok": False, "error": "missing_payload"}), 400
+
+    try:
+        saved = save_frames_order_draft({**payload, "draft_id": data.get("draft_id")})
+    except RuntimeError:
+        return jsonify({"ok": False, "error": "db_unavailable"}), 503
+    lang = (data.get("lang") or get_lang() or "ca").strip().lower() or "ca"
+    draft_url = url_for(
+        "area_privada_comanda",
+        source="frames",
+        draft=saved["draft_id"],
+        lang=lang,
+    )
+    return jsonify(
+        {
+            "ok": True,
+            "draft_id": saved["draft_id"],
+            "saved_at": _format_saved_timestamp(saved["updated_at"]),
+            "url": draft_url,
+        }
     )
 
 
