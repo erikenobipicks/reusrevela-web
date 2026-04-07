@@ -30,7 +30,7 @@
     font-size:.88rem;
   }
   .order-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;margin-top:2rem}
-  .summary-card,.totals-card,.flow-card,.detail-card,.cta-box{padding:1.7rem}
+  .summary-card,.totals-card,.editor-card,.flow-card,.cta-box{padding:1.7rem}
   .badge{
     display:inline-flex;
     align-items:center;
@@ -83,8 +83,43 @@
   }
   .totals-box strong{display:block;font-family:var(--serif);font-size:2.7rem;line-height:1;margin-top:.55rem}
   .muted{color:var(--muted)}
+  .editor-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:1rem;margin-top:1.3rem}
+  .field{display:grid;gap:.45rem}
+  .field label{
+    font-size:.82rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .field input,.field textarea{
+    width:100%;
+    min-height:52px;
+    padding:.9rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .field textarea{min-height:124px;resize:vertical}
+  .field.full{grid-column:1 / -1}
+  .editor-actions{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.2rem}
+  .note-box{
+    margin-top:1.25rem;
+    padding:1rem 1.1rem;
+    border-radius:20px;
+    background:rgba(166,120,67,.08);
+    border:1px solid rgba(166,120,67,.16);
+  }
+  .note-box span{display:block;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}
+  .note-box p{margin-top:.6rem;white-space:pre-wrap}
+  .draft-list{display:grid;gap:.8rem;margin-top:1.2rem}
+  .draft-item{display:block;padding:1rem 1.05rem;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.58)}
+  .draft-item strong{display:block}
+  .draft-item span{display:block;color:var(--muted);font-size:.92rem;margin-top:.3rem}
+  .draft-item.active{border-color:rgba(166,120,67,.34);box-shadow:0 10px 28px rgba(166,120,67,.12)}
   .flow-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
-  .flow-card p,.detail-card p{margin-top:.7rem;color:var(--muted)}
+  .flow-card p{margin-top:.7rem;color:var(--muted)}
   .flow-card strong{
     display:inline-flex;
     width:42px;
@@ -105,7 +140,7 @@
   }
   .cta-actions{display:flex;flex-wrap:wrap;gap:1rem}
   @media (max-width: 1080px){
-    .order-shell,.order-grid,.material-grid,.flow-grid,.cta-box{
+    .order-shell,.order-grid,.material-grid,.flow-grid,.cta-box,.editor-grid{
       grid-template-columns:1fr;
     }
   }
@@ -130,7 +165,7 @@
     <div class="order-stage fade-up">
       <div>
         <div class="visual-label">{{ order_data.origin_label }}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Refer&egrave;ncia {{ order_data.quote_ref }} preparada per seguir cap a pressupost, client o ordre interna.{% else %}Referencia {{ order_data.quote_ref }} preparada para seguir hacia presupuesto, cliente u orden interna.{% endif %}</h2>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Refer&egrave;ncia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada per seguir cap a pressupost, client o ordre interna.{% else %}Referencia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada para seguir hacia presupuesto, cliente u orden interna.{% endif %}</h2>
         <p>{% if lang == 'ca' %}La calculadora de marcs continua fent el c&agrave;lcul i aquesta pantalla t'ajuda a portar-ne el resum dins el flux general de Reus Revela.{% else %}La calculadora de marcos sigue haciendo el c&aacute;lculo y esta pantalla te ayuda a traer su resumen dentro del flujo general de Reus Revela.{% endif %}</p>
         <div class="hero-total">
           <span>{% if lang == 'ca' %}Total client final{% else %}Total cliente final{% endif %}</span>
@@ -152,18 +187,18 @@
       <div class="summary-top">
         <div>
           <span class="badge ready">{{ order_data.origin_label }}</span>
-          <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.8rem">{{ line.final_label if line else order_data.final_size_label }}</h2>
+          <h2 class="display" id="final-size-display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.8rem">{{ line.final_label if line else order_data.final_size_label }}</h2>
           <p class="muted" style="margin-top:.7rem">{{ line.edit_label if line else order_data.origin_label }}</p>
         </div>
         <strong style="font-size:2rem;line-height:1">{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} &euro;</strong>
       </div>
 
       <div class="detail-list">
-        <div class="detail-line"><span>{% if lang == 'ca' %}Client{% else %}Cliente{% endif %}</span><strong>{{ order_data.client_name }}</strong></div>
-        <div class="detail-line"><span>{% if lang == 'ca' %}Telefon{% else %}Tel&eacute;fono{% endif %}</span><strong>{{ order_data.client_phone }}</strong></div>
+        <div class="detail-line"><span>{% if lang == 'ca' %}Client{% else %}Cliente{% endif %}</span><strong id="client-name-display">{{ order_data.client_name }}</strong></div>
+        <div class="detail-line"><span>{% if lang == 'ca' %}Telefon{% else %}Tel&eacute;fono{% endif %}</span><strong id="client-phone-display">{{ order_data.client_phone }}</strong></div>
         <div class="detail-line"><span>{% if lang == 'ca' %}Pe&ccedil;a{% else %}Pieza{% endif %}</span><strong>{{ order_data.piece_type_label }}</strong></div>
         <div class="detail-line"><span>{% if lang == 'ca' %}Mesura de la pe&ccedil;a{% else %}Medida de la pieza{% endif %}</span><strong>{{ order_data.piece_measure or '-' }}</strong></div>
-        <div class="detail-line"><span>{% if lang == 'ca' %}Mesura final{% else %}Medida final{% endif %}</span><strong>{{ order_data.final_size_label }}</strong></div>
+        <div class="detail-line"><span>{% if lang == 'ca' %}Mesura final{% else %}Medida final{% endif %}</span><strong id="final-size-line">{{ order_data.final_size_label }}</strong></div>
       </div>
 
       <div class="material-grid">
@@ -173,6 +208,11 @@
           <strong>{{ item.value }}</strong>
         </article>
         {% endfor %}
+      </div>
+
+      <div class="note-box" id="notes-box" {% if not order_data.notes %}style="display:none"{% endif %}>
+        <span>{% if lang == 'ca' %}Observacions{% else %}Observaciones{% endif %}</span>
+        <p id="notes-display">{{ order_data.notes }}</p>
       </div>
     </article>
 
@@ -196,28 +236,70 @@
 </section>
 
 <section class="section-tight">
-  <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Seguents passos{% else %}Siguientes pasos{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Ja tens la base bona per continuar la feina sense separar marcs de la resta del privat.{% else %}Ya tienes la base buena para continuar el trabajo sin separar marcos del resto del privado.{% endif %}</h2>
-    </div>
-    <div class="flow-grid">
-      <article class="surface flow-card fade-up">
-        <strong>1</strong>
-        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Revisa dades de client{% else %}Revisa datos de cliente{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Nom, telefon i refer&egrave;ncia ja viatgen des de la calculadora per evitar tornar a omplir el mateix.{% else %}Nombre, tel&eacute;fono y referencia ya viajan desde la calculadora para evitar volver a rellenar lo mismo.{% endif %}</p>
-      </article>
-      <article class="surface flow-card fade-up">
-        <strong>2</strong>
-        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Tens el resum comercial a punt{% else %}Tienes el resumen comercial listo{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Import final, entrada i pendent queden llegibles de seguida, amb la mesura final i la configuraci&oacute; del treball.{% else %}Importe final, entrega y pendiente quedan legibles enseguida, con la medida final y la configuraci&oacute;n del trabajo.{% endif %}</p>
-      </article>
-      <article class="surface flow-card fade-up">
-        <strong>3</strong>
-        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Continua integrat{% else %}Sigue integrado{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Des d'aqu&iacute; ja pots tornar a marcs o seguir navegant pel privat sense perdre el fil del pressupost.{% else %}Desde aqu&iacute; ya puedes volver a marcos o seguir navegando por el privado sin perder el hilo del presupuesto.{% endif %}</p>
-      </article>
-    </div>
+  <div class="container order-grid">
+    <article class="surface editor-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Edita la comanda{% else %}Edita el pedido{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Pots ajustar el client, la mida final i les observacions sense tornar a la calculadora.{% else %}Puedes ajustar el cliente, la medida final y las observaciones sin volver a la calculadora.{% endif %}</h2>
+      <div class="editor-grid">
+        <div class="field">
+          <label for="edit-client-name">{% if lang == 'ca' %}Client{% else %}Cliente{% endif %}</label>
+          <input id="edit-client-name" type="text" value="{{ order_data.client_name }}">
+        </div>
+        <div class="field">
+          <label for="edit-client-phone">{% if lang == 'ca' %}Telefon{% else %}Tel&eacute;fono{% endif %}</label>
+          <input id="edit-client-phone" type="text" value="{{ order_data.client_phone }}">
+        </div>
+        <div class="field">
+          <label for="edit-final-size">{% if lang == 'ca' %}Mesura final{% else %}Medida final{% endif %}</label>
+          <input id="edit-final-size" type="text" value="{{ order_data.final_size_label }}">
+        </div>
+        <div class="field full">
+          <label for="edit-notes">{% if lang == 'ca' %}Observacions internes o comercials{% else %}Observaciones internas o comerciales{% endif %}</label>
+          <textarea id="edit-notes">{{ order_data.notes }}</textarea>
+        </div>
+      </div>
+      <div class="editor-actions">
+        <button type="button" class="btn btn-dark" id="save-order-draft">{% if lang == 'ca' %}Guardar esborrany{% else %}Guardar borrador{% endif %}</button>
+        <button type="button" class="btn btn-outline" id="copy-order-link">{% if lang == 'ca' %}Copiar enlla&ccedil; amb canvis{% else %}Copiar enlace con cambios{% endif %}</button>
+        <a href="{{ order_data.frames_entry_url }}" class="btn btn-outline">{% if lang == 'ca' %}Reobrir pressupost a marcs{% else %}Reabrir presupuesto en marcos{% endif %}</a>
+      </div>
+      <p class="muted" id="save-feedback" style="margin-top:1rem">{% if order_data.draft_id %}{% if lang == 'ca' %}Aquest resum ja t&eacute; un esborrany guardat al privat.{% else %}Este resumen ya tiene un borrador guardado en el privado.{% endif %}{% else %}{% if lang == 'ca' %}Encara no has guardat aquest resum com a esborrany dins del privat.{% else %}Todavia no has guardado este resumen como borrador dentro del privado.{% endif %}{% endif %}</p>
+      <p class="muted" id="copy-feedback" style="margin-top:.65rem">{% if lang == 'ca' %}Els canvis s'actualitzen al moment en aquesta pantalla i tamb&eacute; queden reflectits a l'enlla&ccedil; intern.{% else %}Los cambios se actualizan al momento en esta pantalla y tambi&eacute;n quedan reflejados en el enlace interno.{% endif %}</p>
+    </article>
+
+    <article class="surface flow-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}A partir d'aqu&iacute;{% else %}A partir de aqu&iacute;{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}La comanda ja queda preparada per seguir treballant-la dins del privat.{% else %}El pedido ya queda preparado para seguir trabaj&aacute;ndolo dentro del privado.{% endif %}</h2>
+      {% if order_data.saved_drafts %}
+      <div class="draft-list">
+        {% for draft in order_data.saved_drafts %}
+        <a class="draft-item {% if draft.draft_id == order_data.draft_id %}active{% endif %}" href="{{ url_for('area_privada_comanda', source='frames', draft=draft.draft_id, lang=lang) }}">
+          <strong>{{ draft.quote_ref or ('Esborrany ' ~ loop.index) }}</strong>
+          <span>{{ draft.client_name or ('Client pendent' if lang == 'ca' else 'Cliente pendiente') }}</span>
+          <span>{{ draft.final_size_label or ('Mesura pendent' if lang == 'ca' else 'Medida pendiente') }} &middot; {{ "%.2f"|format(draft.total)|replace(".", ",") }} &euro;</span>
+          <span>{{ draft.updated_at_label }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="flow-grid">
+        <article class="surface flow-card">
+          <strong>1</strong>
+          <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Revisa dades de client{% else %}Revisa datos de cliente{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Nom, telefon i refer&egrave;ncia ja viatgen des de la calculadora per evitar tornar a omplir el mateix.{% else %}Nombre, tel&eacute;fono y referencia ya viajan desde la calculadora para evitar volver a rellenar lo mismo.{% endif %}</p>
+        </article>
+        <article class="surface flow-card">
+          <strong>2</strong>
+          <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Afegeix context{% else %}A&ntilde;ade contexto{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Pots deixar observacions comercials, notes de producci&oacute; o matisos del treball sense perdre el resum inicial.{% else %}Puedes dejar observaciones comerciales, notas de producci&oacute;n o matices del trabajo sin perder el resumen inicial.{% endif %}</p>
+        </article>
+        <article class="surface flow-card">
+          <strong>3</strong>
+          <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Recupera el darrer punt{% else %}Recupera el ultimo punto{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Quan desis l'esborrany, el podras tornar a obrir des d'aquest mateix modul sense dependre del link inicial.{% else %}Cuando guardes el borrador, podras volver a abrirlo desde este mismo modulo sin depender del link inicial.{% endif %}</p>
+        </article>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -235,4 +317,106 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var fallbackName = {{ ({'ca': 'Client pendent', 'es': 'Cliente pendiente'}[lang])|tojson }};
+  var fallbackPhone = {{ ({'ca': 'Telefon pendent', 'es': 'Telefono pendiente'}[lang])|tojson }};
+  var fallbackSize = {{ ({'ca': 'Mesura pendent', 'es': 'Medida pendiente'}[lang])|tojson }};
+  var copyOk = {{ ({'ca': 'Enllac copiat al porta-retalls.', 'es': 'Enlace copiado al portapapeles.'}[lang])|tojson }};
+  var copyFail = {{ ({'ca': 'No s\'ha pogut copiar. Pots copiar l\'URL manualment.', 'es': 'No se ha podido copiar. Puedes copiar la URL manualmente.'}[lang])|tojson }};
+  var nameInput = document.getElementById('edit-client-name');
+  var phoneInput = document.getElementById('edit-client-phone');
+  var sizeInput = document.getElementById('edit-final-size');
+  var notesInput = document.getElementById('edit-notes');
+  var nameDisplay = document.getElementById('client-name-display');
+  var phoneDisplay = document.getElementById('client-phone-display');
+  var sizeDisplay = document.getElementById('final-size-display');
+  var sizeLine = document.getElementById('final-size-line');
+  var notesBox = document.getElementById('notes-box');
+  var notesDisplay = document.getElementById('notes-display');
+  var initialPayload = {{ order_data.save_payload|tojson }};
+  var saveUrl = {{ url_for('api_private_orders_frames_save')|tojson }};
+  var saveBtn = document.getElementById('save-order-draft');
+  var saveFeedback = document.getElementById('save-feedback');
+  var copyBtn = document.getElementById('copy-order-link');
+  var copyFeedback = document.getElementById('copy-feedback');
+
+  function buildSavePayload(){
+    var payload = Object.assign({}, initialPayload);
+    payload.client_name = (nameInput.value || "").trim();
+    payload.client_phone = (phoneInput.value || "").trim();
+    payload.final_size = (sizeInput.value || "").trim();
+    payload.notes = (notesInput.value || "").trim();
+    payload.lang = document.documentElement.lang || {{ lang|tojson }};
+    var currentDraft = params.get('draft');
+    if(currentDraft){ payload.draft_id = currentDraft; }
+    return payload;
+  }
+
+  function syncSummary(){
+    var clientName = (nameInput.value || '').trim();
+    var clientPhone = (phoneInput.value || '').trim();
+    var finalSize = (sizeInput.value || '').trim();
+    var notes = notesInput.value || '';
+
+    nameDisplay.textContent = clientName || fallbackName;
+    phoneDisplay.textContent = clientPhone || fallbackPhone;
+    sizeDisplay.textContent = finalSize || fallbackSize;
+    sizeLine.textContent = finalSize || fallbackSize;
+    notesDisplay.textContent = notes.trim();
+    notesBox.style.display = notes.trim() ? '' : 'none';
+
+    if(clientName){ params.set('client_name', clientName); } else { params.delete('client_name'); }
+    if(clientPhone){ params.set('client_phone', clientPhone); } else { params.delete('client_phone'); }
+    if(finalSize){ params.set('final_size', finalSize); } else { params.delete('final_size'); }
+    if(notes.trim()){ params.set('notes', notes.trim()); } else { params.delete('notes'); }
+
+    var newUrl = window.location.pathname + '?' + params.toString();
+    window.history.replaceState({}, '', newUrl);
+  }
+
+  [nameInput, phoneInput, sizeInput, notesInput].forEach(function(el){
+    el.addEventListener('input', syncSummary);
+  });
+
+  saveBtn.addEventListener('click', async function(){
+    syncSummary();
+    saveBtn.disabled = true;
+    saveFeedback.textContent = {{ ({'ca': 'Guardant esborrany...', 'es': 'Guardando borrador...'}[lang])|tojson }};
+    try {
+      var response = await fetch(saveUrl, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(buildSavePayload())
+      });
+      var data = await response.json();
+      if(!response.ok || !data.ok){ throw new Error(data.error || "save_failed"); }
+      saveFeedback.textContent = {{ ({'ca': 'Esborrany guardat.', 'es': 'Borrador guardado.'}[lang])|tojson }} + (data.saved_at ? " " + data.saved_at : "");
+      if(data.url){
+        window.location.assign(data.url);
+        return;
+      }
+    } catch (err) {
+      saveFeedback.textContent = {{ ({'ca': 'No s\'ha pogut guardar ara mateix.', 'es': 'No se ha podido guardar ahora mismo.'}[lang])|tojson }};
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  copyBtn.addEventListener('click', async function(){
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      copyFeedback.textContent = copyOk;
+    } catch (err) {
+      copyFeedback.textContent = copyFail;
+    }
+  });
+
+  syncSummary();
+})();
+</script>
 {% endblock %}
