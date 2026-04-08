@@ -609,13 +609,18 @@
 
   <nav class="nav" aria-label="{% if lang == 'ca' %}Navegació principal{% else %}Navegación principal{% endif %}">
     <div class="nav-inner">
-      <a href="{{ url_for('index') }}" class="nav-logo">
+      <a href="{% if private_area_nav %}{{ url_for('area_privada') }}{% else %}{{ url_for('index') }}{% endif %}" class="nav-logo">
         <img src="{{ url_for('static', filename='img/logo-reusrevela.png') }}" alt="Logo Reus Revela">
         <div>Reus <span>Revela</span></div>
       </a>
 
       <div class="nav-links">
-        {% if lang == 'ca' %}
+        {% if private_area_nav %}
+          {% for item in private_nav_links %}
+            <a href="{{ item.href }}" {% if item.active %}class="active"{% endif %}>{{ item.label }}</a>
+          {% endfor %}
+          <a href="{{ private_return_url }}" class="nav-cta">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
+        {% elif lang == 'ca' %}
           <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Inici</a>
           <a href="{{ url_for('serveis') }}" {% if request.endpoint == 'serveis' %}class="active"{% endif %}>Serveis</a>
           <a href="{{ url_for('sobre') }}" {% if request.endpoint == 'sobre' %}class="active"{% endif %}>Qui som</a>
@@ -650,7 +655,12 @@
   </nav>
 
   <div class="mobile-menu" id="mobile-menu">
-    {% if lang == 'ca' %}
+    {% if private_area_nav %}
+      {% for item in private_nav_links %}
+        <a href="{{ item.href }}">{{ item.label }}</a>
+      {% endfor %}
+      <a href="{{ private_return_url }}">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
+    {% elif lang == 'ca' %}
       <a href="{{ url_for('index') }}">Inici</a>
       <a href="{{ url_for('serveis') }}">Serveis</a>
       <a href="{{ url_for('sobre') }}">Qui som</a>

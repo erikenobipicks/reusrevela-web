@@ -783,6 +783,54 @@ def build_private_modules():
     return modules
 
 
+def build_private_nav():
+    lang = get_lang()
+    current_endpoint = request.endpoint or ""
+    links = [
+        {
+            "endpoint": "area_privada",
+            "label": "Portal" if lang == "ca" else "Portal",
+        },
+        {
+            "endpoint": "area_privada_tarifari",
+            "label": "Tarifari" if lang == "ca" else "Tarifario",
+        },
+        {
+            "endpoint": "area_privada_lienzos",
+            "label": "Llenços" if lang == "ca" else "Lienzos",
+        },
+        {
+            "endpoint": "area_privada_impresions",
+            "label": "Impressions" if lang == "ca" else "Impresiones",
+        },
+        {
+            "endpoint": "area_privada_marcos",
+            "label": "Marcs" if lang == "ca" else "Marcos",
+        },
+        {
+            "endpoint": "area_privada_comanda",
+            "label": "Comanda" if lang == "ca" else "Pedido",
+        },
+    ]
+
+    return [
+        {
+            "href": url_for(item["endpoint"]),
+            "label": item["label"],
+            "active": current_endpoint == item["endpoint"],
+        }
+        for item in links
+    ]
+
+
+def build_private_shell_context():
+    return {
+        "private_area_nav": True,
+        "private_nav_links": build_private_nav(),
+        "private_return_url": url_for("professionals"),
+    }
+
+
 def get_canvas_size_image_url(size_id):
     size_id = str(size_id or "").strip()
     default_url = url_for("static", filename="img/lienzos/private-canvas-main.webp")
@@ -1619,6 +1667,7 @@ def area_privada():
         "area_privada_v2.html",
         lang=get_lang(),
         private_modules=build_private_modules(),
+        **build_private_shell_context(),
     )
 
 
@@ -1648,6 +1697,7 @@ def area_privada_acces():
         access_error_message=get_bridge_error_message(access_error, lang) if access_error else "",
         CALC_DIRECT_URL=build_direct_calc_url(service, lang, source),
         CALC_REQUEST_URL=build_calc_request_url(service),
+        **build_private_shell_context(),
     )
 
 
@@ -1659,6 +1709,7 @@ def area_privada_tarifari():
         private_modules=build_private_modules(),
         **build_canvas_module_context(),
         **build_pricing_view_context(),
+        **build_private_shell_context(),
     )
 
 
@@ -1671,6 +1722,7 @@ def area_privada_lienzos():
         lang=get_lang(),
         private_modules=build_private_modules(),
         **build_canvas_module_context(draft_payload=draft_payload, draft_id=draft_id if draft_payload else ""),
+        **build_private_shell_context(),
     )
 
 
@@ -1681,6 +1733,7 @@ def area_privada_impresions():
         lang=get_lang(),
         private_modules=build_private_modules(),
         **build_prints_module_context(),
+        **build_private_shell_context(),
     )
 
 
@@ -1693,6 +1746,7 @@ def area_privada_marcos():
         calc_service=get_calc_service("frames"),
         CALC_LOGIN_URL=build_calc_login_url("frames", source="private_area"),
         CALC_REQUEST_URL=build_calc_request_url("frames"),
+        **build_private_shell_context(),
     )
 
 
@@ -1712,6 +1766,7 @@ def area_privada_comanda():
         lang=get_lang(),
         private_modules=build_private_modules(),
         order_data=order_data,
+        **build_private_shell_context(),
     )
 
 

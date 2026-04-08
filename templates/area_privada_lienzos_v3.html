@@ -22,6 +22,7 @@
   }
   .canvas-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:38ch}
   .stage-gallery{margin-top:1.5rem}
+  .canvas-stage .stage-gallery{display:none}
   .stage-main-image{
     width:100%;
     aspect-ratio:1/1;
@@ -250,6 +251,24 @@
   }
   .summary-total{margin-top:1.25rem;padding:1.35rem;border-radius:24px;background:rgba(166,120,67,.08);border:1px solid rgba(166,120,67,.16)}
   .summary-total strong{display:block;font-family:var(--serif);font-size:2.8rem;line-height:1;margin-top:.6rem}
+  .summary-preview{
+    margin-top:1.15rem;
+    padding:1rem;
+    border-radius:22px;
+    background:rgba(255,255,255,.56);
+    border:1px solid var(--line);
+  }
+  .summary-preview .stage-selection{
+    margin-bottom:.9rem;
+  }
+  .summary-preview .stage-selection span{
+    color:var(--muted);
+  }
+  .summary-preview .stage-main-image{
+    aspect-ratio:4/3;
+    box-shadow:none;
+    border-radius:20px;
+  }
   .summary-list{display:grid;gap:.8rem;margin-top:1.3rem}
   .summary-line{
     display:flex;
@@ -370,8 +389,8 @@
       <div class="stage-gallery">
         <div class="stage-selection">
           <div>
-            <strong id="selected-canvas-label">{{ canvas_preview.selected_label }}</strong>
-            <span id="selected-canvas-orientation">{{ canvas_preview.selected_orientation }}</span>
+            <strong id="selected-canvas-label-hero">{{ canvas_preview.selected_label }}</strong>
+            <span id="selected-canvas-orientation-hero">{{ canvas_preview.selected_orientation }}</span>
           </div>
           <span class="module-chip" id="selected-canvas-chip">{% if lang == 'ca' %}Vista del llenÃ§{% else %}Vista del lienzo{% endif %}</span>
         </div>
@@ -379,7 +398,7 @@
           src="{{ canvas_preview.image_url }}"
           alt="{% if lang == 'ca' %}Exemple de llenç muntat{% else %}Ejemplo de lienzo montado{% endif %}"
           class="stage-main-image"
-          id="selected-canvas-image"
+          id="selected-canvas-image-hero"
           loading="lazy"
         >
         <div class="stage-detail-grid">
@@ -560,6 +579,23 @@
         <span id="summary-total-label">{% if lang == 'ca' %}Total taller + IVA{% else %}Total taller + IVA{% endif %}</span>
         <strong id="summary-main-total">47,80 €</strong>
         <div class="panel-note">{% if lang == 'ca' %}Inclou bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm i {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% else %}Incluye bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm y {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% endif %}</div>
+      </div>
+
+      <div class="summary-preview">
+        <div class="stage-selection">
+          <div>
+            <strong id="selected-canvas-label">{{ canvas_preview.selected_label }}</strong>
+            <span id="selected-canvas-orientation">{{ canvas_preview.selected_orientation }}</span>
+          </div>
+          <span class="module-chip">{% if lang == 'ca' %}Vista del llenç{% else %}Vista del lienzo{% endif %}</span>
+        </div>
+        <img
+          src="{{ canvas_preview.image_url }}"
+          alt="{% if lang == 'ca' %}Exemple de llenç muntat{% else %}Ejemplo de lienzo montado{% endif %}"
+          class="stage-main-image"
+          id="selected-canvas-image"
+          loading="lazy"
+        >
       </div>
 
       <div class="summary-list">
