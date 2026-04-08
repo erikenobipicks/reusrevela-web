@@ -855,6 +855,43 @@ def request_calc_bridge_login(username, password, service=None, lang=None, sourc
         return {"ok": False, "error": "network_error"}
 
 
+def request_calc_margin_sync(username, settings=None):
+    username = (username or "").strip().lower()
+    if not username or not CALC_BRIDGE_TOKEN or not CALC_URL:
+        return {"attempted": False, "reason": "missing_context"}
+
+    settings = settings or get_private_commercial_settings()
+    payload = {
+        "username": username,
+        "marge": parse_non_negative_float(
+            settings.get("frames"),
+            default=DEFAULT_COMMERCIAL_SETTINGS["frames"],
+        ),
+        "marge_impressio": parse_non_negative_float(
+            settings.get("prints"),
+            default=DEFAULT_COMMERCIAL_SETTINGS["prints"],
+        ),
+    }
+    req = urllib_request.Request(
+        f"{CALC_URL.rstrip('/')}/api/public/commercial-settings-sync",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Bridge-Token": CALC_BRIDGE_TOKEN,
+        },
+        method="POST",
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=12) as resp:
+            body = resp.read().decode("utf-8")
+            return {"attempted": True, "ok": True, "response": json.loads(body or "{}")}
+    except urllib_error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="ignore")
+        return {"attempted": True, "ok": False, "status": exc.code, "detail": detail}
+    except (urllib_error.URLError, TimeoutError, ValueError) as exc:
+        return {"attempted": True, "ok": False, "detail": str(exc)}
+
+
 def build_calc_request_url(service=None):
     calc_service = get_calc_service(service)
     params = {
@@ -2444,7 +2481,9 @@ def area_privada_tarifari():
 @app.route("/area-privada/ajustos", methods=["GET", "POST"])
 def area_privada_ajustos():
     if request.method == "POST":
-        save_private_commercial_settings(request.form)
+        settings = save_private_commercial_settings(request.form)
+        professional = session.get("private_professional") or {}
+        request_calc_margin_sync(professional.get("username"), settings=settings)
         return redirect(url_for("area_privada_ajustos", lang=get_lang(), saved=1))
     return render_template(
         "area_privada_ajustos.html",
@@ -2453,6 +2492,24 @@ def area_privada_ajustos():
         **build_private_settings_context(),
         **build_private_shell_context(),
     )
+
+
+@app.route("/api/private/commercial-settings-sync", methods=["POST"])
+def api_private_commercial_settings_sync():
+    provided_token = request.headers.get("X-Bridge-Token", "").strip()
+    if not CALC_BRIDGE_TOKEN or provided_token != CALC_BRIDGE_TOKEN:
+        return jsonify({"ok": False, "error": "forbidden"}), 403
+
+    payload = request.get_json(silent=True) or {}
+    current = get_private_commercial_settings()
+    for key in ("general", "frames", "canvas", "prints", "foam", "fine_art"):
+        if key in payload:
+            current[key] = parse_non_negative_float(
+                payload.get(key),
+                default=DEFAULT_COMMERCIAL_SETTINGS.get(key, current.get(key, 0.0)),
+            )
+    save_private_commercial_settings(current)
+    return jsonify({"ok": True, "settings": current})
 
 
 @app.route("/area-privada/lienzos")
