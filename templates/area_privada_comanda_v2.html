@@ -110,6 +110,32 @@
   .delivery-card.selected{border-color:rgba(166,120,67,.34);box-shadow:0 10px 28px rgba(166,120,67,.12)}
   .delivery-card p,.client-card p,.history-card p,.flow-card p{margin-top:.7rem;color:var(--muted)}
   .delivery-card .badge,.client-card .badge{margin-top:1rem}
+  .client-select{
+    display:block;
+    text-decoration:none;
+    color:inherit;
+  }
+  .client-select:hover{transform:translateY(-1px)}
+  .client-form{
+    display:grid;
+    gap:.95rem;
+    margin-top:1.2rem;
+  }
+  .client-form input,
+  .client-form textarea{
+    width:100%;
+    min-height:50px;
+    padding:.9rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .client-form textarea{
+    min-height:110px;
+    resize:vertical;
+  }
+  .client-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
   .inline-field{
     margin-top:1.1rem;
     padding:.95rem 1rem;
@@ -143,20 +169,15 @@
   <div class="container order-shell">
     <div class="order-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Comanda{% else %}Pedido{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Agrupa línies, revisa totals i assigna el client quan la feina ja està clara.{% else %}Agrupa líneas, revisa totales y asigna el cliente cuando el trabajo ya está claro.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Això permet preparar primer el producte i deixar per al final les dades del client i la sortida comercial o de taller.{% else %}Esto permite preparar primero el producto y dejar para el final los datos del cliente y la salida comercial o de taller.{% endif %}</p>
-      <div class="module-nav">
-        {% for module in private_modules %}
-        <span class="module-chip">{{ module.title }}</span>
-        {% endfor %}
-      </div>
+      <h1 class="display">{% if lang == 'ca' %}Agrupa línies i assigna el client al final.{% else %}Agrupa líneas y asigna el cliente al final.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Primer tanques el producte. Després tries el client, el pressupost i la sortida a taller.{% else %}Primero cierras el producto. Después eliges el cliente, el presupuesto y la salida a taller.{% endif %}</p>
     </div>
 
     <div class="order-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Ordre de treball{% else %}Orden de trabajo{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Primer es prepara la comanda. Després es decideix com es presenta al client i com es baixa a taller.{% else %}Primero se prepara el pedido. Después se decide cómo se presenta al cliente y cómo baja a taller.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Així és més fàcil reutilitzar clients, repetir feina i mantenir separades la part comercial i la part de producció.{% else %}Así es más fácil reutilizar clientes, repetir trabajo y mantener separadas la parte comercial y la parte de producción.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La comanda junta producte, client i document final en un sol punt.{% else %}El pedido reúne producto, cliente y documento final en un solo punto.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Això et permet repetir clients i preparar pressupost o ordre sense tornar enrere.{% else %}Esto te permite repetir clientes y preparar presupuesto u orden sin volver atrás.{% endif %}</p>
       </div>
       <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-outline">{% if lang == 'ca' %}Afegir un altre llenç{% else %}Añadir otro lienzo{% endif %}</a>
     </div>
@@ -282,30 +303,57 @@
       <article class="surface client-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Seleccionar client{% else %}Seleccionar cliente{% endif %}</div>
         <h3 class="card-title">{% if lang == 'ca' %}Reutilitzar un client existent evita tornar a omplir dades a cada comanda.{% else %}Reutilizar un cliente existente evita volver a rellenar datos en cada pedido.{% endif %}</h3>
-        {% for client in order_data.clients %}
-        <div class="inline-field" style="{% if client.selected %}border-color:rgba(166,120,67,.34);box-shadow:0 10px 28px rgba(166,120,67,.08){% endif %}">
-          <strong>{{ client.name }}</strong>
-          <div style="margin-top:.45rem">{{ client.company }}</div>
-          <div style="margin-top:.45rem">{{ client.email }} · {{ client.phone }}</div>
-          <div style="margin-top:.45rem">{{ client.city }} · {{ client.last_order }}</div>
-          {% if client.selected %}
-          <span class="badge ready">{% if lang == 'ca' %}seleccionat{% else %}seleccionado{% endif %}</span>
-          {% endif %}
-        </div>
-        {% endfor %}
+        {% if order_data.has_clients %}
+          {% for client in order_data.clients %}
+          <a href="{{ client.select_url }}" class="client-select">
+            <div class="inline-field" style="{% if client.selected %}border-color:rgba(166,120,67,.34);box-shadow:0 10px 28px rgba(166,120,67,.08){% endif %}">
+              <strong>{{ client.name }}</strong>
+              {% if client.company %}<div style="margin-top:.45rem">{{ client.company }}</div>{% endif %}
+              <div style="margin-top:.45rem">
+                {% if client.email %}{{ client.email }}{% endif %}
+                {% if client.email and client.phone %} · {% endif %}
+                {% if client.phone %}{{ client.phone }}{% endif %}
+              </div>
+              <div style="margin-top:.45rem">
+                {% if client.city %}{{ client.city }}{% endif %}
+                {% if client.city and client.last_order %} · {% endif %}
+                {% if client.last_order %}{{ client.last_order }}{% endif %}
+              </div>
+              {% if client.selected %}
+              <span class="badge ready">{% if lang == 'ca' %}seleccionat{% else %}seleccionado{% endif %}</span>
+              {% elif client.source == 'frames' %}
+              <span class="badge soft">{% if lang == 'ca' %}arriba des de marcs{% else %}llega desde marcos{% endif %}</span>
+              {% endif %}
+            </div>
+          </a>
+          {% endfor %}
+        {% else %}
+          <div class="inline-field">
+            {% if lang == 'ca' %}Encara no tens clients guardats. El primer que creïs aquí quedarà disponible per a les properes comandes.{% else %}Todavía no tienes clientes guardados. El primero que crees aquí quedará disponible para los próximos pedidos.{% endif %}
+          </div>
+        {% endif %}
       </article>
 
       <article class="surface client-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Crear client nou{% else %}Crear cliente nuevo{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Si encara no existeix, es pot afegir aquí al final sense trencar la comanda.{% else %}Si aún no existe, se puede añadir aquí al final sin romper el pedido.{% endif %}</h3>
-        <div class="summary-list">
-          <div class="summary-line"><span>{% if lang == 'ca' %}Nom i cognoms{% else %}Nombre y apellidos{% endif %}</span><strong>{% if lang == 'ca' %}Camp breu{% else %}Campo breve{% endif %}</strong></div>
-          <div class="summary-line"><span>{% if lang == 'ca' %}Email{% else %}Email{% endif %}</span><strong>{% if lang == 'ca' %}Per enviar pressupost{% else %}Para enviar presupuesto{% endif %}</strong></div>
-          <div class="summary-line"><span>{% if lang == 'ca' %}Telèfon{% else %}Teléfono{% endif %}</span><strong>{% if lang == 'ca' %}Opcional{% else %}Opcional{% endif %}</strong></div>
-          <div class="summary-line"><span>{% if lang == 'ca' %}Observacions{% else %}Observaciones{% endif %}</span><strong>{% if lang == 'ca' %}Nom de la sessió o notes{% else %}Nombre de la sesión o notas{% endif %}</strong></div>
-        </div>
-        <p>{% if lang == 'ca' %}Aquesta fitxa quedaria guardada per a futures comandes del mateix client, de manera que el fotògraf només l'hauria de crear una vegada.{% else %}Esta ficha quedaría guardada para futuros pedidos del mismo cliente, de modo que el fotógrafo solo tendría que crearla una vez.{% endif %}</p>
-        <span class="badge soft">{% if lang == 'ca' %}client al final del flux{% else %}cliente al final del flujo{% endif %}</span>
+        <h3 class="card-title">{% if lang == 'ca' %}Si encara no existeix, el pots crear aquí mateix i la comanda ja quedarà vinculada.{% else %}Si aún no existe, lo puedes crear aquí mismo y el pedido ya quedará vinculado.{% endif %}</h3>
+        <form method="post" action="{{ order_data.client_save_url }}" class="client-form">
+          <input type="hidden" name="next_path" value="{{ request.full_path.rstrip('?') }}">
+          <input type="hidden" name="order_source" value="{{ order_data.origin|default('') }}">
+          <input type="hidden" name="order_draft" value="{{ order_data.draft_id|default('') }}">
+          <input type="hidden" name="source" value="{% if order_data.origin == 'frames' %}frames{% else %}private_area{% endif %}">
+          <input type="hidden" name="last_order_ref" value="{% if order_data.quote_ref %}{{ order_data.quote_ref }}{% else %}CANVAS-{{ order_data.generated_at.strftime('%d%m%y') }}{% endif %}">
+          <input type="text" name="name" placeholder="{% if lang == 'ca' %}Nom i cognoms del client{% else %}Nombre y apellidos del cliente{% endif %}" required>
+          <input type="text" name="company" placeholder="{% if lang == 'ca' %}Sessió, empresa o referència{% else %}Sesión, empresa o referencia{% endif %}">
+          <input type="email" name="email" placeholder="{% if lang == 'ca' %}Email per enviar pressupost{% else %}Email para enviar presupuesto{% endif %}">
+          <input type="text" name="phone" placeholder="{% if lang == 'ca' %}Telèfon{% else %}Teléfono{% endif %}">
+          <input type="text" name="city" placeholder="{% if lang == 'ca' %}Població{% else %}Población{% endif %}">
+          <textarea name="notes" placeholder="{% if lang == 'ca' %}Observacions o nom de la sessió{% else %}Observaciones o nombre de la sesión{% endif %}"></textarea>
+          <div class="client-actions">
+            <button type="submit" class="btn btn-dark">{% if lang == 'ca' %}Guardar client i assignar-lo{% else %}Guardar cliente y asignarlo{% endif %}</button>
+          </div>
+        </form>
+        <p>{% if lang == 'ca' %}La fitxa queda guardada per reutilitzar-la després, també quan entrin pressupostos des de marcs.{% else %}La ficha queda guardada para reutilizarla después, también cuando entren presupuestos desde marcos.{% endif %}</p>
       </article>
     </div>
     <div class="history-grid">

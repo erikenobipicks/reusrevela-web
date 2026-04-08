@@ -367,6 +367,13 @@ CANVAS_DRAFT_FIELDS = [
 ]
 
 
+def _empty_private_area_store():
+    return {
+        "frames_order_drafts": {},
+        "canvas_order_drafts": {},
+        "clients": {},
+    }
+
 
 def get_private_area_db():
     return PRIVATE_AREA_DB_PATH
@@ -380,7 +387,7 @@ def init_private_area_db():
             store_path.parent.mkdir(parents=True, exist_ok=True)
         if not store_path.exists():
             store_path.write_text(
-                json.dumps({"frames_order_drafts": {}, "canvas_order_drafts": {}}, ensure_ascii=False, indent=2),
+                json.dumps(_empty_private_area_store(), ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
         return True
@@ -421,7 +428,7 @@ def _format_saved_timestamp(value):
 
 def _read_private_area_store():
     if not init_private_area_db():
-        return {"frames_order_drafts": {}, "canvas_order_drafts": {}}
+        return _empty_private_area_store()
     store_path = Path(PRIVATE_AREA_DB_PATH)
     try:
         data = json.loads(store_path.read_text(encoding="utf-8") or "{}")
@@ -435,6 +442,9 @@ def _read_private_area_store():
     canvas_drafts = data.get("canvas_order_drafts")
     if not isinstance(canvas_drafts, dict):
         data["canvas_order_drafts"] = {}
+    clients = data.get("clients")
+    if not isinstance(clients, dict):
+        data["clients"] = {}
     return data
 
 
@@ -572,6 +582,80 @@ def save_canvas_draft(payload):
         "updated_at": updated_at,
         "payload": normalized,
     }
+
+
+def _slugify_client_fragment(value):
+    safe = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(value or "").strip())
+    safe = "-".join(part for part in safe.split("-") if part)
+    return safe[:40]
+
+
+def _normalize_private_client_payload(payload=None):
+    payload = payload or {}
+    return {
+        "name": str(payload.get("name") or "").strip(),
+        "company": str(payload.get("company") or "").strip(),
+        "email": str(payload.get("email") or "").strip(),
+        "phone": str(payload.get("phone") or "").strip(),
+        "city": str(payload.get("city") or "").strip(),
+        "notes": str(payload.get("notes") or "").strip(),
+        "source": str(payload.get("source") or "").strip() or "private_area",
+        "last_order_ref": str(payload.get("last_order_ref") or "").strip(),
+    }
+
+
+def _client_sort_key(item):
+    return item.get("updated_at") or ""
+
+
+def save_private_client(payload, client_id=""):
+    normalized = _normalize_private_client_payload(payload)
+    if not normalized["name"] and not normalized["phone"] and not normalized["email"]:
+        raise ValueError("missing_client_identity")
+
+    client_id = str(client_id or "").strip()
+    if not client_id:
+        base_name = _slugify_client_fragment(normalized["name"] or normalized["email"] or normalized["phone"] or "client")
+        base_phone = _slugify_client_fragment(normalized["phone"] or "sense-telefon")
+        client_id = f"client_{base_name}_{base_phone}"[:80]
+
+    updated_at = datetime.utcnow().isoformat(timespec="seconds")
+    store = _read_private_area_store()
+    clients = store.setdefault("clients", {})
+    existing = clients.get(client_id, {}) if isinstance(clients.get(client_id), dict) else {}
+    order_count = int(existing.get("order_count") or 0)
+    clients[client_id] = {
+        "id": client_id,
+        "name": normalized["name"] or existing.get("name", ""),
+        "company": normalized["company"] or existing.get("company", ""),
+        "email": normalized["email"] or existing.get("email", ""),
+        "phone": normalized["phone"] or existing.get("phone", ""),
+        "city": normalized["city"] or existing.get("city", ""),
+        "notes": normalized["notes"] or existing.get("notes", ""),
+        "source": normalized["source"] or existing.get("source", "private_area"),
+        "last_order_ref": normalized["last_order_ref"] or existing.get("last_order_ref", ""),
+        "updated_at": updated_at,
+        "created_at": existing.get("created_at") or updated_at,
+        "order_count": order_count,
+    }
+    if not _write_private_area_store(store):
+        raise RuntimeError("private_area_db_unavailable")
+    return clients[client_id]
+
+
+def list_private_clients(limit=12):
+    clients = _read_private_area_store().get("clients", {})
+    rows = [row for row in clients.values() if isinstance(row, dict)]
+    rows = sorted(rows, key=_client_sort_key, reverse=True)
+    return rows[: max(int(limit or 1), 1)]
+
+
+def get_private_client(client_id):
+    client_id = str(client_id or "").strip()
+    if not client_id:
+        return None
+    row = _read_private_area_store().get("clients", {}).get(client_id)
+    return row if isinstance(row, dict) else None
 
 
 def get_lang():
@@ -1087,6 +1171,21 @@ def build_canvas_order_line(size_item, edit_item, quantity, margin_percent, show
     }
 
 
+def build_order_return_params(source="", draft_id=""):
+    params = {"lang": get_lang()}
+    if source == "frames":
+        params["source"] = "frames"
+        if draft_id:
+            params["draft"] = draft_id
+        return params
+
+    for key in ("size", "edit", "qty", "margin", "show_file_size", "delivery", "client"):
+        value = request.args.get(key)
+        if value not in (None, ""):
+            params[key] = value
+    return params
+
+
 def build_canvas_order_context():
     lang = get_lang()
     size_item = get_canvas_size_by_id(request.args.get("size"))
@@ -1184,45 +1283,10 @@ def build_canvas_order_context():
         else "dropbox"
     )
 
-    sample_clients = [
-        {
-            "id": "client_001",
-            "name": "Marta Puig",
-            "company": {
-                "ca": "Sessió familiar Primavera",
-                "es": "Sesión familiar Primavera",
-            },
-            "email": "marta@example.com",
-            "phone": "+34 600 123 123",
-            "city": {
-                "ca": "Reus",
-                "es": "Reus",
-            },
-            "last_order": {
-                "ca": "2 comandes aquest mes",
-                "es": "2 pedidos este mes",
-            },
-        },
-        {
-            "id": "client_002",
-            "name": "Estudi Grau",
-            "company": {
-                "ca": "Reportatge d'interiors",
-                "es": "Reportaje de interiores",
-            },
-            "email": "estudi@example.com",
-            "phone": "+34 600 456 456",
-            "city": {
-                "ca": "Tarragona",
-                "es": "Tarragona",
-            },
-            "last_order": {
-                "ca": "Client recurrent",
-                "es": "Cliente recurrente",
-            },
-        },
-    ]
-    selected_client_id = request.args.get("client") or sample_clients[0]["id"]
+    saved_clients = list_private_clients(limit=12)
+    selected_client_id = (request.args.get("client") or "").strip()
+    if not selected_client_id and saved_clients:
+        selected_client_id = saved_clients[0]["id"]
 
     recent_orders = [
         {
@@ -1281,17 +1345,25 @@ def build_canvas_order_context():
         "clients": [
             {
                 "id": item["id"],
-                "name": item["name"],
-                "company": item["company"][lang],
+                "name": item.get("name", ""),
+                "company": item.get("company", ""),
                 "email": item["email"],
                 "phone": item["phone"],
-                "city": item["city"][lang],
-                "last_order": item["last_order"][lang],
+                "city": item.get("city", ""),
+                "last_order": item.get("last_order_ref") or (
+                    {"ca": "Sense comandes encara", "es": "Sin pedidos todavia"}[lang]
+                ),
+                "source": item.get("source", "private_area"),
+                "notes": item.get("notes", ""),
                 "selected": item["id"] == selected_client_id,
+                "select_url": url_for("area_privada_comanda", **{**build_order_return_params(), "client": item["id"]}),
             }
-            for item in sample_clients
+            for item in saved_clients
         ],
         "selected_client_id": selected_client_id,
+        "has_clients": bool(saved_clients),
+        "client_save_url": url_for("area_privada_comanda_client_save"),
+        "return_params": build_order_return_params(),
         "recent_orders": [
             {
                 "reference": item["reference"],
@@ -1428,15 +1500,35 @@ def build_frames_order_context(base_payload=None, draft_id=""):
         }
     ]
 
+    saved_client = None
+    if client_name or client_phone:
+        try:
+            saved_client = save_private_client(
+                {
+                    "name": client_name,
+                    "phone": client_phone,
+                    "company": piece_type_label,
+                    "city": {"ca": "Importat des de marcs", "es": "Importado desde marcos"}[lang],
+                    "notes": notes,
+                    "source": "frames",
+                    "last_order_ref": quote_display,
+                }
+            )
+        except (RuntimeError, ValueError):
+            saved_client = None
+
     client_entry = {
-        "id": "client_imported",
-        "name": client_name or missing_client_label,
-        "company": piece_type_label,
-        "email": "",
-        "phone": client_phone or missing_phone_label,
-        "city": {"ca": "Arriba des de marcs", "es": "Llega desde marcos"}[lang],
-        "last_order": quote_display,
+        "id": (saved_client or {}).get("id", "client_imported"),
+        "name": (saved_client or {}).get("name") or client_name or missing_client_label,
+        "company": (saved_client or {}).get("company") or piece_type_label,
+        "email": (saved_client or {}).get("email", ""),
+        "phone": (saved_client or {}).get("phone") or client_phone or missing_phone_label,
+        "city": (saved_client or {}).get("city") or {"ca": "Arriba des de marcs", "es": "Llega desde marcos"}[lang],
+        "last_order": (saved_client or {}).get("last_order_ref") or quote_display,
+        "source": (saved_client or {}).get("source", "frames"),
+        "notes": (saved_client or {}).get("notes", ""),
         "selected": True,
+        "select_url": url_for("area_privada_comanda", **{**build_order_return_params("frames", draft_id), "client": (saved_client or {}).get("id", "client_imported")}),
     }
 
     return {
@@ -1471,6 +1563,9 @@ def build_frames_order_context(base_payload=None, draft_id=""):
         "selected_delivery": "",
         "clients": [client_entry],
         "selected_client_id": client_entry["id"],
+        "has_clients": True,
+        "client_save_url": url_for("area_privada_comanda_client_save"),
+        "return_params": build_order_return_params("frames", draft_id),
         "recent_orders": recent_orders,
         "has_internal_costs": False,
         "frames_entry_url": build_calc_login_url("frames", source="private_area"),
@@ -1768,6 +1863,33 @@ def area_privada_comanda():
         order_data=order_data,
         **build_private_shell_context(),
     )
+
+
+@app.route("/area-privada/comanda/client/guardar", methods=["POST"])
+def area_privada_comanda_client_save():
+    payload = {
+        "name": request.form.get("name"),
+        "company": request.form.get("company"),
+        "email": request.form.get("email"),
+        "phone": request.form.get("phone"),
+        "city": request.form.get("city"),
+        "notes": request.form.get("notes"),
+        "source": request.form.get("source") or "private_area",
+        "last_order_ref": request.form.get("last_order_ref"),
+    }
+    try:
+        client = save_private_client(payload)
+    except (RuntimeError, ValueError):
+        return redirect(url_for("area_privada_comanda", **build_order_return_params(request.form.get("order_source"), request.form.get("order_draft"))))
+
+    next_path = (request.form.get("next_path") or "").strip()
+    if next_path.startswith("/area-privada/comanda"):
+        separator = "&" if "?" in next_path else "?"
+        return redirect(f"{next_path}{separator}client={client['id']}")
+
+    redirect_params = build_order_return_params(request.form.get("order_source"), request.form.get("order_draft"))
+    redirect_params["client"] = client["id"]
+    return redirect(url_for("area_privada_comanda", **redirect_params))
 
 
 @app.route("/api/private-orders/frames/save", methods=["POST"])
