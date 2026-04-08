@@ -428,7 +428,7 @@ def init_private_area_db():
 
 
 def _normalize_frame_order_payload(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     normalized = {}
     for key in FRAME_ORDER_FIELDS:
         value = payload.get(key, "")
@@ -437,7 +437,7 @@ def _normalize_frame_order_payload(payload=None):
 
 
 def _normalize_canvas_draft_payload(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     normalized = {}
     for key in CANVAS_DRAFT_FIELDS:
         value = payload.get(key, "")
@@ -659,7 +659,7 @@ def _slugify_client_fragment(value):
 
 
 def _normalize_private_client_payload(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     return {
         "name": str(payload.get("name") or "").strip(),
         "company": str(payload.get("company") or "").strip(),
@@ -1547,7 +1547,7 @@ def build_order_return_params(source="", draft_id=""):
 
 
 def _normalize_canvas_order_line_payload(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     return {
         "product_type": "canvas",
         "line_id": str(payload.get("line_id") or "").strip(),
@@ -1564,7 +1564,7 @@ def _normalize_canvas_order_line_payload(payload=None):
 
 
 def _normalize_print_order_line_payload(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     return {
         "product_type": "print",
         "line_id": str(payload.get("line_id") or "").strip(),
@@ -1583,7 +1583,7 @@ def _normalize_print_order_line_payload(payload=None):
 
 
 def _normalize_private_order_session_line(payload=None):
-    payload = payload or {}
+    payload = payload if isinstance(payload, dict) else {}
     product_type = str(payload.get("product_type") or "").strip().lower() or "canvas"
     if product_type == "print":
         return _normalize_print_order_line_payload(payload)
