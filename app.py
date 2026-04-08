@@ -27,6 +27,7 @@ SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
 SMTP_FROM = os.environ.get("SMTP_FROM", CONTACT_EMAIL)
 SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "true").lower() != "false"
 PRIVATE_AREA_DB_PATH = os.environ.get("PRIVATE_AREA_DB_PATH", os.path.join(os.path.dirname(__file__), "private_area_store.json"))
+CANVAS_SIZE_IMAGE_DIR = Path(app.static_folder) / "img" / "lienzos" / "by-size"
 
 CALC_SERVICE_CONFIG = {
     "general": {
@@ -782,10 +783,25 @@ def build_private_modules():
     return modules
 
 
-def classify_canvas_size(final_width, final_height, lang):
+def get_canvas_size_image_url(size_id):
+    size_id = str(size_id or "").strip()
+    default_url = url_for("static", filename="img/lienzos/private-canvas-main.webp")
+    if not size_id:
+        return default_url
+
+    candidate = CANVAS_SIZE_IMAGE_DIR / f"{size_id}.webp"
+    if candidate.exists():
+        return url_for("static", filename=f"img/lienzos/by-size/{size_id}.webp")
+    return default_url
+
+
+def classify_canvas_size(final_width, final_height, lang, group="standard"):
     if final_width == final_height:
         orientation = "square"
         orientation_label = "Quadrat" if lang == "ca" else "Cuadrado"
+    elif group == "panoramic":
+        orientation = "horizontal"
+        orientation_label = "Panoràmic" if lang == "ca" else "Panorámico"
     elif final_width > final_height:
         orientation = "horizontal"
         orientation_label = "Horitzontal" if lang == "ca" else "Horizontal"
@@ -833,10 +849,11 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
     for item in CANVAS_PRICING["sizes"]:
         final_width, final_height = item["final"]
         file_width, file_height = item["file"]
-        size_meta = classify_canvas_size(final_width, final_height, lang)
+        size_id = f"{final_width}x{final_height}"
+        size_meta = classify_canvas_size(final_width, final_height, lang, item["group"])
         sizes.append(
             {
-                "id": f"{final_width}x{final_height}",
+                "id": size_id,
                 "group": item["group"],
                 "group_label": "Formats estàndard" if item["group"] == "standard" and lang == "ca" else
                                "Formatos estándar" if item["group"] == "standard" else
@@ -852,9 +869,12 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
                 "orientation_label": size_meta["orientation_label"],
                 "size_band": size_meta["size_band"],
                 "size_band_label": size_meta["size_band_label"],
-                "selected": f"{final_width}x{final_height}" == selected_size_id,
+                "image_url": get_canvas_size_image_url(size_id),
+                "selected": size_id == selected_size_id,
             }
         )
+
+    selected_size = next((item for item in sizes if item["id"] == selected_size_id), sizes[0])
 
     return {
         "canvas_pricing": {
@@ -886,6 +906,11 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
             "selected_margin_percent": selected_margin_percent,
             "selected_show_file_size": selected_show_file_size,
             "saved_drafts": list_saved_canvas_drafts(),
+        },
+        "canvas_preview": {
+            "image_url": selected_size["image_url"],
+            "selected_label": selected_size["final_label"],
+            "selected_orientation": selected_size["orientation_label"],
         },
     }
 

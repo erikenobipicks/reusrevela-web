@@ -30,6 +30,22 @@
     display:block;
     box-shadow:0 24px 54px rgba(18,16,12,.22);
   }
+  .stage-selection{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.8rem;
+    margin-bottom:.8rem;
+  }
+  .stage-selection strong{
+    display:block;
+    font-size:1rem;
+    letter-spacing:.02em;
+  }
+  .stage-selection span{
+    color:rgba(255,255,255,.7);
+    font-size:.88rem;
+  }
   .stage-detail-grid{
     display:grid;
     grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -209,6 +225,29 @@
   .summary{position:sticky;top:calc(var(--nav-h) + 1rem)}
   .summary-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
   .summary-kicker{display:inline-flex;padding:.4rem .7rem;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .summary-head{display:grid;justify-items:end;gap:.75rem}
+  .price-view-switch{
+    display:inline-flex;
+    padding:.25rem;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.74);
+    gap:.25rem;
+  }
+  .price-view-chip{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    border-radius:999px;
+    padding:.45rem .8rem;
+    font-weight:800;
+    cursor:pointer;
+  }
+  .price-view-chip.is-active{
+    background:var(--ink);
+    color:#fff;
+  }
   .summary-total{margin-top:1.25rem;padding:1.35rem;border-radius:24px;background:rgba(166,120,67,.08);border:1px solid rgba(166,120,67,.16)}
   .summary-total strong{display:block;font-family:var(--serif);font-size:2.8rem;line-height:1;margin-top:.6rem}
   .summary-list{display:grid;gap:.8rem;margin-top:1.3rem}
@@ -269,13 +308,18 @@
   .size-card p,.note-card p,.flow-card p{margin-top:.7rem;color:var(--muted)}
   .size-price{
     display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.28rem;
     margin-top:1rem;
     padding:.42rem .72rem;
     border-radius:999px;
     background:rgba(166,120,67,.12);
     color:var(--accent);
     font-weight:800;
-    font-size:.82rem;
+    font-size:.88rem;
+    line-height:1.1;
+    white-space:nowrap;
   }
   .flow-card strong{
     display:inline-flex;
@@ -298,6 +342,7 @@
     .summary{position:static}
     .filter-row{align-items:flex-start}
     .filter-label{min-width:100%}
+    .summary-head{justify-items:start}
   }
 </style>
 {% endblock %}
@@ -323,10 +368,18 @@
         <p>{% if lang == 'ca' %}Des d'aquí ja pots passar el llenç a comanda, preparar el pressupost del client final o deixar-lo en esborrany per més endavant.{% else %}Desde aquí ya puedes pasar el lienzo al pedido, preparar el presupuesto del cliente final o dejarlo en borrador para más adelante.{% endif %}</p>
       </div>
       <div class="stage-gallery">
+        <div class="stage-selection">
+          <div>
+            <strong id="selected-canvas-label">{{ canvas_preview.selected_label }}</strong>
+            <span id="selected-canvas-orientation">{{ canvas_preview.selected_orientation }}</span>
+          </div>
+          <span class="module-chip" id="selected-canvas-chip">{% if lang == 'ca' %}Vista del llenÃ§{% else %}Vista del lienzo{% endif %}</span>
+        </div>
         <img
-          src="{{ url_for('static', filename='img/lienzos/private-canvas-main.webp') }}"
+          src="{{ canvas_preview.image_url }}"
           alt="{% if lang == 'ca' %}Exemple de llenç muntat{% else %}Ejemplo de lienzo montado{% endif %}"
           class="stage-main-image"
+          id="selected-canvas-image"
           loading="lazy"
         >
         <div class="stage-detail-grid">
@@ -370,6 +423,8 @@
                 data-final-label="{{ size.final_label }}"
                 data-file-label="{{ size.file_label }}"
                 data-price="{{ size.price }}"
+                data-image-url="{{ size.image_url }}"
+                data-orientation-label="{{ size.orientation_label }}"
                 {% if size.selected %}selected{% endif %}>
                 {{ size.final_label }} · {{ "%.2f"|format(size.price)|replace(".", ",") }} €
               </option>
@@ -431,13 +486,17 @@
             data-orientation="{{ size.orientation }}"
             data-band="{{ size.size_band }}"
             data-search="{{ (size.final_label ~ ' ' ~ size.group_label ~ ' ' ~ size.orientation_label ~ ' ' ~ size.size_band_label)|lower }}"
+            data-image-url="{{ size.image_url }}"
+            data-final-label="{{ size.final_label }}"
+            data-orientation-label="{{ size.orientation_label }}"
+            data-price="{{ size.price }}"
           >
             <div class="quick-size-top">
               <div>
                 <strong>{{ size.final_label }}</strong>
                 <small>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</small>
               </div>
-              <span class="size-price">{{ "%.2f"|format(size.price)|replace(".", ",") }} €</span>
+              <span class="size-price canvas-price" data-base-price="{{ size.price }}">{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
             </div>
             <div class="quick-size-meta">
               <span>{{ size.group_label }}</span>
@@ -488,12 +547,18 @@
           <div class="eyebrow">{% if lang == 'ca' %}Resum principal{% else %}Resumen principal{% endif %}</div>
           <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Un total clar, amb el detall comercial només quan el vols consultar.{% else %}Un total claro, con el detalle comercial solo cuando lo quieres consultar.{% endif %}</h2>
         </div>
-        <span class="summary-kicker">{% if lang == 'ca' %}Taller{% else %}Taller{% endif %}</span>
+        <div class="summary-head">
+          <span class="summary-kicker" id="summary-kicker-label">{% if lang == 'ca' %}Cost{% else %}Coste{% endif %}</span>
+          <div class="price-view-switch" aria-label="{% if lang == 'ca' %}Vista de preu{% else %}Vista de precio{% endif %}">
+            <button type="button" class="price-view-chip is-active" data-price-view="workshop">{% if lang == 'ca' %}Cost{% else %}Coste{% endif %}</button>
+            <button type="button" class="price-view-chip" data-price-view="client">{% if lang == 'ca' %}PVP{% else %}PVP{% endif %}</button>
+          </div>
+        </div>
       </div>
 
       <div class="summary-total">
-        <span>{% if lang == 'ca' %}Total taller + IVA{% else %}Total taller + IVA{% endif %}</span>
-        <strong id="summary-workshop-total">47,80 €</strong>
+        <span id="summary-total-label">{% if lang == 'ca' %}Total taller + IVA{% else %}Total taller + IVA{% endif %}</span>
+        <strong id="summary-main-total">47,80 €</strong>
         <div class="panel-note">{% if lang == 'ca' %}Inclou bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm i {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% else %}Incluye bastidor de {{ canvas_pricing.fixed_features.frame_depth_cm }} cm y {{ canvas_pricing.fixed_features.laminate_label|lower }}.{% endif %}</div>
       </div>
 
@@ -618,7 +683,7 @@
         <div class="eyebrow">{{ size.group_label }}</div>
         <h3 class="card-title">{{ size.final_label }}</h3>
         <p>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</p>
-        <span class="size-price">{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
+        <span class="size-price canvas-price" data-base-price="{{ size.price }}">{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
       </article>
       {% endfor %}
     </div>
@@ -665,8 +730,15 @@
   const emptySizes = document.getElementById("empty-sizes");
   const saveDraftButton = document.getElementById("save-draft-button");
   const draftStatus = document.getElementById("draft-status");
+  const selectedCanvasImage = document.getElementById("selected-canvas-image");
+  const selectedCanvasLabel = document.getElementById("selected-canvas-label");
+  const selectedCanvasOrientation = document.getElementById("selected-canvas-orientation");
+  const priceViewButtons = Array.from(document.querySelectorAll(".price-view-chip"));
+  const canvasPriceBadges = Array.from(document.querySelectorAll(".canvas-price"));
 
-  const summaryWorkshopTotal = document.getElementById("summary-workshop-total");
+  const summaryMainTotal = document.getElementById("summary-main-total");
+  const summaryKickerLabel = document.getElementById("summary-kicker-label");
+  const summaryTotalLabel = document.getElementById("summary-total-label");
   const summaryFinalSize = document.getElementById("summary-final-size");
   const summaryQty = document.getElementById("summary-qty");
   const summaryEditLabel = document.getElementById("summary-edit-label");
@@ -686,6 +758,7 @@
   const SAVE_DRAFT_URL = {{ url_for("api_private_orders_canvas_save")|tojson }};
   let currentDraftId = {{ canvas_draft.draft_id|tojson }};
   const filterState = { group: "all", orientation: "all", band: "all" };
+  let priceView = "workshop";
 
   const formatCurrency = (value) => `${value.toFixed(2).replace(".", ",")} €`;
   const round = (value) => Math.round(value * 100) / 100;
@@ -717,6 +790,37 @@
     draftStatus.textContent = message || "";
     draftStatus.style.color = isError ? "#b45445" : "#3f7455";
     draftStatus.classList.toggle("show", Boolean(message));
+  };
+
+  const getWorkshopBadgeLabel = (amount) => `${formatCurrency(amount)} + IVA`;
+  const getClientBadgeLabel = (amount, marginPercent) => {
+    const withMargin = round(amount * (1 + (marginPercent / 100)));
+    const withVat = round(withMargin * (1 + VAT_RATE));
+    return `${formatCurrency(withVat)} PVP`;
+  };
+
+  const updateCanvasPreview = (selectedSize) => {
+    if (!selectedSize) {
+      return;
+    }
+    if (selectedCanvasImage) {
+      selectedCanvasImage.src = selectedSize.dataset.imageUrl || selectedCanvasImage.src;
+    }
+    if (selectedCanvasLabel) {
+      selectedCanvasLabel.textContent = selectedSize.dataset.finalLabel || "";
+    }
+    if (selectedCanvasOrientation) {
+      selectedCanvasOrientation.textContent = selectedSize.dataset.orientationLabel || "";
+    }
+  };
+
+  const updatePriceBadges = (marginPercent) => {
+    canvasPriceBadges.forEach((badge) => {
+      const basePrice = Number(badge.dataset.basePrice || 0);
+      badge.textContent = priceView === "client"
+        ? getClientBadgeLabel(basePrice, marginPercent)
+        : getWorkshopBadgeLabel(basePrice);
+    });
   };
 
   const buildDraftPayload = () => ({
@@ -793,7 +897,13 @@
     const clientVat = round(clientSubtotal * VAT_RATE);
     const clientTotal = round(clientSubtotal + clientVat);
 
-    summaryWorkshopTotal.textContent = formatCurrency(professionalTotal);
+    summaryMainTotal.textContent = priceView === "client" ? formatCurrency(clientTotal) : formatCurrency(professionalTotal);
+    summaryKickerLabel.textContent = priceView === "client"
+      ? (CURRENT_LANG === "ca" ? "PVP" : "PVP")
+      : (CURRENT_LANG === "ca" ? "Cost" : "Coste");
+    summaryTotalLabel.textContent = priceView === "client"
+      ? (CURRENT_LANG === "ca" ? "Total client final" : "Total cliente final")
+      : (CURRENT_LANG === "ca" ? "Total taller + IVA" : "Total taller + IVA");
     summaryFinalSize.textContent = selectedSize?.dataset.finalLabel || "";
     summaryQty.textContent = String(quantity);
     summaryEditLabel.textContent = selectedEdit?.parentElement?.querySelector("strong")?.textContent?.split("·")[0]?.trim() || "";
@@ -810,6 +920,8 @@
     summaryClientTotal.textContent = formatCurrency(clientTotal);
     summaryPreviewNote.style.display = selectedEdit?.dataset.includesPreview === "true" ? "block" : "none";
     fileSizeRow.classList.toggle("show", showFileSize);
+    updateCanvasPreview(selectedSize);
+    updatePriceBadges(marginPercent);
     syncActiveSizeCard();
 
     buildOrderLink({
@@ -827,6 +939,13 @@
 
   togglePricingButton?.addEventListener("click", () => togglePanel(pricingPanel));
   toggleSettingsButton?.addEventListener("click", () => togglePanel(settingsPanel));
+  priceViewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      priceView = button.dataset.priceView || "workshop";
+      priceViewButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+      calculateCanvasQuote();
+    });
+  });
 
   filterButtons.forEach((button) => {
     button.addEventListener("click", () => {
