@@ -374,8 +374,8 @@ DEFAULT_COMMERCIAL_SETTINGS = {
     "canvas": 35.0,
     "prints": 30.0,
     "albums": 40.0,
-    "foam": 32.0,
-    "laminate_foam": 32.0,
+    "foam": 35.0,
+    "laminate_foam": 35.0,
     "fine_art": 38.0,
 }
 
@@ -390,6 +390,14 @@ CANVAS_DRAFT_FIELDS = [
 
 
 def _empty_private_area_store():
+    descriptions["frames"] = {
+        "ca": "Se sincronitza amb la calculadora de marcs per mantenir el mateix criteri comercial.",
+        "es": "Se sincroniza con la calculadora de marcos para mantener el mismo criterio comercial.",
+    }
+    descriptions["prints"] = {
+        "ca": "És el marge propi de la fotografia impresa. Foam, laminat + foam i ProEco passen amb el marge general.",
+        "es": "Es el margen propio de la fotografía impresa. Foam, laminado + foam y ProEco pasan con el margen general.",
+    }
     return {
         "frames_order_drafts": {},
         "canvas_order_drafts": {},
@@ -493,19 +501,25 @@ def _write_private_area_store(data):
 def get_private_commercial_settings():
     store = _read_private_area_store()
     settings = store.get("commercial_settings", {})
-    return {
+    normalized = {
         key: parse_non_negative_float(settings.get(key), default=default_value)
         for key, default_value in DEFAULT_COMMERCIAL_SETTINGS.items()
     }
+    normalized["foam"] = normalized["general"]
+    normalized["laminate_foam"] = normalized["general"]
+    return normalized
 
 
 def save_private_commercial_settings(payload=None):
     payload = payload or {}
     store = _read_private_area_store()
-    store["commercial_settings"] = {
+    normalized = {
         key: parse_non_negative_float(payload.get(key), default=default_value)
         for key, default_value in DEFAULT_COMMERCIAL_SETTINGS.items()
     }
+    normalized["foam"] = normalized["general"]
+    normalized["laminate_foam"] = normalized["general"]
+    store["commercial_settings"] = normalized
     _write_private_area_store(store)
     return store["commercial_settings"]
 
@@ -869,6 +883,8 @@ def request_calc_margin_sync(username, settings=None):
         )
         for key in DEFAULT_COMMERCIAL_SETTINGS
     }
+    normalized_settings["foam"] = normalized_settings["general"]
+    normalized_settings["laminate_foam"] = normalized_settings["general"]
     payload = {
         "username": username,
         "marge": normalized_settings["frames"],
@@ -1266,7 +1282,7 @@ def build_private_settings_context():
                     "description": descriptions[key][lang],
                     "value": settings[key],
                 }
-                for key in ("general", "frames", "canvas", "prints", "foam", "laminate_foam", "fine_art", "albums")
+                for key in ("general", "frames", "canvas", "prints", "fine_art", "albums")
             ],
         }
     }
@@ -2516,6 +2532,8 @@ def api_private_commercial_settings_sync():
                 payload.get(key),
                 default=DEFAULT_COMMERCIAL_SETTINGS.get(key, current.get(key, 0.0)),
             )
+    current["foam"] = current["general"]
+    current["laminate_foam"] = current["general"]
     save_private_commercial_settings(current)
     return jsonify({"ok": True, "settings": current})
 
