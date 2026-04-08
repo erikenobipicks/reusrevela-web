@@ -872,6 +872,7 @@ def build_private_modules():
 def build_private_nav():
     lang = get_lang()
     current_endpoint = request.endpoint or ""
+    cart_count = get_private_order_line_count()
     links = [
         {
             "endpoint": "area_privada",
@@ -896,6 +897,7 @@ def build_private_nav():
         {
             "endpoint": "area_privada_comanda",
             "label": "Comanda" if lang == "ca" else "Pedido",
+            "badge": cart_count,
         },
     ]
 
@@ -904,16 +906,46 @@ def build_private_nav():
             "href": url_for(item["endpoint"]),
             "label": item["label"],
             "active": current_endpoint == item["endpoint"],
+            "badge": item.get("badge"),
         }
         for item in links
     ]
 
 
+def get_private_professional_session():
+    data = session.get("private_professional")
+    return data if isinstance(data, dict) else {}
+
+
+def get_private_order_line_count():
+    order = _get_private_order_session()
+    return len(order.get("lines", []))
+
+
 def build_private_shell_context():
+    lang = get_lang()
+    professional = get_private_professional_session()
+    is_logged = bool(professional.get("username"))
     return {
         "private_area_nav": True,
         "private_nav_links": build_private_nav(),
         "private_return_url": url_for("professionals"),
+        "private_login_url": url_for("area_privada_acces", lang=lang, source="private_area"),
+        "private_logout_url": url_for("area_privada_sortir", lang=lang),
+        "private_cart_url": url_for("area_privada_comanda", lang=lang),
+        "private_cart_count": get_private_order_line_count(),
+        "private_professional": {
+            "logged_in": is_logged,
+            "username": professional.get("username", ""),
+            "label": (
+                "Sessió professional activa" if lang == "ca" else "Sesión profesional activa"
+            ) if is_logged else (
+                "Accés professional pendent" if lang == "ca" else "Acceso profesional pendiente"
+            ),
+            "detail": professional.get("username", "") if is_logged else (
+                "Encara no s'ha validat cap sessió" if lang == "ca" else "Todavía no se ha validado ninguna sesión"
+            ),
+        },
     }
 
 
@@ -2255,6 +2287,13 @@ def area_privada_acces():
         password = request.form.get("password") or ""
         result = request_calc_bridge_login(username, password, service=service, lang=lang, source=source)
         if result.get("ok") and result.get("redirect_url"):
+            session["private_professional"] = {
+                "username": username,
+                "service": service,
+                "source": source,
+                "logged_at": datetime.utcnow().isoformat(timespec="seconds"),
+            }
+            session.modified = True
             return redirect(result["redirect_url"])
         access_error = result.get("error") or "unknown"
 
@@ -2271,6 +2310,13 @@ def area_privada_acces():
         CALC_REQUEST_URL=build_calc_request_url(service),
         **build_private_shell_context(),
     )
+
+
+@app.route("/area-privada/sortir")
+def area_privada_sortir():
+    session.pop("private_professional", None)
+    session.modified = True
+    return redirect(url_for("professionals", lang=get_lang()))
 
 
 @app.route("/area-privada/tarifari")

@@ -129,6 +129,66 @@
       font-weight:700;
     }
     .nav-cta:hover{background:var(--accent)}
+    .nav-secondary{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.72rem .95rem;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.6);
+      color:var(--ink) !important;
+      font-weight:700;
+    }
+    .private-status{
+      display:flex;
+      align-items:center;
+      gap:.8rem;
+      padding:.48rem .85rem;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.66);
+      min-height:48px;
+    }
+    .private-status-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#c4b59f;
+      flex-shrink:0;
+    }
+    .private-status.logged .private-status-dot{background:var(--success)}
+    .private-status-copy{
+      display:grid;
+      gap:.02rem;
+      line-height:1.1;
+    }
+    .private-status-copy strong{
+      font-size:.82rem;
+      color:var(--ink);
+    }
+    .private-status-copy span{
+      font-size:.73rem;
+      color:var(--muted);
+      max-width:16ch;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .nav-link-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:22px;
+      height:22px;
+      padding:0 .42rem;
+      margin-left:.35rem;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:var(--accent);
+      font-size:.72rem;
+      font-weight:800;
+    }
     .lang-sw{
       display:flex;
       gap:.3rem;
@@ -404,6 +464,34 @@
       font-size:1.65rem;
     }
     .wa-fab:hover{background:#1fb85a}
+    .private-cart-fab{
+      position:fixed;
+      left:1.35rem;
+      bottom:1.35rem;
+      z-index:250;
+      min-height:58px;
+      padding:.9rem 1rem;
+      border-radius:999px;
+      background:var(--ink);
+      color:#fff;
+      box-shadow:0 18px 40px rgba(18,16,12,.22);
+      display:none;
+      align-items:center;
+      gap:.75rem;
+      font-weight:700;
+    }
+    .private-cart-fab strong{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:28px;
+      height:28px;
+      padding:0 .5rem;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      font-size:.82rem;
+    }
+    .private-cart-fab.visible{display:inline-flex}
     .wa-panel{
       position:fixed;
       right:1.35rem;
@@ -540,6 +628,10 @@
         right:1rem;
         bottom:1rem;
       }
+      .private-cart-fab{
+        left:1rem;
+        bottom:1rem;
+      }
       .wa-panel{
         right:1rem;
         bottom:5.4rem;
@@ -616,10 +708,27 @@
 
       <div class="nav-links">
         {% if private_area_nav %}
+          <div class="private-status {% if private_professional.logged_in %}logged{% endif %}">
+            <span class="private-status-dot"></span>
+            <div class="private-status-copy">
+              <strong>{{ private_professional.label }}</strong>
+              <span>{{ private_professional.detail }}</span>
+            </div>
+          </div>
           {% for item in private_nav_links %}
-            <a href="{{ item.href }}" {% if item.active %}class="active"{% endif %}>{{ item.label }}</a>
+            <a href="{{ item.href }}" {% if item.active %}class="active"{% endif %}>
+              {{ item.label }}
+              {% if item.badge is not none %}
+                <span class="nav-link-badge">{{ item.badge }}</span>
+              {% endif %}
+            </a>
           {% endfor %}
-          <a href="{{ private_return_url }}" class="nav-cta">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
+          {% if private_professional.logged_in %}
+            <a href="{{ private_logout_url }}" class="nav-secondary">{% if lang == 'ca' %}Sortir{% else %}Salir{% endif %}</a>
+          {% else %}
+            <a href="{{ private_login_url }}" class="nav-cta">{% if lang == 'ca' %}Entrar{% else %}Entrar{% endif %}</a>
+          {% endif %}
+          <a href="{{ private_return_url }}" class="nav-secondary">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
         {% elif lang == 'ca' %}
           <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Inici</a>
           <a href="{{ url_for('serveis') }}" {% if request.endpoint == 'serveis' %}class="active"{% endif %}>Serveis</a>
@@ -656,9 +765,15 @@
 
   <div class="mobile-menu" id="mobile-menu">
     {% if private_area_nav %}
+      <a href="{{ private_cart_url }}">{% if lang == 'ca' %}Comanda{% else %}Pedido{% endif %} ({{ private_cart_count }})</a>
       {% for item in private_nav_links %}
         <a href="{{ item.href }}">{{ item.label }}</a>
       {% endfor %}
+      {% if private_professional.logged_in %}
+        <a href="{{ private_logout_url }}">{% if lang == 'ca' %}Sortir{% else %}Salir{% endif %}</a>
+      {% else %}
+        <a href="{{ private_login_url }}">{% if lang == 'ca' %}Entrar{% else %}Entrar{% endif %}</a>
+      {% endif %}
       <a href="{{ private_return_url }}">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
     {% elif lang == 'ca' %}
       <a href="{{ url_for('index') }}">Inici</a>
@@ -683,6 +798,13 @@
   <main id="main-content">
     {% block content %}{% endblock %}
   </main>
+
+  {% if private_area_nav %}
+  <a href="{{ private_cart_url }}" class="private-cart-fab {% if private_cart_count or request.endpoint == 'area_privada_comanda' %}visible{% endif %}">
+    {% if lang == 'ca' %}Comanda{% else %}Pedido{% endif %}
+    <strong>{{ private_cart_count }}</strong>
+  </a>
+  {% endif %}
 
   <div class="wa-panel" id="whatsapp-panel" aria-hidden="true">
     <div class="wa-panel-head">
