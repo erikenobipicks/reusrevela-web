@@ -21,6 +21,29 @@
     justify-content:space-between;
   }
   .canvas-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:38ch}
+  .stage-gallery{margin-top:1.5rem}
+  .stage-main-image{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:24px;
+    display:block;
+    box-shadow:0 24px 54px rgba(18,16,12,.22);
+  }
+  .stage-detail-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:.8rem;
+    margin-top:.8rem;
+  }
+  .stage-detail-image{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:18px;
+    display:block;
+    opacity:.96;
+  }
   .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
   .module-chip{
     padding:.55rem .85rem;
@@ -51,6 +74,124 @@
   .builder-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:1rem;margin-top:1.4rem}
   .option-group{margin-top:1.5rem}
   .option-group .eyebrow{display:block;margin-bottom:.7rem}
+  .size-browser{
+    margin-top:1.5rem;
+    padding:1.2rem;
+    border-radius:24px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.44);
+  }
+  .size-browser p{margin-top:.55rem;color:var(--muted)}
+  .filter-stack{display:grid;gap:.95rem;margin-top:1.2rem}
+  .filter-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.7rem;
+    align-items:center;
+  }
+  .filter-label{
+    min-width:96px;
+    font-size:.8rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .filter-chip{
+    appearance:none;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.82);
+    color:var(--ink);
+    border-radius:999px;
+    padding:.62rem .92rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .filter-chip.is-active{
+    background:var(--ink);
+    color:#fff;
+    border-color:var(--ink);
+  }
+  .size-search{
+    width:100%;
+    min-height:50px;
+    padding:.85rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.82);
+    color:var(--ink);
+  }
+  .browser-summary{
+    margin-top:1rem;
+    color:var(--muted);
+    font-size:.92rem;
+  }
+  .quick-size-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:.85rem;
+    margin-top:1rem;
+  }
+  .quick-size-card{
+    appearance:none;
+    width:100%;
+    text-align:left;
+    padding:1rem;
+    border-radius:18px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    cursor:pointer;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .quick-size-card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(166,120,67,.34);
+    box-shadow:0 10px 24px rgba(18,16,12,.08);
+  }
+  .quick-size-card.is-active{
+    border-color:rgba(166,120,67,.4);
+    background:rgba(166,120,67,.08);
+    box-shadow:0 14px 30px rgba(166,120,67,.12);
+  }
+  .quick-size-card.is-hidden{display:none}
+  .quick-size-top{
+    display:flex;
+    justify-content:space-between;
+    gap:.75rem;
+    align-items:flex-start;
+  }
+  .quick-size-top strong{display:block}
+  .quick-size-card small{
+    display:block;
+    margin-top:.45rem;
+    color:var(--muted);
+  }
+  .quick-size-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    margin-top:.9rem;
+  }
+  .quick-size-meta span{
+    display:inline-flex;
+    padding:.34rem .58rem;
+    border-radius:999px;
+    background:rgba(18,16,12,.06);
+    color:var(--muted);
+    font-size:.76rem;
+    font-weight:700;
+  }
+  .empty-sizes{
+    display:none;
+    margin-top:1rem;
+    padding:1rem 1.1rem;
+    border-radius:18px;
+    background:rgba(255,255,255,.72);
+    border:1px dashed var(--line);
+    color:var(--muted);
+  }
+  .empty-sizes.show{display:block}
   .radio-grid{display:grid;gap:.8rem}
   .radio-row{
     display:flex;
@@ -80,6 +221,13 @@
   }
   .summary-line:last-child{border-bottom:none}
   .summary-actions{display:grid;gap:.75rem;margin-top:1.4rem}
+  .draft-status{
+    display:none;
+    margin-top:.8rem;
+    font-size:.92rem;
+    color:var(--success);
+  }
+  .draft-status.show{display:block}
   .summary-tools{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
   .tool-button{
     appearance:none;
@@ -115,6 +263,9 @@
   .size-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
   .note-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
   .flow-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .draft-grid{display:grid;gap:1rem;margin-top:2rem;grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .draft-card p{margin-top:.7rem;color:var(--muted)}
+  .draft-card .eyebrow{display:block}
   .size-card p,.note-card p,.flow-card p{margin-top:.7rem;color:var(--muted)}
   .size-price{
     display:inline-flex;
@@ -141,10 +292,12 @@
   .hidden-row{display:none}
   .hidden-row.show{display:flex}
   @media (max-width: 1080px){
-    .canvas-shell,.canvas-grid,.builder-grid,.size-grid,.note-grid,.flow-grid{
+    .canvas-shell,.canvas-grid,.builder-grid,.size-grid,.note-grid,.flow-grid,.quick-size-grid,.draft-grid{
       grid-template-columns:1fr;
     }
     .summary{position:static}
+    .filter-row{align-items:flex-start}
+    .filter-label{min-width:100%}
   }
 </style>
 {% endblock %}
@@ -168,6 +321,28 @@
         <div class="visual-label">{% if lang == 'ca' %}Condicions del producte{% else %}Condiciones del producto{% endif %}</div>
         <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm, laminat Protter i preu base clar des del primer moment.{% else %}Bastidor de 4 cm, laminado Protter y precio base claro desde el primer momento.{% endif %}</h2>
         <p>{% if lang == 'ca' %}Des d'aquí ja pots passar el llenç a comanda, preparar el pressupost del client final o deixar-lo en esborrany per més endavant.{% else %}Desde aquí ya puedes pasar el lienzo al pedido, preparar el presupuesto del cliente final o dejarlo en borrador para más adelante.{% endif %}</p>
+      </div>
+      <div class="stage-gallery">
+        <img
+          src="{{ url_for('static', filename='img/lienzos/private-canvas-main.webp') }}"
+          alt="{% if lang == 'ca' %}Exemple de llenç muntat{% else %}Ejemplo de lienzo montado{% endif %}"
+          class="stage-main-image"
+          loading="lazy"
+        >
+        <div class="stage-detail-grid">
+          <img
+            src="{{ url_for('static', filename='img/lienzos/private-canvas-detail-1.webp') }}"
+            alt="{% if lang == 'ca' %}Detall de la textura del llenç{% else %}Detalle de la textura del lienzo{% endif %}"
+            class="stage-detail-image"
+            loading="lazy"
+          >
+          <img
+            src="{{ url_for('static', filename='img/lienzos/private-canvas-detail-2.webp') }}"
+            alt="{% if lang == 'ca' %}Detall lateral del bastidor{% else %}Detalle lateral del bastidor{% endif %}"
+            class="stage-detail-image"
+            loading="lazy"
+          >
+        </div>
       </div>
       <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure comanda demo{% else %}Ver pedido demo{% endif %}</a>
     </div>
@@ -195,7 +370,7 @@
                 data-final-label="{{ size.final_label }}"
                 data-file-label="{{ size.file_label }}"
                 data-price="{{ size.price }}"
-                {% if loop.first %}selected{% endif %}>
+                {% if size.selected %}selected{% endif %}>
                 {{ size.final_label }} · {{ "%.2f"|format(size.price)|replace(".", ",") }} €
               </option>
             {% endfor %}
@@ -205,7 +380,72 @@
 
         <div class="field">
           <label for="canvas-qty">{% if lang == 'ca' %}Quantitat{% else %}Cantidad{% endif %}</label>
-          <input id="canvas-qty" type="number" min="1" step="1" value="1">
+          <input id="canvas-qty" type="number" min="1" step="1" value="{{ canvas_draft.selected_quantity }}">
+        </div>
+      </div>
+
+      <div class="size-browser">
+        <div class="eyebrow">{% if lang == 'ca' %}Selector ràpid de mida{% else %}Selector rápido de medida{% endif %}</div>
+        <p>{% if lang == 'ca' %}Filtra primer per format o orientació i tria després la mida exacta sense recórrer tota la llista.{% else %}Filtra primero por formato u orientación y elige después la medida exacta sin recorrer toda la lista.{% endif %}</p>
+
+        <div class="filter-stack">
+          <div class="field">
+            <label for="canvas-size-search">{% if lang == 'ca' %}Cercar mida{% else %}Buscar medida{% endif %}</label>
+            <input id="canvas-size-search" class="size-search" type="search" placeholder="{% if lang == 'ca' %}Per exemple 50 x 70 o panoràmic{% else %}Por ejemplo 50 x 70 o panorámico{% endif %}">
+          </div>
+
+          <div class="filter-row">
+            <span class="filter-label">{% if lang == 'ca' %}Format{% else %}Formato{% endif %}</span>
+            <button type="button" class="filter-chip is-active" data-filter-group="group" data-filter-value="all">{% if lang == 'ca' %}Tots{% else %}Todos{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="group" data-filter-value="standard">{% if lang == 'ca' %}Estàndard{% else %}Estándar{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="group" data-filter-value="panoramic">{% if lang == 'ca' %}Panoràmics{% else %}Panorámicos{% endif %}</button>
+          </div>
+
+          <div class="filter-row">
+            <span class="filter-label">{% if lang == 'ca' %}Orientació{% else %}Orientación{% endif %}</span>
+            <button type="button" class="filter-chip is-active" data-filter-group="orientation" data-filter-value="all">{% if lang == 'ca' %}Totes{% else %}Todas{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="square">{% if lang == 'ca' %}Quadrat{% else %}Cuadrado{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="vertical">{% if lang == 'ca' %}Vertical{% else %}Vertical{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="orientation" data-filter-value="horizontal">{% if lang == 'ca' %}Horitzontal{% else %}Horizontal{% endif %}</button>
+          </div>
+
+          <div class="filter-row">
+            <span class="filter-label">{% if lang == 'ca' %}Mida{% else %}Tamaño{% endif %}</span>
+            <button type="button" class="filter-chip is-active" data-filter-group="band" data-filter-value="all">{% if lang == 'ca' %}Totes{% else %}Todas{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="band" data-filter-value="small">{% if lang == 'ca' %}Petit format{% else %}Formato pequeño{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="band" data-filter-value="medium">{% if lang == 'ca' %}Format mitjà{% else %}Formato medio{% endif %}</button>
+            <button type="button" class="filter-chip" data-filter-group="band" data-filter-value="large">{% if lang == 'ca' %}Gran format{% else %}Gran formato{% endif %}</button>
+          </div>
+        </div>
+
+        <div class="browser-summary" id="browser-summary"></div>
+        <div class="empty-sizes" id="empty-sizes">{% if lang == 'ca' %}No hi ha cap mida que coincideixi amb aquests filtres. Prova de treure'n algun o de cercar una altra combinació.{% else %}No hay ninguna medida que coincida con estos filtros. Prueba a quitar alguno o a buscar otra combinación.{% endif %}</div>
+
+        <div class="quick-size-grid" id="quick-size-grid">
+          {% for size in canvas_pricing.sizes %}
+          <button
+            type="button"
+            class="quick-size-card{% if size.selected %} is-active{% endif %}"
+            data-size-id="{{ size.id }}"
+            data-group="{{ size.group }}"
+            data-orientation="{{ size.orientation }}"
+            data-band="{{ size.size_band }}"
+            data-search="{{ (size.final_label ~ ' ' ~ size.group_label ~ ' ' ~ size.orientation_label ~ ' ' ~ size.size_band_label)|lower }}"
+          >
+            <div class="quick-size-top">
+              <div>
+                <strong>{{ size.final_label }}</strong>
+                <small>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</small>
+              </div>
+              <span class="size-price">{{ "%.2f"|format(size.price)|replace(".", ",") }} €</span>
+            </div>
+            <div class="quick-size-meta">
+              <span>{{ size.group_label }}</span>
+              <span>{{ size.orientation_label }}</span>
+              <span>{{ size.size_band_label }}</span>
+            </div>
+          </button>
+          {% endfor %}
         </div>
       </div>
 
@@ -216,9 +456,10 @@
           <label class="radio-row">
             <input type="radio" name="canvas-edit" class="canvas-edit"
               value="{{ option.id }}"
+              data-label="{{ option.label }}"
               data-price="{{ option.price }}"
               data-includes-preview="{{ option.includes_preview|lower }}"
-              {% if loop.first %}checked{% endif %}>
+              {% if option.selected %}checked{% endif %}>
             <div>
               <strong>{{ option.label }} · {{ "%.2f"|format(option.price)|replace(".", ",") }} €</strong>
               <span>{{ option.description }}</span>
@@ -230,7 +471,7 @@
 
       <div class="option-group">
         <label class="radio-row">
-          <input type="checkbox" id="show-file-size">
+          <input type="checkbox" id="show-file-size" {% if canvas_draft.selected_show_file_size %}checked{% endif %}>
           <div>
             <strong>{% if lang == 'ca' %}Mostrar mida del fitxer amb marge de 5 cm per costat{% else %}Mostrar medida del archivo con margen de 5 cm por lado{% endif %}</strong>
             <span>{% if lang == 'ca' %}Ajuda el fotògraf a saber quina part de la imatge quedarà doblada sobre el bastidor.{% else %}Ayuda al fotógrafo a saber qué parte de la imagen quedará doblada sobre el bastidor.{% endif %}</span>
@@ -286,7 +527,7 @@
         <div class="settings-grid">
           <div class="field">
             <label for="margin-percent">{% if lang == 'ca' %}Marge intern per defecte (%) {% else %}Margen interno por defecto (%) {% endif %}</label>
-            <input id="margin-percent" type="number" min="0" step="1" value="{{ canvas_pricing.default_margin_percent }}">
+            <input id="margin-percent" type="number" min="0" step="1" value="{{ canvas_draft.selected_margin_percent }}">
           </div>
         </div>
         <div class="panel-note">{% if lang == 'ca' %}Aquest marge no embruta la pantalla principal. Serveix per calcular el PVP i alimentar el pressupost del client final quan el llenç entra a comanda.{% else %}Este margen no ensucia la pantalla principal. Sirve para calcular el PVP y alimentar el presupuesto del cliente final cuando el lienzo entra en el pedido.{% endif %}</div>
@@ -294,9 +535,48 @@
 
       <div class="summary-actions">
         <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-dark" id="order-link">{% if lang == 'ca' %}Afegir a la comanda{% else %}Añadir al pedido{% endif %}</a>
-        <button type="button" class="btn btn-outline">{% if lang == 'ca' %}Guardar com a borrador{% else %}Guardar como borrador{% endif %}</button>
+        <button type="button" class="btn btn-outline" id="save-draft-button">{% if lang == 'ca' %}Guardar com a borrador{% else %}Guardar como borrador{% endif %}</button>
+        <div class="draft-status{% if canvas_draft.draft_id %} show{% endif %}" id="draft-status">
+          {% if canvas_draft.draft_id %}
+            {% if lang == 'ca' %}EstÃ s treballant sobre un borrador guardat.{% else %}EstÃ¡s trabajando sobre un borrador guardado.{% endif %}
+          {% endif %}
+        </div>
       </div>
     </aside>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Borradors{% else %}Borradores{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Recupera configuracions recents i continua el pressupost sense tornar a comenÃ§ar.{% else %}Recupera configuraciones recientes y sigue el presupuesto sin volver a empezar.{% endif %}</h2>
+    </div>
+    {% if canvas_draft.saved_drafts %}
+    <div class="draft-grid">
+      {% for draft in canvas_draft.saved_drafts %}
+      <article class="surface draft-card fade-up">
+        <span class="eyebrow">{% if lang == 'ca' %}Guardat {{ draft.updated_at_label }}{% else %}Guardado {{ draft.updated_at_label }}{% endif %}</span>
+        <h3 class="card-title">{{ draft.size_label }}</h3>
+        <p>
+          {% if lang == 'ca' %}
+            {{ draft.quantity }} unitat{% if draft.quantity != 1 %}s{% endif %} · {{ draft.edit_label }}
+          {% else %}
+            {{ draft.quantity }} ud. · {{ draft.edit_label }}
+          {% endif %}
+        </p>
+        <a class="btn btn-outline" href="{{ url_for('area_privada_lienzos', draft=draft.draft_id, lang=lang) }}">
+          {% if lang == 'ca' %}Obrir borrador{% else %}Abrir borrador{% endif %}
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <article class="surface note-card fade-up" style="margin-top:2rem">
+      <div class="eyebrow">{% if lang == 'ca' %}Encara buit{% else %}Aun vacio{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Quan guardis el primer pressupost, el trobarÃ s aquÃ­ per reprendre'l rÃ pid.{% else %}Cuando guardes el primer presupuesto, lo encontrarÃ¡s aquÃ­ para retomarlo rÃ¡pido.{% endif %}</h3>
+    </article>
+    {% endif %}
   </div>
 </section>
 
@@ -378,6 +658,13 @@
   const pricingPanel = document.getElementById("pricing-panel");
   const settingsPanel = document.getElementById("settings-panel");
   const orderLink = document.getElementById("order-link");
+  const sizeSearchInput = document.getElementById("canvas-size-search");
+  const filterButtons = Array.from(document.querySelectorAll(".filter-chip"));
+  const quickSizeCards = Array.from(document.querySelectorAll(".quick-size-card"));
+  const browserSummary = document.getElementById("browser-summary");
+  const emptySizes = document.getElementById("empty-sizes");
+  const saveDraftButton = document.getElementById("save-draft-button");
+  const draftStatus = document.getElementById("draft-status");
 
   const summaryWorkshopTotal = document.getElementById("summary-workshop-total");
   const summaryFinalSize = document.getElementById("summary-final-size");
@@ -395,6 +682,10 @@
   const fileSizeRow = document.getElementById("file-size-row");
 
   const VAT_RATE = {{ canvas_pricing.vat_rate|tojson }};
+  const CURRENT_LANG = {{ lang|tojson }};
+  const SAVE_DRAFT_URL = {{ url_for("api_private_orders_canvas_save")|tojson }};
+  let currentDraftId = {{ canvas_draft.draft_id|tojson }};
+  const filterState = { group: "all", orientation: "all", band: "all" };
 
   const formatCurrency = (value) => `${value.toFixed(2).replace(".", ",")} €`;
   const round = (value) => Math.round(value * 100) / 100;
@@ -411,9 +702,71 @@
 
   const getSelectedEdit = () => editInputs.find((input) => input.checked) || editInputs[0];
   const getSelectedSize = () => sizeSelect?.selectedOptions?.[0];
+  const getSearchTerm = () => (sizeSearchInput?.value || "").trim().toLowerCase();
+  const getDraftStatusMessage = (savedAtLabel) => {
+    if (CURRENT_LANG === "ca") {
+      return savedAtLabel ? `Borrador guardat ${savedAtLabel}.` : "Borrador guardat.";
+    }
+    return savedAtLabel ? `Borrador guardado ${savedAtLabel}.` : "Borrador guardado.";
+  };
+
+  const setDraftStatus = (message, isError = false) => {
+    if (!draftStatus) {
+      return;
+    }
+    draftStatus.textContent = message || "";
+    draftStatus.style.color = isError ? "#b45445" : "#3f7455";
+    draftStatus.classList.toggle("show", Boolean(message));
+  };
+
+  const buildDraftPayload = () => ({
+    draft_id: currentDraftId || "",
+    lang: CURRENT_LANG,
+    size: getSelectedSize()?.value || "",
+    qty: getQuantity(),
+    edit: getSelectedEdit()?.value || "",
+    margin: getMarginPercent(),
+    show_file_size: showFileSizeInput?.checked ? "1" : "0",
+  });
+
+  const syncActiveSizeCard = () => {
+    const selectedSizeId = getSelectedSize()?.value || "";
+    quickSizeCards.forEach((card) => {
+      card.classList.toggle("is-active", card.dataset.sizeId === selectedSizeId);
+    });
+  };
+
+  const updateBrowserSummary = (visibleCount) => {
+    browserSummary.textContent = visibleCount
+      ? `{% if lang == 'ca' %}${visibleCount} mides visibles per triar ràpid.{% else %}${visibleCount} medidas visibles para elegir rápido.{% endif %}`
+      : `{% if lang == 'ca' %}Ajusta els filtres per tornar a veure mides disponibles.{% else %}Ajusta los filtros para volver a ver medidas disponibles.{% endif %}`;
+    emptySizes.classList.toggle("show", visibleCount === 0);
+  };
+
+  const updateSizeBrowser = () => {
+    const searchTerm = getSearchTerm();
+    let visibleCount = 0;
+
+    quickSizeCards.forEach((card) => {
+      const matchesGroup = filterState.group === "all" || card.dataset.group === filterState.group;
+      const matchesOrientation = filterState.orientation === "all" || card.dataset.orientation === filterState.orientation;
+      const matchesBand = filterState.band === "all" || card.dataset.band === filterState.band;
+      const matchesSearch = !searchTerm || (card.dataset.search || "").includes(searchTerm);
+      const isVisible = matchesGroup && matchesOrientation && matchesBand && matchesSearch;
+
+      card.classList.toggle("is-hidden", !isVisible);
+      if (isVisible) {
+        visibleCount += 1;
+      }
+    });
+
+    updateBrowserSummary(visibleCount);
+    syncActiveSizeCard();
+  };
 
   const buildOrderLink = ({ sizeId, editId, quantity, marginPercent, showFileSize }) => {
     const params = new URLSearchParams({
+      lang: CURRENT_LANG,
       size: sizeId,
       edit: editId,
       qty: String(quantity),
@@ -444,6 +797,9 @@
     summaryFinalSize.textContent = selectedSize?.dataset.finalLabel || "";
     summaryQty.textContent = String(quantity);
     summaryEditLabel.textContent = selectedEdit?.parentElement?.querySelector("strong")?.textContent?.split("·")[0]?.trim() || "";
+    if (selectedEdit?.dataset.label) {
+      summaryEditLabel.textContent = selectedEdit.dataset.label;
+    }
     summaryFileSize.textContent = selectedSize?.dataset.fileLabel || "";
     summaryProfessionalSubtotal.textContent = formatCurrency(professionalSubtotal);
     summaryProfessionalVat.textContent = formatCurrency(professionalVat);
@@ -454,6 +810,7 @@
     summaryClientTotal.textContent = formatCurrency(clientTotal);
     summaryPreviewNote.style.display = selectedEdit?.dataset.includesPreview === "true" ? "block" : "none";
     fileSizeRow.classList.toggle("show", showFileSize);
+    syncActiveSizeCard();
 
     buildOrderLink({
       sizeId: selectedSize?.value || "",
@@ -471,11 +828,75 @@
   togglePricingButton?.addEventListener("click", () => togglePanel(pricingPanel));
   toggleSettingsButton?.addEventListener("click", () => togglePanel(settingsPanel));
 
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filterGroup = button.dataset.filterGroup;
+      const filterValue = button.dataset.filterValue || "all";
+      filterState[filterGroup] = filterValue;
+
+      filterButtons
+        .filter((item) => item.dataset.filterGroup === filterGroup)
+        .forEach((item) => item.classList.toggle("is-active", item === button));
+
+      updateSizeBrowser();
+    });
+  });
+
+  quickSizeCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      if (!sizeSelect) {
+        return;
+      }
+      sizeSelect.value = card.dataset.sizeId || "";
+      calculateCanvasQuote();
+    });
+  });
+
   [sizeSelect, quantityInput, showFileSizeInput, marginPercentInput, ...editInputs].forEach((element) => {
     element?.addEventListener("input", calculateCanvasQuote);
     element?.addEventListener("change", calculateCanvasQuote);
   });
 
+  sizeSearchInput?.addEventListener("input", updateSizeBrowser);
+  saveDraftButton?.addEventListener("click", async () => {
+    const originalLabel = saveDraftButton.textContent;
+    saveDraftButton.disabled = true;
+    saveDraftButton.textContent = CURRENT_LANG === "ca" ? "Guardant..." : "Guardando...";
+
+    try {
+      const response = await fetch(SAVE_DRAFT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(buildDraftPayload()),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result?.ok) {
+        throw new Error(result?.error || "save_failed");
+      }
+
+      currentDraftId = result.draft_id || currentDraftId;
+      setDraftStatus(getDraftStatusMessage(result.saved_at));
+
+      if (result.url) {
+        window.history.replaceState({}, "", result.url);
+      }
+    } catch (error) {
+      setDraftStatus(
+        CURRENT_LANG === "ca"
+          ? "No s'ha pogut guardar el borrador. Torna-ho a provar."
+          : "No se ha podido guardar el borrador. Vuelve a intentarlo.",
+        true
+      );
+    } finally {
+      saveDraftButton.disabled = false;
+      saveDraftButton.textContent = originalLabel;
+    }
+  });
+
+  updateSizeBrowser();
   calculateCanvasQuote();
 </script>
 {% endblock %}

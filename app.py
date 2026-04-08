@@ -357,6 +357,15 @@ FRAME_ORDER_FIELDS = [
 ]
 
 
+CANVAS_DRAFT_FIELDS = [
+    "size",
+    "qty",
+    "edit",
+    "margin",
+    "show_file_size",
+]
+
+
 
 def get_private_area_db():
     return PRIVATE_AREA_DB_PATH
@@ -370,7 +379,7 @@ def init_private_area_db():
             store_path.parent.mkdir(parents=True, exist_ok=True)
         if not store_path.exists():
             store_path.write_text(
-                json.dumps({"frames_order_drafts": {}}, ensure_ascii=False, indent=2),
+                json.dumps({"frames_order_drafts": {}, "canvas_order_drafts": {}}, ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
         return True
@@ -383,6 +392,15 @@ def _normalize_frame_order_payload(payload=None):
     payload = payload or {}
     normalized = {}
     for key in FRAME_ORDER_FIELDS:
+        value = payload.get(key, "")
+        normalized[key] = "" if value is None else str(value).strip()
+    return normalized
+
+
+def _normalize_canvas_draft_payload(payload=None):
+    payload = payload or {}
+    normalized = {}
+    for key in CANVAS_DRAFT_FIELDS:
         value = payload.get(key, "")
         normalized[key] = "" if value is None else str(value).strip()
     return normalized
@@ -402,7 +420,7 @@ def _format_saved_timestamp(value):
 
 def _read_private_area_store():
     if not init_private_area_db():
-        return {"frames_order_drafts": {}}
+        return {"frames_order_drafts": {}, "canvas_order_drafts": {}}
     store_path = Path(PRIVATE_AREA_DB_PATH)
     try:
         data = json.loads(store_path.read_text(encoding="utf-8") or "{}")
@@ -413,6 +431,9 @@ def _read_private_area_store():
     drafts = data.get("frames_order_drafts")
     if not isinstance(drafts, dict):
         data["frames_order_drafts"] = {}
+    canvas_drafts = data.get("canvas_order_drafts")
+    if not isinstance(canvas_drafts, dict):
+        data["canvas_order_drafts"] = {}
     return data
 
 
@@ -482,6 +503,64 @@ def save_frames_order_draft(payload):
         "client_phone": normalized.get("client_phone", ""),
         "final_size_label": normalized.get("final_size", ""),
         "total": total,
+        "updated_at": updated_at,
+        "payload": normalized,
+    }
+    if not _write_private_area_store(store):
+        raise RuntimeError("private_area_db_unavailable")
+    return {
+        "draft_id": draft_id,
+        "updated_at": updated_at,
+        "payload": normalized,
+    }
+
+
+def _store_to_saved_canvas_draft(row):
+    return {
+        "draft_id": row.get("draft_id", ""),
+        "size_label": row.get("size_label", ""),
+        "quantity": int(row.get("quantity") or 1),
+        "edit_label": row.get("edit_label", ""),
+        "updated_at": row.get("updated_at", ""),
+        "updated_at_label": _format_saved_timestamp(row.get("updated_at", "")),
+    }
+
+
+def list_saved_canvas_drafts(limit=8):
+    drafts = _read_private_area_store().get("canvas_order_drafts", {})
+    rows = sorted(drafts.values(), key=_draft_sort_key, reverse=True)
+    return [_store_to_saved_canvas_draft(row) for row in rows[: max(int(limit or 1), 1)]]
+
+
+def get_saved_canvas_draft(draft_id):
+    draft_id = str(draft_id or "").strip()
+    if not draft_id:
+        return None
+
+    drafts = _read_private_area_store().get("canvas_order_drafts", {})
+    row = drafts.get(draft_id)
+    if not isinstance(row, dict):
+        return None
+    return _normalize_canvas_draft_payload(row.get("payload") or {})
+
+
+def save_canvas_draft(payload):
+    normalized = _normalize_canvas_draft_payload(payload)
+    draft_id = str((payload or {}).get("draft_id") or "").strip() or secrets.token_urlsafe(8)
+    updated_at = datetime.utcnow().isoformat(timespec="seconds")
+
+    size_item = get_canvas_size_by_id(normalized.get("size"))
+    edit_item = get_canvas_edit_by_id(normalized.get("edit"))
+    lang = (payload or {}).get("lang") or get_lang()
+    quantity = parse_positive_int(normalized.get("qty"), default=1)
+
+    store = _read_private_area_store()
+    drafts = store.setdefault("canvas_order_drafts", {})
+    drafts[draft_id] = {
+        "draft_id": draft_id,
+        "size_label": f"{size_item['final'][0]} x {size_item['final'][1]} cm",
+        "quantity": quantity,
+        "edit_label": edit_item["label"][lang],
         "updated_at": updated_at,
         "payload": normalized,
     }
@@ -703,12 +782,58 @@ def build_private_modules():
     return modules
 
 
-def build_canvas_module_context():
+def classify_canvas_size(final_width, final_height, lang):
+    if final_width == final_height:
+        orientation = "square"
+        orientation_label = "Quadrat" if lang == "ca" else "Cuadrado"
+    elif final_width > final_height:
+        orientation = "horizontal"
+        orientation_label = "Horitzontal" if lang == "ca" else "Horizontal"
+    else:
+        orientation = "vertical"
+        orientation_label = "Vertical"
+
+    larger_side = max(final_width, final_height)
+    if larger_side <= 60:
+        size_band = "small"
+        size_band_label = "Petit format" if lang == "ca" else "Formato pequeño"
+    elif larger_side <= 100:
+        size_band = "medium"
+        size_band_label = "Format mitjà" if lang == "ca" else "Formato medio"
+    else:
+        size_band = "large"
+        size_band_label = "Gran format" if lang == "ca" else "Gran formato"
+
+    return {
+        "orientation": orientation,
+        "orientation_label": orientation_label,
+        "size_band": size_band,
+        "size_band_label": size_band_label,
+    }
+
+
+def build_canvas_module_context(draft_payload=None, draft_id=""):
     lang = get_lang()
+    source_payload = draft_payload or {}
+    selected_size_id = (request.args.get("size") or source_payload.get("size") or "").strip()
+    selected_edit_id = (request.args.get("edit") or source_payload.get("edit") or "").strip()
+    selected_quantity = parse_positive_int(request.args.get("qty") or source_payload.get("qty"), default=1)
+    selected_margin_percent = parse_non_negative_float(
+        request.args.get("margin") or source_payload.get("margin"),
+        default=CANVAS_PRICING["default_margin_percent"],
+    )
+    selected_show_file_size = parse_bool_flag(request.args.get("show_file_size") or source_payload.get("show_file_size"))
+    default_size_id = f"{CANVAS_PRICING['sizes'][0]['final'][0]}x{CANVAS_PRICING['sizes'][0]['final'][1]}"
+    default_edit_id = CANVAS_PRICING["edit_options"][0]["id"]
+    valid_size_ids = {f"{item['final'][0]}x{item['final'][1]}" for item in CANVAS_PRICING["sizes"]}
+    valid_edit_ids = {item["id"] for item in CANVAS_PRICING["edit_options"]}
+    selected_size_id = selected_size_id if selected_size_id in valid_size_ids else default_size_id
+    selected_edit_id = selected_edit_id if selected_edit_id in valid_edit_ids else default_edit_id
     sizes = []
     for item in CANVAS_PRICING["sizes"]:
         final_width, final_height = item["final"]
         file_width, file_height = item["file"]
+        size_meta = classify_canvas_size(final_width, final_height, lang)
         sizes.append(
             {
                 "id": f"{final_width}x{final_height}",
@@ -723,6 +848,11 @@ def build_canvas_module_context():
                 "final_height": final_height,
                 "file_width": file_width,
                 "file_height": file_height,
+                "orientation": size_meta["orientation"],
+                "orientation_label": size_meta["orientation_label"],
+                "size_band": size_meta["size_band"],
+                "size_band_label": size_meta["size_band_label"],
+                "selected": f"{final_width}x{final_height}" == selected_size_id,
             }
         )
 
@@ -742,10 +872,21 @@ def build_canvas_module_context():
                     "price": item.get("price"),
                     "description": item["description"][lang],
                     "includes_preview": item["includes_preview"],
+                    "selected": item["id"] == selected_edit_id,
                 }
                 for item in CANVAS_PRICING["edit_options"]
             ],
         }
+        ,
+        "canvas_draft": {
+            "draft_id": draft_id,
+            "selected_size_id": selected_size_id,
+            "selected_quantity": selected_quantity,
+            "selected_edit_id": selected_edit_id,
+            "selected_margin_percent": selected_margin_percent,
+            "selected_show_file_size": selected_show_file_size,
+            "saved_drafts": list_saved_canvas_drafts(),
+        },
     }
 
 
@@ -1498,11 +1639,13 @@ def area_privada_tarifari():
 
 @app.route("/area-privada/lienzos")
 def area_privada_lienzos():
+    draft_id = (request.args.get("draft") or "").strip()
+    draft_payload = get_saved_canvas_draft(draft_id) if draft_id else None
     return render_template(
         "area_privada_lienzos_v3.html",
         lang=get_lang(),
         private_modules=build_private_modules(),
-        **build_canvas_module_context(),
+        **build_canvas_module_context(draft_payload=draft_payload, draft_id=draft_id if draft_payload else ""),
     )
 
 
@@ -1566,6 +1709,33 @@ def api_private_orders_frames_save():
         draft=saved["draft_id"],
         lang=lang,
     )
+    return jsonify(
+        {
+            "ok": True,
+            "draft_id": saved["draft_id"],
+            "saved_at": _format_saved_timestamp(saved["updated_at"]),
+            "url": draft_url,
+        }
+    )
+
+
+@app.route("/api/private-orders/canvas/save", methods=["POST"])
+def api_private_orders_canvas_save():
+    data = request.get_json(silent=True) or {}
+
+    try:
+        saved = save_canvas_draft(
+            {
+                **data,
+                "draft_id": data.get("draft_id"),
+                "lang": data.get("lang") or get_lang(),
+            }
+        )
+    except RuntimeError:
+        return jsonify({"ok": False, "error": "db_unavailable"}), 503
+
+    lang = (data.get("lang") or get_lang() or "ca").strip().lower() or "ca"
+    draft_url = url_for("area_privada_lienzos", draft=saved["draft_id"], lang=lang)
     return jsonify(
         {
             "ok": True,

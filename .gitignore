@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .env
+private_area_store.json
+canvas-prices.pdf
+reusrevela_pdf.txt
