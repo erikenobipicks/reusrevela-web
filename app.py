@@ -693,6 +693,8 @@ def build_direct_calc_url(service=None, lang=None, source="web"):
         "source": source,
         "lang": lang,
     }
+    if service == "frames":
+        return f"{CALC_URL.rstrip('/')}/calculadora?{urlencode(query)}"
     if service != "general":
         query["service"] = service
     return f"{CALC_URL.rstrip('/')}?{urlencode(query)}"
