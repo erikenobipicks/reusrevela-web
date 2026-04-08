@@ -672,6 +672,32 @@ def _normalize_private_client_payload(payload=None):
     }
 
 
+def _coerce_private_client_row(payload=None, fallback_id=""):
+    payload = payload if isinstance(payload, dict) else {}
+    client_id = str(payload.get("id") or fallback_id or "").strip()
+    order_count_value = payload.get("order_count")
+    try:
+        order_count = int(str(order_count_value).strip())
+    except (TypeError, ValueError):
+        order_count = 0
+    if order_count < 0:
+        order_count = 0
+    return {
+        "id": client_id,
+        "name": str(payload.get("name") or "").strip(),
+        "company": str(payload.get("company") or "").strip(),
+        "email": str(payload.get("email") or "").strip(),
+        "phone": str(payload.get("phone") or "").strip(),
+        "city": str(payload.get("city") or "").strip(),
+        "notes": str(payload.get("notes") or "").strip(),
+        "source": str(payload.get("source") or "").strip() or "private_area",
+        "last_order_ref": str(payload.get("last_order_ref") or "").strip(),
+        "updated_at": str(payload.get("updated_at") or "").strip(),
+        "created_at": str(payload.get("created_at") or "").strip(),
+        "order_count": order_count,
+    }
+
+
 def _client_sort_key(item):
     return item.get("updated_at") or ""
 
@@ -690,8 +716,8 @@ def save_private_client(payload, client_id=""):
     updated_at = datetime.utcnow().isoformat(timespec="seconds")
     store = _read_private_area_store()
     clients = store.setdefault("clients", {})
-    existing = clients.get(client_id, {}) if isinstance(clients.get(client_id), dict) else {}
-    order_count = int(existing.get("order_count") or 0)
+    existing = _coerce_private_client_row(clients.get(client_id), fallback_id=client_id)
+    order_count = existing.get("order_count", 0)
     clients[client_id] = {
         "id": client_id,
         "name": normalized["name"] or existing.get("name", ""),
@@ -713,7 +739,12 @@ def save_private_client(payload, client_id=""):
 
 def list_private_clients(limit=12):
     clients = _read_private_area_store().get("clients", {})
-    rows = [row for row in clients.values() if isinstance(row, dict)]
+    rows = []
+    for key, row in clients.items():
+        normalized = _coerce_private_client_row(row, fallback_id=key)
+        if not normalized["id"]:
+            continue
+        rows.append(normalized)
     rows = sorted(rows, key=_client_sort_key, reverse=True)
     return rows[: max(int(limit or 1), 1)]
 
@@ -723,7 +754,8 @@ def get_private_client(client_id):
     if not client_id:
         return None
     row = _read_private_area_store().get("clients", {}).get(client_id)
-    return row if isinstance(row, dict) else None
+    normalized = _coerce_private_client_row(row, fallback_id=client_id)
+    return normalized if normalized["id"] else None
 
 
 def get_lang():
@@ -1831,19 +1863,22 @@ def _build_print_order_line_from_payload(payload, lang, index=1):
 
 
 def _build_private_order_line_from_payload(payload, lang, index=1):
-    product_type = str((payload or {}).get("product_type") or "").strip().lower() or "canvas"
+    payload = payload if isinstance(payload, dict) else {}
+    product_type = str(payload.get("product_type") or "").strip().lower() or "canvas"
     if product_type == "print":
         return _build_print_order_line_from_payload(payload, lang, index=index)
     return _build_canvas_order_line_from_payload(payload, lang, index=index)
 
 
-def build_private_order_context():
+def build_private_order_context(safe_mode=False):
     lang = get_lang()
-    session_lines = _get_private_order_session().get("lines", [])
-    order_lines = [
-        _build_private_order_line_from_payload(item, lang, index=index)
-        for index, item in enumerate(session_lines, start=1)
-    ]
+    session_lines = [] if safe_mode else _get_private_order_session().get("lines", [])
+    order_lines = []
+    for index, item in enumerate(session_lines, start=1):
+        try:
+            order_lines.append(_build_private_order_line_from_payload(item, lang, index=index))
+        except Exception:
+            app.logger.exception("private_order_line_failed", extra={"line_index": index})
 
     if not order_lines and any(request.args.get(key) for key in ("size", "edit", "qty", "margin", "show_file_size")):
         order_lines = [
@@ -1927,7 +1962,7 @@ def build_private_order_context():
         else "dropbox"
     )
 
-    saved_clients = list_private_clients(limit=12)
+    saved_clients = [] if safe_mode else list_private_clients(limit=12)
     selected_client_id = (request.args.get("client") or "").strip()
     if not selected_client_id and saved_clients:
         selected_client_id = saved_clients[0]["id"]
@@ -2615,18 +2650,31 @@ def area_privada_comanda():
         return redirect(url_for("area_privada_comanda", lang=get_lang()))
     draft_id = (request.args.get("draft") or "").strip()
     saved_payload = get_saved_frames_order(draft_id) if source == "frames" and draft_id else None
-    order_data = (
-        build_frames_order_context(saved_payload, draft_id=draft_id if saved_payload else "")
-        if source == "frames"
-        else build_private_order_context()
-    )
+    try:
+        order_data = (
+            build_frames_order_context(saved_payload, draft_id=draft_id if saved_payload else "")
+            if source == "frames"
+            else build_private_order_context()
+        )
+        shell_context = build_private_shell_context()
+    except Exception:
+        app.logger.exception("area_privada_comanda_failed", extra={"source": source})
+        session.pop("private_order", None)
+        session.pop("private_canvas_order", None)
+        session.modified = True
+        order_data = (
+            build_frames_order_context(saved_payload, draft_id=draft_id if saved_payload else "")
+            if source == "frames"
+            else build_private_order_context(safe_mode=True)
+        )
+        shell_context = build_private_shell_context()
     template_name = "area_privada_comanda_marcs.html" if source == "frames" else "area_privada_comanda_v2.html"
     return render_template(
         template_name,
         lang=get_lang(),
         private_modules=build_private_modules(),
         order_data=order_data,
-        **build_private_shell_context(),
+        **shell_context,
     )
 
 
