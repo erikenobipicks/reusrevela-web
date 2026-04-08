@@ -5,6 +5,9 @@
 {% block head %}
 <style>
   .order-hero{padding-top:3rem}
+  .order-hero h1.display{font-size:clamp(2.15rem, 4.2vw, 3.35rem)}
+  .order-hero h2.display{font-size:clamp(1.55rem, 3vw, 2.2rem)}
+  .order-hero h3.card-title{font-size:1.2rem}
   .order-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
   .order-copy{padding:2rem 0}
   .order-stage{
@@ -193,15 +196,15 @@
   <div class="container order-shell">
     <div class="order-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Comanda{% else %}Pedido{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Agrupa productes, client i fitxers dins d'una sola comanda.{% else %}Agrupa productos, cliente y archivos dentro de un solo pedido.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquí poden conviure llenços, impressions i, quan toqui, línies que arribin des de marcs.{% else %}Aquí pueden convivir lienzos, impresiones y, cuando toque, líneas que lleguen desde marcos.{% endif %}</p>
+      <h1 class="display">{% if lang == 'ca' %}Tot el que has de pressupostar, dins d'una sola comanda.{% else %}Todo lo que tienes que presupuestar, dentro de un solo pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Llenços, impressions i, quan toqui, marcs.{% else %}Lienzos, impresiones y, cuando toque, marcos.{% endif %}</p>
     </div>
 
     <div class="order-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Ordre de treball{% else %}Orden de trabajo{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La comanda és el centre comú on tot acaba encaixant.{% else %}El pedido es el centro común donde todo acaba encajando.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Això et permet repetir clients i preparar pressupost o ordre sense tornar enrere.{% else %}Esto te permite repetir clientes y preparar presupuesto u orden sin volver atrás.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(1.65rem, 3vw, 2.35rem)">{% if lang == 'ca' %}Aquí es tanca la feina: línies, client i fitxers.{% else %}Aquí se cierra el trabajo: líneas, cliente y archivos.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Revisa, completa i continua.{% else %}Revisa, completa y sigue.{% endif %}</p>
       </div>
       <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-outline">{% if lang == 'ca' %}Afegir més productes{% else %}Añadir más productos{% endif %}</a>
     </div>
@@ -212,7 +215,7 @@
   <div class="container order-grid">
     <article class="surface lines-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Línies de la comanda{% else %}Líneas del pedido{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}Una mateixa comanda pot agrupar diverses línies abans d'assignar el client final.{% else %}Un mismo pedido puede agrupar varias líneas antes de asignar al cliente final.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(1.6rem, 2.9vw, 2.25rem);margin-top:.45rem">{% if lang == 'ca' %}Afegeix línies i després assigna el client.{% else %}Añade líneas y después asigna al cliente.{% endif %}</h2>
       <div class="line-stack">
         {% if not order_data.has_lines %}
         <article class="line-item">
@@ -281,7 +284,7 @@
 
     <aside class="surface totals-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Lectura ràpida{% else %}Lectura rápida{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.6rem);margin-top:.45rem">{% if lang == 'ca' %}Lectura ràpida del total comercial i del total de taller de tota la comanda.{% else %}Lectura rápida del total comercial y del total de taller de todo el pedido.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(1.5rem, 2.8vw, 2.05rem);margin-top:.45rem">{% if lang == 'ca' %}Totals de client i de taller d'un cop d'ull.{% else %}Totales de cliente y de taller de un vistazo.{% endif %}</h2>
       <div class="totals-box">
         <span>{% if lang == 'ca' %}Total client final amb IVA{% else %}Total cliente final con IVA{% endif %}</span>
         <strong>{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} €</strong>
@@ -301,12 +304,12 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Documents de sortida{% else %}Documentos de salida{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}De la mateixa comanda en surt tant el pressupost per al client com l'ordre interna de taller.{% else %}Del mismo pedido sale tanto el presupuesto para el cliente como la orden interna de taller.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}D'aquí en surt tant el pressupost com l'ordre interna.{% else %}De aquí salen tanto el presupuesto como la orden interna.{% endif %}</h2>
     </div>
     <div class="docs-grid">
       <article class="surface doc-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Pressupost client final{% else %}Presupuesto cliente final{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Un sol document comercial per compartir amb el client.{% else %}Un solo documento comercial para compartir con el cliente.{% endif %}</h3>
+      <h3 class="card-title">{% if lang == 'ca' %}Un sol document per al client.{% else %}Un solo documento para el cliente.{% endif %}</h3>
         <div class="summary-list">
           <div class="summary-line"><span>{% if lang == 'ca' %}Línies incloses{% else %}Líneas incluidas{% endif %}</span><strong>{{ order_data.line_count }}</strong></div>
           <div class="summary-line"><span>{% if lang == 'ca' %}Unitats totals{% else %}Unidades totales{% endif %}</span><strong>{{ order_data.quantity_total }}</strong></div>
@@ -327,7 +330,7 @@
 
       <article class="surface doc-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Ordre laboratori{% else %}Orden laboratorio{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Una ordre interna amb les línies separades i els costos visibles.{% else %}Una orden interna con las líneas separadas y los costes visibles.{% endif %}</h3>
+      <h3 class="card-title">{% if lang == 'ca' %}Ordre interna amb costos i línies clares.{% else %}Orden interna con costes y líneas claras.{% endif %}</h3>
         <div class="summary-list">
           <div class="summary-line"><span>{% if lang == 'ca' %}Referencia{% else %}Referencia{% endif %}</span><strong>CANVAS-{{ order_data.generated_at.strftime("%d%m%y") }}</strong></div>
           <div class="summary-line"><span>{% if lang == 'ca' %}Línies de producció{% else %}Líneas de producción{% endif %}</span><strong>{{ order_data.line_count }}</strong></div>
@@ -353,12 +356,12 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Client final{% else %}Cliente final{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}El client es tria al final, quan ja saps exactament què s'ha de pressupostar o produir.{% else %}El cliente se elige al final, cuando ya sabes exactamente qué se tiene que presupuestar o producir.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Tria el client quan la comanda ja està clara.{% else %}Elige al cliente cuando el pedido ya está claro.{% endif %}</h2>
     </div>
     <div class="client-grid">
       <article class="surface client-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Seleccionar client{% else %}Seleccionar cliente{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Reutilitzar un client existent evita tornar a omplir dades a cada comanda.{% else %}Reutilizar un cliente existente evita volver a rellenar datos en cada pedido.{% endif %}</h3>
+      <h3 class="card-title">{% if lang == 'ca' %}Recupera un client i continua.{% else %}Recupera un cliente y sigue.{% endif %}</h3>
         {% if order_data.has_clients %}
           {% for client in order_data.clients %}
           <a href="{{ client.select_url }}" class="client-select">
@@ -392,7 +395,7 @@
 
       <article class="surface client-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Crear client nou{% else %}Crear cliente nuevo{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Si encara no existeix, el pots crear aquí mateix i la comanda ja quedarà vinculada.{% else %}Si aún no existe, lo puedes crear aquí mismo y el pedido ya quedará vinculado.{% endif %}</h3>
+      <h3 class="card-title">{% if lang == 'ca' %}Si no hi és, crea'l aquí mateix.{% else %}Si no está, créalo aquí mismo.{% endif %}</h3>
         <form method="post" action="{{ order_data.client_save_url }}" class="client-form">
           <input type="hidden" name="next_path" value="{{ request.full_path.rstrip('?') }}">
           <input type="hidden" name="order_source" value="{{ order_data.origin|default('') }}">
@@ -430,7 +433,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Recepció del fitxer{% else %}Recepción del archivo{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Ara el fitxer es pot guardar dins de cada línia de la comanda.{% else %}Ahora el archivo se puede guardar dentro de cada línea del pedido.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Cada línia pot portar el seu fitxer.{% else %}Cada línea puede llevar su archivo.{% endif %}</h2>
     </div>
     <div class="delivery-grid">
       {% for option in order_data.delivery_options %}
@@ -461,7 +464,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Flux complet{% else %}Flujo completo{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Ara sí que es veu el recorregut natural: producte, comanda, client i enviament del fitxer.{% else %}Ahora sí que se ve el recorrido natural: producto, pedido, cliente y envío del archivo.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}El flux és simple: producte, comanda, client i fitxer.{% else %}El flujo es simple: producto, pedido, cliente y archivo.{% endif %}</h2>
     </div>
     <div class="flow-grid">
       <article class="surface flow-card fade-up">

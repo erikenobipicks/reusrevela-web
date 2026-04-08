@@ -5,6 +5,9 @@
 {% block head %}
 <style>
   .order-hero{padding-top:3rem}
+  .order-hero h1.display{font-size:clamp(2.15rem, 4.2vw, 3.35rem)}
+  .order-hero h2.display{font-size:clamp(1.55rem, 3vw, 2.2rem)}
+  .order-hero h3.card-title{font-size:1.2rem}
   .order-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
   .order-copy{padding:2rem 0}
   .order-stage{
@@ -153,20 +156,15 @@
   <div class="container order-shell">
     <div class="order-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Comanda de marcs{% else %}Pedido de marcos{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}El pressupost de marcs ja entra dins el privat amb la configuraci&oacute; i el resum comercial preparats.{% else %}El presupuesto de marcos ya entra dentro del privado con la configuraci&oacute;n y el resumen comercial preparados.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aix&ograve; et permet continuar la feina sense tornar a copiar dades: client, pe&ccedil;a, mida final i import queden agrupats en un mateix punt.{% else %}Esto te permite continuar el trabajo sin volver a copiar datos: cliente, pieza, medida final e importe quedan agrupados en un mismo punto.{% endif %}</p>
-      <div class="module-nav">
-        {% for module in private_modules %}
-        <span class="module-chip">{{ module.title }}</span>
-        {% endfor %}
-      </div>
+      <h1 class="display">{% if lang == 'ca' %}El pressupost de marcs ja entra dins la comanda.{% else %}El presupuesto de marcos ya entra dentro del pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Client, pe&ccedil;a, mida i import ja venen preparats.{% else %}Cliente, pieza, medida e importe ya vienen preparados.{% endif %}</p>
     </div>
 
     <div class="order-stage fade-up">
       <div>
         <div class="visual-label">{{ order_data.origin_label }}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Refer&egrave;ncia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada per seguir cap a pressupost, client o ordre interna.{% else %}Referencia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada para seguir hacia presupuesto, cliente u orden interna.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}La calculadora de marcs continua fent el c&agrave;lcul i aquesta pantalla t'ajuda a portar-ne el resum dins el flux general de Reus Revela.{% else %}La calculadora de marcos sigue haciendo el c&aacute;lculo y esta pantalla te ayuda a traer su resumen dentro del flujo general de Reus Revela.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(1.65rem, 3vw, 2.35rem)">{% if lang == 'ca' %}Refer&egrave;ncia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada per continuar.{% else %}Referencia <span id="quote-ref-hero">{{ order_data.quote_ref }}</span> preparada para continuar.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Marcs continua calculant; aqu&iacute; només en recollim el resum.{% else %}Marcos sigue calculando; aquí solo recogemos el resumen.{% endif %}</p>
         <div class="hero-total">
           <span>{% if lang == 'ca' %}Total client final{% else %}Total cliente final{% endif %}</span>
           <strong>{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} &euro;</strong>
@@ -187,7 +185,7 @@
       <div class="summary-top">
         <div>
           <span class="badge ready">{{ order_data.origin_label }}</span>
-          <h2 class="display" id="final-size-display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.8rem">{{ line.title if line else order_data.final_size_label }}</h2>
+          <h2 class="display" id="final-size-display" style="font-size:clamp(1.6rem, 2.9vw, 2.25rem);margin-top:.8rem">{{ line.title if line else order_data.final_size_label }}</h2>
           <p class="muted" style="margin-top:.7rem">{{ line.summary if line else order_data.origin_label }}</p>
         </div>
         <strong style="font-size:2rem;line-height:1">{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} &euro;</strong>
@@ -218,7 +216,7 @@
 
     <aside class="surface totals-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Lectura comercial{% else %}Lectura comercial{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.6rem);margin-top:.45rem">{% if lang == 'ca' %}El resum importat deixa clara la part que veu el client i el que queda pendent de cobrar.{% else %}El resumen importado deja clara la parte que ve el cliente y lo que queda pendiente de cobrar.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(1.5rem, 2.8vw, 2.05rem);margin-top:.45rem">{% if lang == 'ca' %}Totals clars per a client i cobrament.{% else %}Totales claros para cliente y cobro.{% endif %}</h2>
       <div class="totals-box">
         <span>{% if lang == 'ca' %}Total pressupostat{% else %}Total presupuestado{% endif %}</span>
         <strong>{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} &euro;</strong>
@@ -239,7 +237,7 @@
   <div class="container order-grid">
     <article class="surface editor-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Edita la comanda{% else %}Edita el pedido{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Pots ajustar el client, la mida final i les observacions sense tornar a la calculadora.{% else %}Puedes ajustar el cliente, la medida final y las observaciones sin volver a la calculadora.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(1.5rem, 2.8vw, 2.05rem);margin-top:.45rem">{% if lang == 'ca' %}Ajusta dades bàsiques sense tornar enrere.{% else %}Ajusta datos básicos sin volver atrás.{% endif %}</h2>
       <div class="editor-grid">
         <div class="field">
           <label for="edit-client-name">{% if lang == 'ca' %}Client{% else %}Cliente{% endif %}</label>
@@ -269,7 +267,7 @@
 
     <article class="surface flow-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}A partir d'aqu&iacute;{% else %}A partir de aqu&iacute;{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}La comanda ja queda preparada per seguir treballant-la dins del privat.{% else %}El pedido ya queda preparado para seguir trabaj&aacute;ndolo dentro del privado.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(1.5rem, 2.8vw, 2.05rem);margin-top:.45rem">{% if lang == 'ca' %}A partir d'aqu&iacute;, continua com una comanda m&eacute;s.{% else %}A partir de aqu&iacute;, contin&uacute;a como un pedido m&aacute;s.{% endif %}</h2>
       {% if order_data.saved_drafts %}
       <div class="draft-list">
         {% for draft in order_data.saved_drafts %}
@@ -308,7 +306,7 @@
     <div class="surface cta-box fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Continuem des d'aqu&iacute;{% else %}Seguimos desde aqu&iacute;{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}El pressupost de marcs ja no queda penjat: entra al privat amb context, totals i dades clau preparades.{% else %}El presupuesto de marcos ya no queda colgado: entra al privado con contexto, totales y datos clave preparados.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Marcs ja entra al privat amb el resum preparat.{% else %}Marcos ya entra en el privado con el resumen preparado.{% endif %}</h2>
       </div>
       <div class="cta-actions">
         <a href="{{ order_data.frames_entry_url }}" class="btn btn-dark">{% if lang == 'ca' %}Tornar a marcs{% else %}Volver a marcos{% endif %}</a>

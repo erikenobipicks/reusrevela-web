@@ -5,9 +5,9 @@
 {% block head %}
 <style>
   .prints-app{padding:2.5rem 0 4rem}
-  .prints-app h1.display{font-size:clamp(2.4rem, 4.8vw, 4rem)}
-  .prints-app h2.display{font-size:clamp(1.85rem, 3.4vw, 2.7rem)}
-  .prints-app h3.card-title{font-size:1.45rem}
+  .prints-app h1.display{font-size:clamp(2.1rem, 4.1vw, 3.25rem)}
+  .prints-app h2.display{font-size:clamp(1.55rem, 2.9vw, 2.2rem)}
+  .prints-app h3.card-title{font-size:1.2rem}
   .prints-top{
     display:flex;
     align-items:end;
@@ -112,8 +112,8 @@
     <div class="prints-top fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Impressions{% else %}Impresiones{% endif %}</div>
-        <h1 class="display">{% if lang == 'ca' %}Calcula la línia i envia-la a comanda.{% else %}Calcula la línea y envíala al pedido.{% endif %}</h1>
-        <p>{% if lang == 'ca' %}Aquest mòdul està pensat com una eina de treball: paper, acabat, mida, cost i PVP. Si la peça porta marc, passa directament a la calculadora de marcs.{% else %}Este módulo está pensado como una herramienta de trabajo: papel, acabado, medida, coste y PVP. Si la pieza lleva marco, pasa directamente a la calculadora de marcos.{% endif %}</p>
+        <h1 class="display">{% if lang == 'ca' %}Calcula la peça i afegeix-la.{% else %}Calcula la pieza y añádela.{% endif %}</h1>
+        <p>{% if lang == 'ca' %}Paper, acabat, mida i preu. Si porta marc, passa a marcs.{% else %}Papel, acabado, medida y precio. Si lleva marco, pasa a marcos.{% endif %}</p>
       </div>
       <div class="prints-actions">
         <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir comanda{% else %}Abrir pedido{% endif %}</a>
@@ -198,7 +198,7 @@
 
       <aside class="surface summary-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Resum{% else %}Resumen{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.6rem);margin-top:.35rem">{{ prints_module.summary_title }}</h2>
+        <h2 class="display" style="font-size:clamp(1.5rem, 2.8vw, 2.05rem);margin-top:.35rem">{{ prints_module.summary_title }}</h2>
         <div class="summary-box">
           {% if prints_module.view_is_client %}
           <span>{% if lang == 'ca' %}PVP client final amb IVA{% else %}PVP cliente final con IVA{% endif %}</span>
@@ -228,12 +228,12 @@
     <div class="note-grid">
       <article class="surface note-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Flux actual{% else %}Flujo actual{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}El preu encara és manual, però la línia ja entra bé a comanda.{% else %}El precio todavía es manual, pero la línea ya entra bien en el pedido.{% endif %}</h3>
+        <h3 class="card-title">{% if lang == 'ca' %}El preu encara és manual, però la línia ja entra a comanda.{% else %}El precio todavía es manual, pero la línea ya entra en el pedido.{% endif %}</h3>
         <p>{% if lang == 'ca' %}Això ens permet provar comandes mixtes ara mateix i connectar la tarifa real després sense rebentar el mòdul.{% else %}Esto nos permite probar pedidos mixtos ahora mismo y conectar la tarifa real después sin romper el módulo.{% endif %}</p>
       </article>
       <article class="surface note-card fade-up">
         <div class="eyebrow">{% if lang == 'ca' %}Marc a part{% else %}Marco aparte{% endif %}</div>
-        <h3 class="card-title">{% if lang == 'ca' %}Quan la peça porta marc, la calculadora bona continua sent marcs.{% else %}Cuando la pieza lleva marco, la calculadora buena sigue siendo marcos.{% endif %}</h3>
+        <h3 class="card-title">{% if lang == 'ca' %}Si porta marc, continua a marcs.{% else %}Si lleva marco, sigue en marcos.{% endif %}</h3>
         <p>{% if lang == 'ca' %}Això evita embolicar una consulta simple amb opcions que només toca resoldre al motor especialitzat.{% else %}Eso evita complicar una consulta simple con opciones que solo debe resolver el motor especializado.{% endif %}</p>
       </article>
     </div>

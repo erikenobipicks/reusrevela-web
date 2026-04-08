@@ -5,6 +5,9 @@
 {% block head %}
 <style>
   .access-hero{padding-top:3rem}
+  .access-hero h1.display{font-size:clamp(2.15rem, 4.2vw, 3.35rem)}
+  .access-hero h2.display{font-size:clamp(1.55rem, 3vw, 2.2rem)}
+  .access-hero h3.card-title{font-size:1.2rem}
   .access-shell{display:grid;grid-template-columns:1.02fr .98fr;gap:2rem;align-items:stretch}
   .access-copy{padding:2rem 0}
   .access-stage,.access-form{padding:2rem}
@@ -34,14 +37,14 @@
   <div class="container access-shell">
     <div class="access-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Acc&eacute;s professional{% else %}Acceso profesional{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Entra a {{ calc_service.label }} des del mateix entorn de Reus Revela.{% else %}Entra en {{ calc_service.label }} desde el mismo entorno de Reus Revela.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest acc&eacute;s fa de pont amb la calculadora real perqu&egrave; el client no senti que surt a una eina separada. Mant&eacute; el mateix usuari professional que ja tens validat.{% else %}Este acceso hace de puente con la calculadora real para que el cliente no sienta que sale a una herramienta separada. Mantiene el mismo usuario profesional que ya tienes validado.{% endif %}</p>
+      <h1 class="display">{% if lang == 'ca' %}Entra amb el mateix usuari professional.{% else %}Entra con el mismo usuario profesional.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}És el pas previ per entrar a la calculadora real.{% else %}Es el paso previo para entrar en la calculadora real.{% endif %}</p>
     </div>
     <div class="access-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Entrada unificada{% else %}Entrada unificada{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.35rem)">{% if lang == 'ca' %}La calculadora continua sent la font bona de marcs, per&ograve; ara l'entrada pot sortir des del privat de la web.{% else %}La calculadora sigue siendo la fuente buena de marcos, pero ahora la entrada puede salir desde el privado de la web.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Aquesta primera integraci&oacute; unifica l'acc&eacute;s i mant&eacute; la l&ograve;gica actual de marcs intacta. El seg&uuml;ent pas ja ser&agrave; compartir millor comandes, clients i retorns entre m&ograve;duls.{% else %}Esta primera integraci&oacute;n unifica el acceso y mantiene la l&oacute;gica actual de marcos intacta. El siguiente paso ya ser&aacute; compartir mejor pedidos, clientes y retornos entre m&oacute;dulos.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(1.55rem, 3vw, 2.2rem)">{% if lang == 'ca' %}Entres des del privat, però el càlcul continua a la seva eina.{% else %}Entras desde el privado, pero el cálculo sigue en su herramienta.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}No canviem la lògica de marcs; només ordenem millor l'accés.{% else %}No cambiamos la lógica de marcos; solo ordenamos mejor el acceso.{% endif %}</p>
       </div>
       <div class="access-points">
         <div class="access-point">
@@ -61,8 +64,8 @@
   <div class="container access-form">
     <div class="surface form-box fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Validaci&oacute; de compte{% else %}Validaci&oacute;n de cuenta{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem)">{% if lang == 'ca' %}Accedeix amb les mateixes credencials de la calculadora.{% else %}Accede con las mismas credenciales de la calculadora.{% endif %}</h2>
-      <p>{% if lang == 'ca' %}Si ja tens acc&eacute;s professional aprovat, des d'aqu&iacute; t'obrim directament la sessi&oacute; a la calculadora. Si encara no tens alta, te la preparem des del formulari de contacte.{% else %}Si ya tienes acceso profesional aprobado, desde aqu&iacute; te abrimos directamente la sesi&oacute;n en la calculadora. Si todav&iacute;a no tienes alta, te la preparamos desde el formulario de contacto.{% endif %}</p>
+      <h2 class="display" style="font-size:clamp(1.55rem, 3vw, 2.2rem)">{% if lang == 'ca' %}Mateixes credencials, mateix accés.{% else %}Mismas credenciales, mismo acceso.{% endif %}</h2>
+      <p>{% if lang == 'ca' %}Si ja tens accés, entres. Si encara no el tens, et preparem l'alta des del formulari de contacte.{% else %}Si ya tienes acceso, entras. Si aún no lo tienes, te preparamos el alta desde el formulario de contacto.{% endif %}</p>
       {% if access_error_message %}<div class="notice error">{{ access_error_message }}</div>{% endif %}
       <form method="post" class="form-grid">
         <input type="hidden" name="service" value="{{ service }}">
@@ -81,7 +84,7 @@
           <a href="{{ CALC_REQUEST_URL }}" class="btn btn-gold">{% if lang == 'ca' %}Necessito alta{% else %}Necesito alta{% endif %}</a>
         </div>
       </form>
-      <div class="helper">{% if lang == 'ca' %}Primer objectiu d'aquesta fase: una sola porta d'entrada. Despr&eacute;s podrem unificar encara millor navegaci&oacute;, comandes i retorns entre m&ograve;duls.{% else %}Primer objetivo de esta fase: una sola puerta de entrada. Despu&eacute;s podremos unificar todav&iacute;a mejor navegaci&oacute;n, pedidos y retornos entre m&oacute;dulos.{% endif %}</div>
+      <div class="helper">{% if lang == 'ca' %}Objectiu d'aquesta fase: que entrar sigui simple i clar.{% else %}Objetivo de esta fase: que entrar sea simple y claro.{% endif %}</div>
     </div>
   </div>
 </section>

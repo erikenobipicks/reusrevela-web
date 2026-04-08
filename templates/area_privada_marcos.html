@@ -5,6 +5,9 @@
 {% block head %}
 <style>
   .frames-hero{padding-top:3rem}
+  .frames-hero h1.display{font-size:clamp(2.15rem, 4.2vw, 3.35rem)}
+  .frames-hero h2.display{font-size:clamp(1.55rem, 3vw, 2.2rem)}
+  .frames-hero h3.card-title{font-size:1.2rem}
   .frames-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
   .frames-copy{padding:2rem 0}
   .frames-stage{
@@ -66,20 +69,15 @@
   <div class="container frames-shell">
     <div class="frames-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Marcs{% else %}Marcos{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Si necessites emmarcació, aquí tens l'entrada directa a la calculadora específica de marcs.{% else %}Si necesitas enmarcación, aquí tienes la entrada directa a la calculadora específica de marcos.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest apartat serveix per entrar al catàleg i al càlcul de marcs des del mateix entorn professional que la resta de productes.{% else %}Este apartado sirve para entrar en el catálogo y en el cálculo de marcos desde el mismo entorno profesional que el resto de productos.{% endif %}</p>
-      <div class="module-nav">
-        {% for module in private_modules %}
-        <span class="module-chip">{{ module.title }}</span>
-        {% endfor %}
-      </div>
+      <h1 class="display">{% if lang == 'ca' %}Marcs continua tenint la seva calculadora.{% else %}Marcos sigue teniendo su calculadora.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Des d'aquí hi entres directament, sense perdre el fil del privat.{% else %}Desde aquí entras directamente, sin perder el hilo del privado.{% endif %}</p>
     </div>
 
     <div class="frames-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Calculadora específica{% else %}Calculadora específica{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La calculadora de marcs continua sent el lloc on consultar catàleg, opcions i preus d'emmarcació.{% else %}La calculadora de marcos sigue siendo el lugar donde consultar catálogo, opciones y precios de enmarcación.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Des d'aquí hi entres amb el mateix context professional que a la resta del privat, però mantenint la seva manera pròpia de treballar.{% else %}Desde aquí entras con el mismo contexto profesional que en el resto del privado, pero manteniendo su propia forma de trabajar.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(1.65rem, 3vw, 2.35rem)">{% if lang == 'ca' %}Catàleg, opcions i càlcul continuen vivint a marcs.{% else %}Catálogo, opciones y cálculo siguen viviendo en marcos.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}La lògica és la mateixa de sempre.{% else %}La lógica es la misma de siempre.{% endif %}</p>
       </div>
       <div class="cta-actions">
         <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir calculadora actual{% else %}Abrir calculadora actual{% endif %}</a>
@@ -93,13 +91,13 @@
   <div class="container detail-grid">
     <article class="surface detail-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Catàleg actual{% else %}Catálogo actual{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}La calculadora de marcs continua sent l'eina principal per a aquest producte.{% else %}La calculadora de marcos sigue siendo la herramienta principal para este producto.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Hi trobaràs el mateix catàleg, les mateixes opcions i els mateixos càlculs que ja feu servir ara.{% else %}Ahí encontrarás el mismo catálogo, las mismas opciones y los mismos cálculos que ya usáis ahora.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}És l'eina bona per a marcs.{% else %}Es la herramienta adecuada para marcos.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Mateix catàleg i mateix càlcul.{% else %}Mismo catálogo y mismo cálculo.{% endif %}</p>
     </article>
     <article class="surface detail-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Accés ordenat{% else %}Acceso ordenado{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Marcs queda integrat dins del mateix entorn professional.{% else %}Marcos queda integrado dentro del mismo entorno profesional.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Així el client professional no ha d'anar buscant eines separades: entra des del mateix privat i continua des d'allà cap a la calculadora específica.{% else %}Así el cliente profesional no tiene que ir buscando herramientas separadas: entra desde el mismo privado y continúa desde ahí hacia la calculadora específica.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}L'entrada queda més ordenada.{% else %}La entrada queda más ordenada.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Entres des del privat i continues a la calculadora.{% else %}Entras desde el privado y continúas en la calculadora.{% endif %}</p>
     </article>
   </div>
 </section>
@@ -113,8 +111,8 @@
     </article>
     <article class="surface safety-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Càlculs{% else %}Cálculos{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}La calculadora continua sent la mateixa{% else %}La calculadora sigue siendo la misma{% endif %}</h3>
-      <p>{% if lang == 'ca' %}El càlcul de marcs continua vivint on viu ara. No hi ha cap reinterpretació parcial ni una còpia simplificada que us pugui desquadrar preus o configuracions.{% else %}El cálculo de marcos sigue viviendo donde vive ahora. No hay ninguna reinterpretación parcial ni una copia simplificada que os pueda descuadrar precios o configuraciones.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}Mateix càlcul{% else %}Mismo cálculo{% endif %}</h3>
+      <p>{% if lang == 'ca' %}No canviem tarifes ni lògica.{% else %}No cambiamos tarifas ni lógica.{% endif %}</p>
     </article>
     <article class="surface safety-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Treball futur{% else %}Trabajo futuro{% endif %}</div>
@@ -128,7 +126,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Com queda el flux{% else %}Como queda el flujo{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Mateix entorn professional, mateix catàleg de marcs i una entrada clara cap a la calculadora específica.{% else %}Mismo entorno profesional, mismo catálogo de marcos y una entrada clara hacia la calculadora específica.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}El flux és simple: entres al privat i obres marcs des d'aquí.{% else %}El flujo es simple: entras en el privado y abres marcos desde aquí.{% endif %}</h2>
     </div>
     <div class="step-grid">
       <article class="surface step-card fade-up">
@@ -143,8 +141,8 @@
       </article>
       <article class="surface step-card fade-up">
         <strong>3</strong>
-        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Continuem integrant sense perdre res{% else %}Seguimos integrando sin perder nada{% endif %}</h3>
-        <p>{% if lang == 'ca' %}La informació actual de marcs queda protegida i el següent pas ja podrà ser més funcional: retorn a comanda, clients compartits o fluxos mixtos.{% else %}La información actual de marcos queda protegida y el siguiente paso ya podrá ser más funcional: retorno a pedido, clientes compartidos o flujos mixtos.{% endif %}</p>
+        <h3 class="card-title" style="margin-top:1rem">{% if lang == 'ca' %}Continuem integrant sense tocar la base{% else %}Seguimos integrando sin tocar la base{% endif %}</h3>
+        <p>{% if lang == 'ca' %}El següent pas és portar millor marcs a comanda.{% else %}El siguiente paso es llevar mejor marcos al pedido.{% endif %}</p>
       </article>
     </div>
   </div>
@@ -155,7 +153,7 @@
     <div class="surface cta-box fade-up">
       <div>
         <div class="tag">{% if lang == 'ca' %}Punt important{% else %}Punto importante{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Si necessites marcs, aquí tens l'entrada bona per obrir la calculadora de sempre sense perdre context ni opcions.{% else %}Si necesitas marcos, aquí tienes la entrada buena para abrir la calculadora de siempre sin perder contexto ni opciones.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Si necessites marcs, obre la calculadora de sempre des d'aquí.{% else %}Si necesitas marcos, abre la calculadora de siempre desde aquí.{% endif %}</h2>
       </div>
       <div class="cta-actions">
         <a href="{{ CALC_LOGIN_URL }}" class="btn btn-dark">{% if lang == 'ca' %}Entrar a marcs{% else %}Entrar en marcos{% endif %}</a>

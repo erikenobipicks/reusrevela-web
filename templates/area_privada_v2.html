@@ -5,9 +5,9 @@
 {% block head %}
 <style>
   .dashboard{padding:2.5rem 0 4rem}
-  .dashboard h1.display{font-size:clamp(2.5rem, 5vw, 4.2rem)}
-  .dashboard h2.display{font-size:clamp(1.9rem, 3.6vw, 2.9rem)}
-  .dashboard h3.card-title{font-size:1.55rem}
+  .dashboard h1.display{font-size:clamp(2.15rem, 4.2vw, 3.35rem)}
+  .dashboard h2.display{font-size:clamp(1.55rem, 3vw, 2.2rem)}
+  .dashboard h3.card-title{font-size:1.25rem}
   .dashboard-top{
     display:grid;
     grid-template-columns:1.2fr .8fr;
@@ -111,8 +111,8 @@
     <div class="dashboard-top">
       <article class="surface dash-panel fade-up">
         <div class="tag">{% if lang == 'ca' %}Panell professional{% else %}Panel profesional{% endif %}</div>
-        <h1 class="display">{% if lang == 'ca' %}Entra, calcula i porta-ho a comanda sense voltar per la web.{% else %}Entra, calcula y llévalo al pedido sin dar vueltas por la web.{% endif %}</h1>
-        <p>{% if lang == 'ca' %}Aquest espai hauria de servir per treballar ràpid: veure si tens sessió, entrar al producte que toca i tenir la comanda sempre a mà.{% else %}Este espacio debería servir para trabajar rápido: ver si tienes sesión, entrar en el producto adecuado y tener el pedido siempre a mano.{% endif %}</p>
+        <h1 class="display">{% if lang == 'ca' %}Tot el privat, més a mà.{% else %}Todo el privado, más a mano.{% endif %}</h1>
+        <p>{% if lang == 'ca' %}Sessió, productes i comanda al mateix punt.{% else %}Sesión, productos y pedido en el mismo punto.{% endif %}</p>
         <div class="dash-summary">
           <div class="dash-metric">
             <strong>{% if private_professional.logged_in %}OK{% else %}--{% endif %}</strong>
