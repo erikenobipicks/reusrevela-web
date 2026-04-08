@@ -386,6 +386,108 @@
       font-size:.88rem;
       color:rgba(255,255,255,.45);
     }
+    .wa-fab{
+      position:fixed;
+      right:1.35rem;
+      bottom:1.35rem;
+      z-index:260;
+      width:62px;
+      height:62px;
+      border:none;
+      border-radius:50%;
+      background:#25d366;
+      color:#fff;
+      box-shadow:0 18px 40px rgba(18,16,12,.22);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.65rem;
+    }
+    .wa-fab:hover{background:#1fb85a}
+    .wa-panel{
+      position:fixed;
+      right:1.35rem;
+      bottom:5.9rem;
+      z-index:255;
+      width:min(360px, calc(100vw - 2rem));
+      border:1px solid rgba(18, 16, 12, 0.08);
+      border-radius:24px;
+      background:rgba(255,253,249,.98);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      padding:1.15rem;
+      display:none;
+    }
+    .wa-panel.open{display:block}
+    .wa-panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:.9rem;
+    }
+    .wa-panel-head strong{
+      display:block;
+      font-size:1rem;
+      color:var(--ink);
+      margin-bottom:.2rem;
+    }
+    .wa-panel-head p{
+      margin:0;
+      font-size:.92rem;
+      line-height:1.55;
+      color:var(--muted);
+    }
+    .wa-close{
+      width:36px;
+      height:36px;
+      flex-shrink:0;
+      border:none;
+      border-radius:50%;
+      background:rgba(18,16,12,.06);
+      color:var(--ink);
+      font-size:1.2rem;
+    }
+    .wa-options{
+      display:grid;
+      gap:.65rem;
+    }
+    .wa-option{
+      display:block;
+      width:100%;
+      padding:.95rem 1rem;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      text-align:left;
+      color:var(--ink);
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .wa-option:hover{
+      transform:translateY(-1px);
+      border-color:#bda88f;
+      box-shadow:0 14px 28px rgba(18,16,12,.08);
+    }
+    .wa-option strong{
+      display:block;
+      font-size:.96rem;
+      margin-bottom:.2rem;
+    }
+    .wa-option span{
+      display:block;
+      font-size:.88rem;
+      line-height:1.5;
+      color:var(--muted);
+    }
+    .wa-direct{
+      margin-top:.8rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      color:var(--success);
+      font-weight:700;
+      font-size:.92rem;
+    }
 
     @media (max-width: 980px){
       .grid-2,
@@ -433,6 +535,14 @@
       .footer-bottom{
         flex-direction:column;
         align-items:flex-start;
+      }
+      .wa-fab{
+        right:1rem;
+        bottom:1rem;
+      }
+      .wa-panel{
+        right:1rem;
+        bottom:5.4rem;
       }
     }
   </style>
@@ -564,6 +674,44 @@
     {% block content %}{% endblock %}
   </main>
 
+  <div class="wa-panel" id="whatsapp-panel" aria-hidden="true">
+    <div class="wa-panel-head">
+      <div>
+        <strong>{% if lang == 'ca' %}Parla amb Reus Revela{% else %}Habla con Reus Revela{% endif %}</strong>
+        <p>
+          {% if lang == 'ca' %}
+            Tria el tipus de consulta i t'obrirem WhatsApp amb un missatge preparat.
+          {% else %}
+            Elige el tipo de consulta y te abriremos WhatsApp con un mensaje preparado.
+          {% endif %}
+        </p>
+      </div>
+      <button type="button" class="wa-close" id="whatsapp-close" aria-label="{% if lang == 'ca' %}Tancar{% else %}Cerrar{% endif %}">×</button>
+    </div>
+    <div class="wa-options">
+      <button type="button" class="wa-option" data-wa-text="{% if lang == 'ca' %}Hola Reus Revela, tinc una consulta sobre impressió fotogràfica i m'agradaria orientació.{% else %}Hola Reus Revela, tengo una consulta sobre impresión fotográfica y me gustaría orientación.{% endif %}">
+        <strong>{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Papers, mides, acabats o dubtes abans de demanar.{% else %}Papeles, medidas, acabados o dudas antes de pedir.{% endif %}</span>
+      </button>
+      <button type="button" class="wa-option" data-wa-text="{% if lang == 'ca' %}Hola Reus Revela, voldria informació sobre marcs a mida.{% else %}Hola Reus Revela, me gustaría información sobre marcos a medida.{% endif %}">
+        <strong>{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Materials, motllures, vidres o orientació abans de pressupostar.{% else %}Materiales, molduras, cristales u orientación antes de presupuestar.{% endif %}</span>
+      </button>
+      <button type="button" class="wa-option" data-wa-text="{% if lang == 'ca' %}Hola Reus Revela, voldria informació sobre l'àrea professional i l'accés a la calculadora.{% else %}Hola Reus Revela, me gustaría información sobre el área profesional y el acceso a la calculadora.{% endif %}">
+        <strong>{% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Alta, accés o consultes per a fotògrafs i estudis.{% else %}Alta, acceso o consultas para fotógrafos y estudios.{% endif %}</span>
+      </button>
+      <button type="button" class="wa-option" data-wa-text="{% if lang == 'ca' %}Hola Reus Revela, tinc una consulta i m'agradaria parlar amb vosaltres.{% else %}Hola Reus Revela, tengo una consulta y me gustaría hablar con vosotros.{% endif %}">
+        <strong>{% if lang == 'ca' %}Una altra consulta{% else %}Otra consulta{% endif %}</strong>
+        <span>{% if lang == 'ca' %}Obre WhatsApp directament amb un missatge general.{% else %}Abre WhatsApp directamente con un mensaje general.{% endif %}</span>
+      </button>
+    </div>
+    <a class="wa-direct" href="https://wa.me/34613346180?text={% if lang == 'ca' %}Hola%20Reus%20Revela{% else %}Hola%20Reus%20Revela{% endif %}" target="_blank" rel="noopener">
+      {% if lang == 'ca' %}Escriure directament al WhatsApp{% else %}Escribir directamente por WhatsApp{% endif %}
+    </a>
+  </div>
+  <button type="button" class="wa-fab" id="whatsapp-fab" aria-label="{% if lang == 'ca' %}Obrir WhatsApp{% else %}Abrir WhatsApp{% endif %}">✆</button>
+
   <footer>
     <div class="footer-inner">
       <div>
@@ -612,8 +760,12 @@
   </footer>
 
   <script>
+    const whatsappNumber = "34613346180";
     const menuButton = document.getElementById("menu-toggle");
     const mobileMenu = document.getElementById("mobile-menu");
+    const whatsappFab = document.getElementById("whatsapp-fab");
+    const whatsappPanel = document.getElementById("whatsapp-panel");
+    const whatsappClose = document.getElementById("whatsapp-close");
 
     if (menuButton && mobileMenu) {
       const setMenuState = (open) => {
@@ -647,6 +799,36 @@
     }, { threshold: 0.16 });
 
     document.querySelectorAll(".fade-up").forEach((element) => observer.observe(element));
+
+    if (whatsappFab && whatsappPanel) {
+      const setWhatsappPanel = (open) => {
+        whatsappPanel.classList.toggle("open", open);
+        whatsappPanel.setAttribute("aria-hidden", String(!open));
+      };
+
+      whatsappFab.addEventListener("click", () => {
+        const isOpen = whatsappPanel.classList.contains("open");
+        setWhatsappPanel(!isOpen);
+      });
+
+      if (whatsappClose) {
+        whatsappClose.addEventListener("click", () => setWhatsappPanel(false));
+      }
+
+      whatsappPanel.querySelectorAll("[data-wa-text]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const text = button.getAttribute("data-wa-text") || "";
+          window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+          setWhatsappPanel(false);
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!whatsappPanel.contains(event.target) && !whatsappFab.contains(event.target)) {
+          setWhatsappPanel(false);
+        }
+      });
+    }
   </script>
   {% block scripts %}{% endblock %}
 </body>
