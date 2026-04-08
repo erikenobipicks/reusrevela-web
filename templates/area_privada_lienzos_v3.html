@@ -837,6 +837,7 @@
 
   const buildOrderLink = ({ sizeId, editId, quantity, marginPercent, showFileSize }) => {
     const params = new URLSearchParams({
+      append: "1",
       lang: CURRENT_LANG,
       size: sizeId,
       edit: editId,

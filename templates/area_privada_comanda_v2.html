@@ -87,6 +87,29 @@
   }
   .line-meta-row strong{color:var(--ink)}
   .line-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.2rem}
+  .line-file-form{
+    display:grid;
+    gap:.8rem;
+    margin-top:1.1rem;
+    padding-top:1rem;
+    border-top:1px solid rgba(18,16,12,.08);
+  }
+  .line-file-form select,
+  .line-file-form input,
+  .line-file-form textarea{
+    width:100%;
+    min-height:48px;
+    padding:.85rem 1rem;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:rgba(255,255,255,.72);
+    color:var(--ink);
+  }
+  .line-file-form textarea{
+    min-height:88px;
+    resize:vertical;
+  }
+  .line-file-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
   .ghost-button{
     appearance:none;
     border:none;
@@ -160,6 +183,7 @@
     .order-shell,.order-grid,.docs-grid,.delivery-grid,.flow-grid,.client-grid,.history-grid{
       grid-template-columns:1fr;
     }
+    .line-file-grid{grid-template-columns:1fr}
   }
 </style>
 {% endblock %}
@@ -190,6 +214,12 @@
       <div class="eyebrow">{% if lang == 'ca' %}Línies de la comanda{% else %}Líneas del pedido{% endif %}</div>
       <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}Una mateixa comanda pot agrupar diverses línies abans d'assignar el client final.{% else %}Un mismo pedido puede agrupar varias líneas antes de asignar al cliente final.{% endif %}</h2>
       <div class="line-stack">
+        {% if not order_data.has_lines %}
+        <article class="line-item">
+          <h3 class="card-title">{% if lang == 'ca' %}Encara no hi ha cap línia a la comanda.{% else %}Todavía no hay ninguna línea en el pedido.{% endif %}</h3>
+          <p>{% if lang == 'ca' %}Afegeix un llenç des del configurador i aquí el podràs revisar, eliminar o completar amb el fitxer corresponent.{% else %}Añade un lienzo desde el configurador y aquí podrás revisarlo, eliminarlo o completar con el archivo correspondiente.{% endif %}</p>
+        </article>
+        {% endif %}
         {% for line in order_data.lines %}
         <article class="line-item">
           <div class="line-top">
@@ -210,16 +240,39 @@
           {% if line.includes_preview %}
           <p class="muted" style="margin-top:1rem">{% if lang == 'ca' %}Aquesta línia inclou prova prèvia dins del retoc complet.{% else %}Esta línea incluye prueba previa dentro del retoque completo.{% endif %}</p>
           {% endif %}
+          <form method="post" action="{{ url_for('area_privada_comanda_line_file_save') }}" class="line-file-form">
+            <input type="hidden" name="line_id" value="{{ line.line_id }}">
+            <input type="hidden" name="next_path" value="{{ request.full_path.rstrip('?') }}">
+            <div class="line-file-grid">
+              <select name="file_method">
+                <option value="dropbox" {% if line.file_method == 'dropbox' %}selected{% endif %}>{% if lang == 'ca' %}Dropbox compartit{% else %}Dropbox compartido{% endif %}</option>
+                <option value="link" {% if line.file_method == 'link' %}selected{% endif %}>{% if lang == 'ca' %}Enllaç extern{% else %}Enlace externo{% endif %}</option>
+                <option value="later" {% if line.file_method == 'later' %}selected{% endif %}>{% if lang == 'ca' %}Enviar més tard{% else %}Enviar más tarde{% endif %}</option>
+              </select>
+              <input type="text" name="file_name" value="{{ line.file_name }}" placeholder="{% if lang == 'ca' %}Nom del fitxer o referència{% else %}Nombre del archivo o referencia{% endif %}">
+            </div>
+            <input type="text" name="file_link" value="{{ line.file_link }}" placeholder="{% if lang == 'ca' %}Enllaç, carpeta o ubicació del fitxer{% else %}Enlace, carpeta o ubicación del archivo{% endif %}">
+            <textarea name="file_notes" placeholder="{% if lang == 'ca' %}Observacions del fitxer per a aquesta línia{% else %}Observaciones del archivo para esta línea{% endif %}">{{ line.file_notes }}</textarea>
+            <div class="line-actions">
+              <button type="submit" class="ghost-button">{% if lang == 'ca' %}Guardar fitxer{% else %}Guardar archivo{% endif %}</button>
+            </div>
+          </form>
           <div class="line-actions">
-            <button type="button" class="ghost-button">{% if lang == 'ca' %}Editar línia{% else %}Editar línea{% endif %}</button>
-            <button type="button" class="ghost-button">{% if lang == 'ca' %}Duplicar{% else %}Duplicar{% endif %}</button>
+            <a href="{{ line.edit_url }}" class="ghost-button">{% if lang == 'ca' %}Editar línia{% else %}Editar línea{% endif %}</a>
+            <form method="post" action="{{ url_for('area_privada_comanda_line_remove') }}">
+              <input type="hidden" name="line_id" value="{{ line.line_id }}">
+              <input type="hidden" name="next_path" value="{{ request.full_path.rstrip('?') }}">
+              <button type="submit" class="ghost-button">{% if lang == 'ca' %}Eliminar línia{% else %}Eliminar línea{% endif %}</button>
+            </form>
           </div>
         </article>
         {% endfor %}
       </div>
       <div class="line-actions">
         <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-dark">{% if lang == 'ca' %}Afegir una altra línia{% else %}Añadir otra línea{% endif %}</a>
-        <button type="button" class="btn btn-outline">{% if lang == 'ca' %}Desar com esborrany sense client{% else %}Guardar como borrador sin cliente{% endif %}</button>
+        <form method="post" action="{{ url_for('area_privada_comanda_clear') }}">
+          <button type="submit" class="btn btn-outline">{% if lang == 'ca' %}Buidar comanda{% else %}Vaciar pedido{% endif %}</button>
+        </form>
       </div>
     </article>
 
@@ -374,7 +427,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Recepció del fitxer{% else %}Recepción del archivo{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}El mètode d'enviament del fitxer segueix vivint a la comanda, i idealment acabaria vinculat a cada línia.{% else %}El método de envío del archivo sigue viviendo en el pedido, e idealmente acabaría vinculado a cada línea.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Ara el fitxer es pot guardar dins de cada línia de la comanda.{% else %}Ahora el archivo se puede guardar dentro de cada línea del pedido.{% endif %}</h2>
     </div>
     <div class="delivery-grid">
       {% for option in order_data.delivery_options %}

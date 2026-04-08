@@ -1186,18 +1186,88 @@ def build_order_return_params(source="", draft_id=""):
     return params
 
 
-def build_canvas_order_context():
-    lang = get_lang()
-    size_item = get_canvas_size_by_id(request.args.get("size"))
-    edit_item = get_canvas_edit_by_id(request.args.get("edit"))
-    quantity = parse_positive_int(request.args.get("qty"), default=1)
-    margin_percent = parse_non_negative_float(
-        request.args.get("margin"),
-        default=CANVAS_PRICING["default_margin_percent"],
-    )
-    show_file_size = parse_bool_flag(request.args.get("show_file_size"))
+def _normalize_canvas_order_line_payload(payload=None):
+    payload = payload or {}
+    return {
+        "line_id": str(payload.get("line_id") or "").strip(),
+        "size": str(payload.get("size") or payload.get("size_id") or "").strip(),
+        "qty": str(payload.get("qty") or payload.get("quantity") or "1").strip(),
+        "edit": str(payload.get("edit") or payload.get("edit_id") or "").strip(),
+        "margin": str(payload.get("margin") or payload.get("margin_percent") or CANVAS_PRICING["default_margin_percent"]).strip(),
+        "show_file_size": "1" if parse_bool_flag(payload.get("show_file_size")) else "0",
+        "file_method": str(payload.get("file_method") or "dropbox").strip(),
+        "file_name": str(payload.get("file_name") or "").strip(),
+        "file_link": str(payload.get("file_link") or "").strip(),
+        "file_notes": str(payload.get("file_notes") or "").strip(),
+    }
 
-    primary_line = build_canvas_order_line(
+
+def _get_canvas_order_session():
+    order = session.get("private_canvas_order")
+    if not isinstance(order, dict):
+        order = {"lines": []}
+    lines = order.get("lines")
+    if not isinstance(lines, list):
+        order["lines"] = []
+    return order
+
+
+def _write_canvas_order_session(order):
+    session["private_canvas_order"] = {"lines": order.get("lines", [])}
+    session.modified = True
+
+
+def add_canvas_order_line_to_session(payload):
+    normalized = _normalize_canvas_order_line_payload(payload)
+    normalized["line_id"] = normalized["line_id"] or f"line_{secrets.token_urlsafe(6)}"
+    order = _get_canvas_order_session()
+    order.setdefault("lines", []).append(normalized)
+    _write_canvas_order_session(order)
+    return normalized["line_id"]
+
+
+def remove_canvas_order_line_from_session(line_id):
+    line_id = str(line_id or "").strip()
+    if not line_id:
+        return
+    order = _get_canvas_order_session()
+    order["lines"] = [line for line in order.get("lines", []) if str(line.get("line_id") or "").strip() != line_id]
+    _write_canvas_order_session(order)
+
+
+def update_canvas_order_line_file_in_session(line_id, payload):
+    line_id = str(line_id or "").strip()
+    if not line_id:
+        return False
+    order = _get_canvas_order_session()
+    updated = False
+    for line in order.get("lines", []):
+        if str(line.get("line_id") or "").strip() != line_id:
+            continue
+        line["file_method"] = str(payload.get("file_method") or "dropbox").strip() or "dropbox"
+        line["file_name"] = str(payload.get("file_name") or "").strip()
+        line["file_link"] = str(payload.get("file_link") or "").strip()
+        line["file_notes"] = str(payload.get("file_notes") or "").strip()
+        updated = True
+        break
+    if updated:
+        _write_canvas_order_session(order)
+    return updated
+
+
+def clear_canvas_order_session():
+    session.pop("private_canvas_order", None)
+    session.modified = True
+
+
+def _build_canvas_order_line_from_payload(payload, lang, index=1):
+    normalized = _normalize_canvas_order_line_payload(payload)
+    size_item = get_canvas_size_by_id(normalized.get("size"))
+    edit_item = get_canvas_edit_by_id(normalized.get("edit"))
+    quantity = parse_positive_int(normalized.get("qty"), default=1)
+    margin_percent = parse_non_negative_float(normalized.get("margin"), default=CANVAS_PRICING["default_margin_percent"])
+    show_file_size = parse_bool_flag(normalized.get("show_file_size"))
+    line = build_canvas_order_line(
         size_item=size_item,
         edit_item=edit_item,
         quantity=quantity,
@@ -1205,18 +1275,59 @@ def build_canvas_order_context():
         show_file_size=show_file_size,
         lang=lang,
     )
-    secondary_line = build_canvas_order_line(
-        size_item=get_canvas_size_by_id("30x40"),
-        edit_item=get_canvas_edit_by_id("extend_only"),
-        quantity=1,
-        margin_percent=margin_percent,
-        show_file_size=False,
-        lang=lang,
+    file_method = normalized.get("file_method") or "dropbox"
+    file_method_labels = {
+        "dropbox": {"ca": "Dropbox compartit", "es": "Dropbox compartido"},
+        "link": {"ca": "Enllaç extern", "es": "Enlace externo"},
+        "later": {"ca": "Enviar més tard", "es": "Enviar más tarde"},
+    }
+    line.update(
+        {
+            "line_id": normalized.get("line_id") or f"line_{index:02d}",
+            "reference": f"LINE-{index:02d}",
+            "is_suggested": False,
+            "file_method": file_method,
+            "file_method_label": file_method_labels.get(file_method, file_method_labels["dropbox"])[lang],
+            "file_name": normalized.get("file_name", ""),
+            "file_link": normalized.get("file_link", ""),
+            "file_notes": normalized.get("file_notes", ""),
+            "edit_url": url_for(
+                "area_privada_lienzos",
+                lang=lang,
+                size=line["size_id"],
+                qty=quantity,
+                edit=edit_item["id"],
+                margin=margin_percent,
+                show_file_size="1" if show_file_size else "0",
+            ),
+        }
     )
-    secondary_line["reference"] = "LINE-02"
-    secondary_line["is_suggested"] = True
+    return line
 
-    order_lines = [primary_line, secondary_line]
+
+def build_canvas_order_context():
+    lang = get_lang()
+    session_lines = _get_canvas_order_session().get("lines", [])
+    order_lines = [
+        _build_canvas_order_line_from_payload(item, lang, index=index)
+        for index, item in enumerate(session_lines, start=1)
+    ]
+
+    if not order_lines and any(request.args.get(key) for key in ("size", "edit", "qty", "margin", "show_file_size")):
+        order_lines = [
+            _build_canvas_order_line_from_payload(
+                {
+                    "size": request.args.get("size"),
+                    "qty": request.args.get("qty"),
+                    "edit": request.args.get("edit"),
+                    "margin": request.args.get("margin"),
+                    "show_file_size": request.args.get("show_file_size"),
+                },
+                lang,
+                index=1,
+            )
+        ]
+
     professional_subtotal = round(sum(line["professional_subtotal"] for line in order_lines), 2)
     professional_vat = round(sum(line["professional_vat"] for line in order_lines), 2)
     professional_total = round(sum(line["professional_total"] for line in order_lines), 2)
@@ -1224,6 +1335,7 @@ def build_canvas_order_context():
     client_subtotal = round(sum(line["client_subtotal"] for line in order_lines), 2)
     client_vat = round(sum(line["client_vat"] for line in order_lines), 2)
     client_total = round(sum(line["client_total"] for line in order_lines), 2)
+    margin_percent = order_lines[0]["margin_percent"] if order_lines else CANVAS_PRICING["default_margin_percent"]
 
     delivery_options = [
         {
@@ -1342,6 +1454,7 @@ def build_canvas_order_context():
             for item in delivery_options
         ],
         "selected_delivery": selected_delivery,
+        "has_lines": bool(order_lines),
         "clients": [
             {
                 "id": item["id"],
@@ -1848,6 +1961,17 @@ def area_privada_marcos():
 @app.route("/area-privada/comanda")
 def area_privada_comanda():
     source = (request.args.get("source") or "").strip().lower()
+    if source != "frames" and parse_bool_flag(request.args.get("append")):
+        add_canvas_order_line_to_session(
+            {
+                "size": request.args.get("size"),
+                "qty": request.args.get("qty"),
+                "edit": request.args.get("edit"),
+                "margin": request.args.get("margin"),
+                "show_file_size": request.args.get("show_file_size"),
+            }
+        )
+        return redirect(url_for("area_privada_comanda", lang=get_lang()))
     draft_id = (request.args.get("draft") or "").strip()
     saved_payload = get_saved_frames_order(draft_id) if source == "frames" and draft_id else None
     order_data = (
@@ -1863,6 +1987,38 @@ def area_privada_comanda():
         order_data=order_data,
         **build_private_shell_context(),
     )
+
+
+@app.route("/area-privada/comanda/linia/eliminar", methods=["POST"])
+def area_privada_comanda_line_remove():
+    remove_canvas_order_line_from_session(request.form.get("line_id"))
+    next_path = (request.form.get("next_path") or "").strip()
+    if next_path.startswith("/area-privada/comanda"):
+        return redirect(next_path)
+    return redirect(url_for("area_privada_comanda", lang=get_lang()))
+
+
+@app.route("/area-privada/comanda/linia/fitxer", methods=["POST"])
+def area_privada_comanda_line_file_save():
+    update_canvas_order_line_file_in_session(
+        request.form.get("line_id"),
+        {
+            "file_method": request.form.get("file_method"),
+            "file_name": request.form.get("file_name"),
+            "file_link": request.form.get("file_link"),
+            "file_notes": request.form.get("file_notes"),
+        },
+    )
+    next_path = (request.form.get("next_path") or "").strip()
+    if next_path.startswith("/area-privada/comanda"):
+        return redirect(next_path)
+    return redirect(url_for("area_privada_comanda", lang=get_lang()))
+
+
+@app.route("/area-privada/comanda/buidar", methods=["POST"])
+def area_privada_comanda_clear():
+    clear_canvas_order_session()
+    return redirect(url_for("area_privada_comanda", lang=get_lang()))
 
 
 @app.route("/area-privada/comanda/client/guardar", methods=["POST"])
