@@ -371,20 +371,15 @@
   <div class="container canvas-shell">
     <div class="canvas-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Llenços{% else %}Lienzos{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Configura un llenç de manera ràpida i passa'l directament a comanda.{% else %}Configura un lienzo de forma rápida y pásalo directamente a pedido.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}La pantalla se centra en el que cal decidir: mida, quantitat i preparació del fitxer. La resta queda resolta perquè pressupostar sigui àgil i clar.{% else %}La pantalla se centra en lo que hace falta decidir: medida, cantidad y preparación del archivo. El resto queda resuelto para que presupuestar sea ágil y claro.{% endif %}</p>
-      <div class="module-nav">
-        {% for module in private_modules %}
-        <span class="module-chip">{{ module.title }}</span>
-        {% endfor %}
-      </div>
+      <h1 class="display">{% if lang == 'ca' %}Configura el llenç i passa'l a comanda.{% else %}Configura el lienzo y pásalo a pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Tria la mida, la quantitat i la preparació del fitxer. La resta queda resolta dins del mateix mòdul.{% else %}Elige la medida, la cantidad y la preparación del archivo. El resto queda resuelto dentro del mismo módulo.{% endif %}</p>
     </div>
 
     <div class="canvas-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Condicions del producte{% else %}Condiciones del producto{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm, laminat Protter i preu base clar des del primer moment.{% else %}Bastidor de 4 cm, laminado Protter y precio base claro desde el primer momento.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Des d'aquí ja pots passar el llenç a comanda, preparar el pressupost del client final o deixar-lo en esborrany per més endavant.{% else %}Desde aquí ya puedes pasar el lienzo al pedido, preparar el presupuesto del cliente final o dejarlo en borrador para más adelante.{% endif %}</p>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}Bastidor de 4 cm i laminat Protter, sempre inclosos.{% else %}Bastidor de 4 cm y laminado Protter, siempre incluidos.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}Pressuposta, guarda el treball o envia'l a comanda sense sortir de l'àrea privada.{% else %}Presupuesta, guarda el trabajo o envíalo al pedido sin salir del área privada.{% endif %}</p>
       </div>
       <div class="stage-gallery">
         <div class="stage-selection">
@@ -416,7 +411,7 @@
           >
         </div>
       </div>
-      <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure comanda demo{% else %}Ver pedido demo{% endif %}</a>
+      <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir comanda{% else %}Abrir pedido{% endif %}</a>
     </div>
   </div>
 </section>
@@ -425,7 +420,7 @@
   <div class="container canvas-grid">
     <article class="surface builder fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Configuració del llenç{% else %}Configuración del lienzo{% endif %}</div>
-      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}Tria la mida, la quantitat i com voleu preparar l'arxiu.{% else %}Elige la medida, la cantidad y cómo queréis preparar el archivo.{% endif %}</h2>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.45rem">{% if lang == 'ca' %}Tria mida, quantitat i preparació del fitxer.{% else %}Elige medida, cantidad y preparación del archivo.{% endif %}</h2>
 
       <div class="builder-grid">
         <div class="field">
@@ -460,7 +455,7 @@
 
       <div class="size-browser">
         <div class="eyebrow">{% if lang == 'ca' %}Selector ràpid de mida{% else %}Selector rápido de medida{% endif %}</div>
-        <p>{% if lang == 'ca' %}Filtra primer per format o orientació i tria després la mida exacta sense recórrer tota la llista.{% else %}Filtra primero por formato u orientación y elige después la medida exacta sin recorrer toda la lista.{% endif %}</p>
+        <p>{% if lang == 'ca' %}Filtra per format, orientació o mida i ves directament a la mesura que necessites.{% else %}Filtra por formato, orientación o tamaño y ve directamente a la medida que necesitas.{% endif %}</p>
 
         <div class="filter-stack">
           <div class="field">
@@ -557,14 +552,14 @@
         </label>
       </div>
 
-      <p class="builder-note">{% if lang == 'ca' %}El marge comercial queda apartat dels camps principals perquè la configuració del producte sigui més neta i més ràpida.{% else %}El margen comercial queda aparte de los campos principales para que la configuración del producto sea más limpia y más rápida.{% endif %}</p>
+      <p class="builder-note">{% if lang == 'ca' %}El marge queda dins d'ajustos perquè la pantalla principal sigui més clara.{% else %}El margen queda dentro de ajustes para que la pantalla principal sea más clara.{% endif %}</p>
     </article>
 
     <aside class="surface summary fade-up">
       <div class="summary-top">
         <div>
           <div class="eyebrow">{% if lang == 'ca' %}Resum principal{% else %}Resumen principal{% endif %}</div>
-          <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Un total clar, amb el detall comercial només quan el vols consultar.{% else %}Un total claro, con el detalle comercial solo cuando lo quieres consultar.{% endif %}</h2>
+          <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.7rem);margin-top:.45rem">{% if lang == 'ca' %}Total, vista de la peça i detall comercial quan el necessites.{% else %}Total, vista de la pieza y detalle comercial cuando lo necesitas.{% endif %}</h2>
         </div>
         <div class="summary-head">
           <span class="summary-kicker" id="summary-kicker-label">{% if lang == 'ca' %}Cost{% else %}Coste{% endif %}</span>
@@ -631,7 +626,7 @@
             <input id="margin-percent" type="number" min="0" step="1" value="{{ canvas_draft.selected_margin_percent }}">
           </div>
         </div>
-        <div class="panel-note">{% if lang == 'ca' %}Aquest marge no embruta la pantalla principal. Serveix per calcular el PVP i alimentar el pressupost del client final quan el llenç entra a comanda.{% else %}Este margen no ensucia la pantalla principal. Sirve para calcular el PVP y alimentar el presupuesto del cliente final cuando el lienzo entra en el pedido.{% endif %}</div>
+        <div class="panel-note">{% if lang == 'ca' %}Aquest marge serveix per calcular el PVP quan el llenç passa a pressupost o comanda.{% else %}Este margen sirve para calcular el PVP cuando el lienzo pasa a presupuesto o pedido.{% endif %}</div>
       </div>
 
       <div class="summary-actions">
@@ -651,7 +646,7 @@
   <div class="container">
     <div class="fade-up">
       <div class="tag">{% if lang == 'ca' %}Borradors{% else %}Borradores{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Recupera configuracions recents i continua el pressupost sense tornar a comenÃ§ar.{% else %}Recupera configuraciones recientes y sigue el presupuesto sin volver a empezar.{% endif %}</h2>
+      <h2 class="display">{% if lang == 'ca' %}Recupera treballs guardats i continua on ho vas deixar.{% else %}Recupera trabajos guardados y sigue donde lo dejaste.{% endif %}</h2>
     </div>
     {% if canvas_draft.saved_drafts %}
     <div class="draft-grid">
@@ -681,70 +676,6 @@
   </div>
 </section>
 
-<section class="section-tight">
-  <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Després del pressupost{% else %}Después del presupuesto{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Quan el llenç està clar, el següent pas és portar-lo a comanda i decidir com es lliura la feina.{% else %}Cuando el lienzo está claro, el siguiente paso es llevarlo al pedido y decidir cómo se entrega el trabajo.{% endif %}</h2>
-    </div>
-    <div class="flow-grid">
-      <article class="surface flow-card fade-up">
-        <strong>1</strong>
-        <h3 class="card-title">{% if lang == 'ca' %}Configures el llenç{% else %}Configuras el lienzo{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Mida, quantitat i tractament del fitxer, sense opcions que al taller ja teniu tancades.{% else %}Medida, cantidad y tratamiento del archivo, sin opciones que en el taller ya teneis cerradas.{% endif %}</p>
-      </article>
-      <article class="surface flow-card fade-up">
-        <strong>2</strong>
-        <h3 class="card-title">{% if lang == 'ca' %}L'afegeixes a comanda{% else %}Lo añades al pedido{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Des d'allà es genera tant el pressupost per al client final com l'ordre interna de producció.{% else %}Desde ahí se genera tanto el presupuesto para el cliente final como la orden interna de producción.{% endif %}</p>
-      </article>
-      <article class="surface flow-card fade-up">
-        <strong>3</strong>
-        <h3 class="card-title">{% if lang == 'ca' %}Associes el fitxer{% else %}Asocias el archivo{% endif %}</h3>
-        <p>{% if lang == 'ca' %}Dropbox, enllaç extern o enviar més tard. El sistema es prepara per treballar amb el flux que ja teniu.{% else %}Dropbox, enlace externo o enviar más tarde. El sistema se prepara para trabajar con el flujo que ya tenéis.{% endif %}</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section-tight">
-  <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Tarifa viva{% else %}Tarifa viva{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Les mides segueixen ancorades al catàleg real, però ara viuen dins del tarifari privat i no en un PDF separat.{% else %}Las medidas siguen ancladas al catálogo real, pero ahora viven dentro del tarifario privado y no en un PDF separado.{% endif %}</h2>
-    </div>
-    <div class="size-grid">
-      {% for size in canvas_pricing.sizes %}
-      <article class="surface size-card fade-up">
-        <div class="eyebrow">{{ size.group_label }}</div>
-        <h3 class="card-title">{{ size.final_label }}</h3>
-        <p>{% if lang == 'ca' %}Fitxer amb marge: {{ size.file_label }}{% else %}Archivo con margen: {{ size.file_label }}{% endif %}</p>
-        <span class="size-price canvas-price" data-base-price="{{ size.price }}">{{ "%.2f"|format(size.price)|replace(".", ",") }} € + IVA</span>
-      </article>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<section class="section-tight">
-  <div class="container note-grid">
-    <article class="surface note-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Per al fotògraf{% else %}Para el fotógrafo{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Més ràpid d'usar{% else %}Más rápido de usar{% endif %}</h3>
-      <p>{% if lang == 'ca' %}La pantalla principal queda neta i no sembla una calculadora tècnica. Treballa com una eina de venda i de comanda alhora.{% else %}La pantalla principal queda limpia y no parece una calculadora técnica. Trabaja como una herramienta de venta y de pedido a la vez.{% endif %}</p>
-    </article>
-    <article class="surface note-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Per a taller{% else %}Para taller{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Més control intern{% else %}Más control interno{% endif %}</h3>
-      <p>{% if lang == 'ca' %}El marge comercial continua existint, però sense contaminar la configuració del producte ni confondre el fotògraf mentre treballa.{% else %}El margen comercial sigue existiendo, pero sin contaminar la configuración del producto ni confundir al fotógrafo mientras trabaja.{% endif %}</p>
-    </article>
-    <article class="surface note-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Per a la base futura{% else %}Para la base futura{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Reutilitzable per a impressions{% else %}Reutilizable para impresiones{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Aquest mateix esquema de configurador + comanda + enviament de fitxer es pot repetir molt bé a impressions, àlbums i altres apartats del privat.{% else %}Este mismo esquema de configurador + pedido + envío de archivo se puede repetir muy bien en impresiones, álbumes y otros apartados del privado.{% endif %}</p>
-    </article>
-  </div>
-</section>
 {% endblock %}
 
 {% block scripts %}
