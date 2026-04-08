@@ -251,12 +251,9 @@
           </div>
         </div>
         <div class="filter-row">
-          <span class="filter-label">{% if lang == 'ca' %}Perfil comercial{% else %}Perfil comercial{% endif %}</span>
-          <select id="pricing-profile" class="profile-select">
-            {% for profile in pricing_view.profiles %}
-            <option value="{{ profile.id }}" {% if profile.selected %}selected{% endif %}>{{ profile.name }}</option>
-            {% endfor %}
-          </select>
+          <span class="filter-label">{% if lang == 'ca' %}Marge actiu{% else %}Margen activo{% endif %}</span>
+          <strong>{{ '%.2f'|format(pricing_view.margins.canvas)|replace('.', ',') }} %</strong>
+          <a href="{{ url_for('area_privada_ajustos') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir ajustos{% else %}Abrir ajustes{% endif %}</a>
         </div>
         <div class="filter-row">
           <span class="filter-label">{% if lang == 'ca' %}Format{% else %}Formato{% endif %}</span>
@@ -283,9 +280,7 @@
         <span id="filter-count">{{ canvas_pricing.sizes|length }} {% if lang == 'ca' %}mides visibles{% else %}medidas visibles{% endif %}</span>
         <span>{% if lang == 'ca' %}Consell: combina format + orientació + mida per trobar ràpid una tarifa concreta.{% else %}Consejo: combina formato + orientación + medida para encontrar rápido una tarifa concreta.{% endif %}</span>
       </div>
-      <div class="pricing-note" id="pricing-note">
-        {% if lang == 'ca' %}La vista PVP utilitza el marge de llenços del perfil comercial seleccionat i mostra el preu final amb IVA inclòs per a una consulta ràpida.{% else %}La vista PVP utiliza el margen de lienzos del perfil comercial seleccionado y muestra el precio final con IVA incluido para una consulta rápida.{% endif %}
-      </div>
+      <div class="pricing-note" id="pricing-note">{{ pricing_view.margin_note }}</div>
     </div>
 
     <div class="size-grid" id="canvas-size-grid">
@@ -368,8 +363,6 @@
 {% block scripts %}
 <script>
   const VAT_RATE = {{ canvas_pricing.vat_rate|tojson }};
-  const marginProfiles = {{ pricing_view.profile_margins|tojson }};
-  const profileSelect = document.getElementById("pricing-profile");
   const viewButtons = Array.from(document.querySelectorAll(".view-button"));
   const pricingNote = document.getElementById("pricing-note");
   const filterState = {
@@ -391,10 +384,7 @@
       : `${visibleCount} {% if lang == 'ca' %}mides visibles{% else %}medidas visibles{% endif %}`;
   };
 
-  const getCanvasMarginPercent = () => {
-    const selectedId = profileSelect?.value || "{{ pricing_view.selected_profile_id }}";
-    return Number(marginProfiles?.[selectedId]?.canvas ?? {{ pricing_view.margins.canvas|tojson }});
-  };
+  const getCanvasMarginPercent = () => Number({{ pricing_view.margins.canvas|tojson }});
 
   const updatePriceView = () => {
     const marginPercent = getCanvasMarginPercent();
@@ -409,7 +399,7 @@
         const subtotal = basePrice * (1 + marginPercent / 100);
         const total = subtotal * (1 + VAT_RATE);
         priceOutput.textContent = `${formatCurrency(total)} {% if lang == 'ca' %}PVP final{% else %}PVP final{% endif %}`;
-        priceNote.textContent = `{% if lang == 'ca' %}Inclou marge de llenços + IVA per a consulta ràpida.{% else %}Incluye margen de lienzos + IVA para consulta rápida.{% endif %}`;
+        priceNote.textContent = `{{ pricing_view.margin_note }}`;
       } else {
         priceOutput.textContent = `${formatCurrency(basePrice)} + IVA`;
         priceNote.textContent = `{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}`;
@@ -418,8 +408,8 @@
 
     if (pricingNote) {
       pricingNote.textContent = pricingViewMode === "pvp"
-        ? `{% if lang == 'ca' %}La vista PVP utilitza el marge de llenços del perfil comercial seleccionat i mostra el preu final amb IVA inclòs per a una consulta ràpida.{% else %}La vista PVP utiliza el margen de lienzos del perfil comercial seleccionado y muestra el precio final con IVA incluido para una consulta rápida.{% endif %}`
-        : `{% if lang == 'ca' %}La vista cost mostra la tarifa base per al fotògraf, abans d'aplicar el marge comercial propi del client.{% else %}La vista coste muestra la tarifa base para el fotógrafo, antes de aplicar el margen comercial propio del cliente.{% endif %}`;
+        ? `{{ pricing_view.margin_note }}`
+        : `{{ pricing_view.cost_note }}`;
     }
   };
 
@@ -459,8 +449,6 @@
       updatePriceView();
     });
   });
-
-  profileSelect?.addEventListener("change", updatePriceView);
 
   applyFilters();
   updatePriceView();

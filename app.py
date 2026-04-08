@@ -120,6 +120,17 @@ PRIVATE_MODULES = [
         "href": "area_privada_marcos",
     },
     {
+        "key": "settings",
+        "status": "ready",
+        "eyebrow": {"ca": "Base comuna", "es": "Base común"},
+        "title": {"ca": "Ajustos", "es": "Ajustes"},
+        "summary": {
+            "ca": "Revisa i toca els marges comercials des d'un sol punt.",
+            "es": "Revisa y toca los márgenes comerciales desde un solo punto.",
+        },
+        "href": "area_privada_ajustos",
+    },
+    {
         "key": "albums",
         "status": "planned",
         "eyebrow": {"ca": "Següent fase", "es": "Siguiente fase"},
@@ -357,6 +368,16 @@ FRAME_ORDER_FIELDS = [
     "notes",
 ]
 
+DEFAULT_COMMERCIAL_SETTINGS = {
+    "general": 35.0,
+    "frames": 35.0,
+    "canvas": 35.0,
+    "prints": 30.0,
+    "albums": 40.0,
+    "foam": 32.0,
+    "fine_art": 38.0,
+}
+
 
 CANVAS_DRAFT_FIELDS = [
     "size",
@@ -372,6 +393,7 @@ def _empty_private_area_store():
         "frames_order_drafts": {},
         "canvas_order_drafts": {},
         "clients": {},
+        "commercial_settings": dict(DEFAULT_COMMERCIAL_SETTINGS),
     }
 
 
@@ -445,6 +467,13 @@ def _read_private_area_store():
     clients = data.get("clients")
     if not isinstance(clients, dict):
         data["clients"] = {}
+    settings = data.get("commercial_settings")
+    if not isinstance(settings, dict):
+        settings = {}
+    data["commercial_settings"] = {
+        key: parse_non_negative_float(settings.get(key), default=default_value)
+        for key, default_value in DEFAULT_COMMERCIAL_SETTINGS.items()
+    }
     return data
 
 
@@ -458,6 +487,26 @@ def _write_private_area_store(data):
         return True
     except OSError:
         return False
+
+
+def get_private_commercial_settings():
+    store = _read_private_area_store()
+    settings = store.get("commercial_settings", {})
+    return {
+        key: parse_non_negative_float(settings.get(key), default=default_value)
+        for key, default_value in DEFAULT_COMMERCIAL_SETTINGS.items()
+    }
+
+
+def save_private_commercial_settings(payload=None):
+    payload = payload or {}
+    store = _read_private_area_store()
+    store["commercial_settings"] = {
+        key: parse_non_negative_float(payload.get(key), default=default_value)
+        for key, default_value in DEFAULT_COMMERCIAL_SETTINGS.items()
+    }
+    _write_private_area_store(store)
+    return store["commercial_settings"]
 
 
 
@@ -895,6 +944,10 @@ def build_private_nav():
             "label": "Marcs" if lang == "ca" else "Marcos",
         },
         {
+            "endpoint": "area_privada_ajustos",
+            "label": "Ajustos" if lang == "ca" else "Ajustes",
+        },
+        {
             "endpoint": "area_privada_comanda",
             "label": "Comanda" if lang == "ca" else "Pedido",
             "badge": cart_count,
@@ -997,12 +1050,13 @@ def classify_canvas_size(final_width, final_height, lang, group="standard"):
 def build_canvas_module_context(draft_payload=None, draft_id=""):
     lang = get_lang()
     source_payload = draft_payload or {}
+    default_margin_percent = get_default_margin_for_product("canvas")
     selected_size_id = (request.args.get("size") or source_payload.get("size") or "").strip()
     selected_edit_id = (request.args.get("edit") or source_payload.get("edit") or "").strip()
     selected_quantity = parse_positive_int(request.args.get("qty") or source_payload.get("qty"), default=1)
     selected_margin_percent = parse_non_negative_float(
         request.args.get("margin") or source_payload.get("margin"),
-        default=CANVAS_PRICING["default_margin_percent"],
+        default=default_margin_percent,
     )
     selected_show_file_size = parse_bool_flag(request.args.get("show_file_size") or source_payload.get("show_file_size"))
     default_size_id = f"{CANVAS_PRICING['sizes'][0]['final'][0]}x{CANVAS_PRICING['sizes'][0]['final'][1]}"
@@ -1072,6 +1126,7 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
             "selected_margin_percent": selected_margin_percent,
             "selected_show_file_size": selected_show_file_size,
             "saved_drafts": list_saved_canvas_drafts(),
+            "default_margin_percent": default_margin_percent,
         },
         "canvas_preview": {
             "image_url": selected_size["image_url"],
@@ -1081,38 +1136,85 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
     }
 
 
+def get_default_margin_for_product(product_key, profile_id="default"):
+    settings = get_private_commercial_settings()
+    return float(settings.get(product_key, settings.get("general", CANVAS_PRICING["default_margin_percent"])))
+
+
 def build_pricing_view_context():
     lang = get_lang()
-    selected_profile_id = (request.args.get("pricing_profile") or "default").strip().lower()
-    profile_lookup = {item["id"]: item for item in COMMERCIAL_MARGIN_PROFILES}
-    selected_profile = profile_lookup.get(selected_profile_id, COMMERCIAL_MARGIN_PROFILES[0])
-
+    settings = get_private_commercial_settings()
     return {
         "pricing_view": {
-            "selected_profile_id": selected_profile["id"],
-            "profiles": [
-                {
-                    "id": item["id"],
-                    "name": item["name"][lang],
-                    "description": item["description"][lang],
-                    "selected": item["id"] == selected_profile["id"],
-                }
-                for item in COMMERCIAL_MARGIN_PROFILES
-            ],
-            "profile_margins": {
-                item["id"]: item["margins"]
-                for item in COMMERCIAL_MARGIN_PROFILES
-            },
-            "margins": selected_profile["margins"],
+            "margins": settings,
+            "margin_note": {
+                "ca": "La vista PVP utilitza el marge guardat a Ajustos comercials i mostra el preu final amb IVA inclòs.",
+                "es": "La vista PVP usa el margen guardado en Ajustes comerciales y muestra el precio final con IVA incluido.",
+            }[lang],
+            "cost_note": {
+                "ca": "La vista cost mostra la tarifa base per al fotògraf, abans d'aplicar el marge comercial.",
+                "es": "La vista coste muestra la tarifa base para el fotógrafo, antes de aplicar el margen comercial.",
+            }[lang],
         }
     }
 
 
-def get_default_margin_for_product(product_key, profile_id="default"):
-    selected_profile_id = str(profile_id or "default").strip().lower()
-    profile_lookup = {item["id"]: item for item in COMMERCIAL_MARGIN_PROFILES}
-    selected_profile = profile_lookup.get(selected_profile_id, COMMERCIAL_MARGIN_PROFILES[0])
-    return float(selected_profile.get("margins", {}).get(product_key, CANVAS_PRICING["default_margin_percent"]))
+def build_private_settings_context():
+    lang = get_lang()
+    settings = get_private_commercial_settings()
+    product_labels = {
+        "general": {"ca": "Marge general", "es": "Margen general"},
+        "frames": {"ca": "Marcs", "es": "Marcos"},
+        "canvas": {"ca": "Llenços", "es": "Lienzos"},
+        "prints": {"ca": "Impressions", "es": "Impresiones"},
+        "albums": {"ca": "Àlbums", "es": "Álbumes"},
+        "foam": {"ca": "Foam", "es": "Foam"},
+        "fine_art": {"ca": "Fine art", "es": "Fine art"},
+    }
+    descriptions = {
+        "general": {
+            "ca": "Serveix com a base comuna quan un producte encara no té marge propi.",
+            "es": "Sirve como base común cuando un producto todavía no tiene margen propio.",
+        },
+        "frames": {
+            "ca": "De moment queda preparat aquí per poder-lo unificar també amb marcs.",
+            "es": "De momento queda preparado aquí para poder unificarlo también con marcos.",
+        },
+        "canvas": {
+            "ca": "És el marge que veus per defecte a llenços i al tarifari.",
+            "es": "Es el margen que ves por defecto en lienzos y en el tarifario.",
+        },
+        "prints": {
+            "ca": "És el marge per defecte d'impressions, foam i laminat.",
+            "es": "Es el margen por defecto de impresiones, foam y laminado.",
+        },
+        "albums": {
+            "ca": "Queda preparat per quan entri el mòdul d'àlbums.",
+            "es": "Queda preparado para cuando entre el módulo de álbumes.",
+        },
+        "foam": {
+            "ca": "Et permet reservar un marge específic per a productes muntats sobre foam.",
+            "es": "Te permite reservar un margen específico para productos montados sobre foam.",
+        },
+        "fine_art": {
+            "ca": "Preparat per a còpia fine art i treballs expositius.",
+            "es": "Preparado para copia fine art y trabajos expositivos.",
+        },
+    }
+    return {
+        "private_settings": {
+            "saved": parse_bool_flag(request.args.get("saved")),
+            "entries": [
+                {
+                    "key": key,
+                    "label": product_labels[key][lang],
+                    "description": descriptions[key][lang],
+                    "value": settings[key],
+                }
+                for key in ("general", "frames", "canvas", "prints", "albums", "foam", "fine_art")
+            ],
+        }
+    }
 
 
 def format_measure_value(value):
@@ -1126,8 +1228,7 @@ def format_measure_value(value):
 
 def build_prints_module_context():
     lang = get_lang()
-    selected_profile_id = (request.args.get("pricing_profile") or "default").strip().lower()
-    default_margin_percent = get_default_margin_for_product("prints", selected_profile_id)
+    default_margin_percent = get_default_margin_for_product("prints")
     selected_paper_id = (request.args.get("paper") or PRINT_PRODUCTS_CONFIG["papers"][0]["id"]).strip().lower()
     selected_build_id = (request.args.get("build") or PRINT_PRODUCTS_CONFIG["build_options"][0]["id"]).strip().lower()
     selected_width = parse_non_negative_float(request.args.get("width"), default=30.0)
@@ -1179,7 +1280,6 @@ def build_prints_module_context():
             "selected_quantity": selected_quantity,
             "selected_cost": selected_cost,
             "selected_margin_percent": selected_margin_percent,
-            "selected_profile_id": selected_profile_id,
             "selected_view": selected_view,
             "view_is_cost": selected_view == "cost",
             "view_is_client": selected_view == "client",
@@ -2327,6 +2427,20 @@ def area_privada_tarifari():
         private_modules=build_private_modules(),
         **build_canvas_module_context(),
         **build_pricing_view_context(),
+        **build_private_shell_context(),
+    )
+
+
+@app.route("/area-privada/ajustos", methods=["GET", "POST"])
+def area_privada_ajustos():
+    if request.method == "POST":
+        save_private_commercial_settings(request.form)
+        return redirect(url_for("area_privada_ajustos", lang=get_lang(), saved=1))
+    return render_template(
+        "area_privada_ajustos.html",
+        lang=get_lang(),
+        private_modules=build_private_modules(),
+        **build_private_settings_context(),
         **build_private_shell_context(),
     )
 

@@ -129,13 +129,11 @@
           <input type="hidden" name="paper" value="{{ prints_module.selected_paper_id }}">
           <input type="hidden" name="build" value="{{ prints_module.selected_build_id }}">
           <input type="hidden" name="view" value="{{ prints_module.selected_view }}">
-          <input type="hidden" name="pricing_profile" value="{{ prints_module.selected_profile_id }}">
-
           <div>
             <span class="field-label">{% if lang == 'ca' %}Vista{% else %}Vista{% endif %}</span>
             <div class="toggle-row">
-              <a class="toggle-chip {% if prints_module.view_is_client %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='client', pricing_profile=prints_module.selected_profile_id) }}">PVP + IVA</a>
-              <a class="toggle-chip {% if prints_module.view_is_cost %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='cost', pricing_profile=prints_module.selected_profile_id) }}">{% if lang == 'ca' %}Cost taller{% else %}Coste taller{% endif %}</a>
+              <a class="toggle-chip {% if prints_module.view_is_client %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='client') }}">PVP + IVA</a>
+              <a class="toggle-chip {% if prints_module.view_is_cost %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='cost') }}">{% if lang == 'ca' %}Cost taller{% else %}Coste taller{% endif %}</a>
             </div>
           </div>
 
@@ -143,7 +141,7 @@
             <span class="field-label">{% if lang == 'ca' %}Paper{% else %}Papel{% endif %}</span>
             <div class="selection-grid">
               {% for paper in prints_module.papers %}
-              <a class="selection-card {% if paper.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=paper.id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view, pricing_profile=prints_module.selected_profile_id) }}">
+              <a class="selection-card {% if paper.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=paper.id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view) }}">
                 <h3 class="card-title">{{ paper.label }}</h3>
                 <p>{{ paper.description }}</p>
               </a>
@@ -155,7 +153,7 @@
             <span class="field-label">{% if lang == 'ca' %}Tipus de línia{% else %}Tipo de línea{% endif %}</span>
             <div class="selection-grid">
               {% for option in prints_module.build_options %}
-              <a class="selection-card {% if option.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=option.id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view, pricing_profile=prints_module.selected_profile_id) }}">
+              <a class="selection-card {% if option.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=option.id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view) }}">
                 <h3 class="card-title">{{ option.label }}</h3>
                 <p>{{ option.summary }}</p>
               </a>
@@ -208,6 +206,7 @@
           <strong>{{ "%.2f"|format(prints_module.professional_total)|replace(".", ",") }} €</strong>
           {% endif %}
           <div class="muted-note">{{ prints_module.manual_pricing_note }}</div>
+          <div class="muted-note">{% if lang == 'ca' %}Marge per defecte carregat des d'ajustos comercials.{% else %}Margen por defecto cargado desde ajustes comerciales.{% endif %}</div>
         </div>
         <div class="summary-list">
           <div class="summary-line"><span>{% if lang == 'ca' %}Mida{% else %}Medida{% endif %}</span><strong>{{ prints_module.size_label }}</strong></div>
