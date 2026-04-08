@@ -526,11 +526,12 @@ def save_private_commercial_settings(payload=None):
 
 
 def _draft_sort_key(item):
-    return item.get("updated_at") or ""
+    return item.get("updated_at") if isinstance(item, dict) else ""
 
 
 
 def _store_to_saved_order(row):
+    row = row if isinstance(row, dict) else {}
     return {
         "draft_id": row.get("draft_id", ""),
         "quote_ref": row.get("quote_ref", ""),
@@ -545,7 +546,8 @@ def _store_to_saved_order(row):
 
 def list_saved_frames_orders(limit=8):
     drafts = _read_private_area_store().get("frames_order_drafts", {})
-    rows = sorted(drafts.values(), key=_draft_sort_key, reverse=True)
+    rows = [row for row in drafts.values() if isinstance(row, dict)]
+    rows = sorted(rows, key=_draft_sort_key, reverse=True)
     return [_store_to_saved_order(row) for row in rows[: max(int(limit or 1), 1)]]
 
 
@@ -591,6 +593,7 @@ def save_frames_order_draft(payload):
 
 
 def _store_to_saved_canvas_draft(row):
+    row = row if isinstance(row, dict) else {}
     return {
         "draft_id": row.get("draft_id", ""),
         "size_label": row.get("size_label", ""),
@@ -603,7 +606,8 @@ def _store_to_saved_canvas_draft(row):
 
 def list_saved_canvas_drafts(limit=8):
     drafts = _read_private_area_store().get("canvas_order_drafts", {})
-    rows = sorted(drafts.values(), key=_draft_sort_key, reverse=True)
+    rows = [row for row in drafts.values() if isinstance(row, dict)]
+    rows = sorted(rows, key=_draft_sort_key, reverse=True)
     return [_store_to_saved_canvas_draft(row) for row in rows[: max(int(limit or 1), 1)]]
 
 
