@@ -743,6 +743,16 @@ def build_direct_calc_url(service=None, lang=None, source="web"):
         "lang": lang,
     }
     if service == "frames":
+        if source == "private_area":
+            settings = get_private_commercial_settings()
+            query["commercial_margin"] = parse_non_negative_float(
+                settings.get("frames"),
+                default=DEFAULT_COMMERCIAL_SETTINGS["frames"],
+            )
+            query["commercial_print_margin"] = parse_non_negative_float(
+                settings.get("prints"),
+                default=DEFAULT_COMMERCIAL_SETTINGS["prints"],
+            )
         return f"{CALC_URL.rstrip('/')}/calculadora?{urlencode(query)}"
     if service != "general":
         query["service"] = service

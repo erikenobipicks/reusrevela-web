@@ -91,21 +91,17 @@
       gap:2rem;
     }
     .nav-logo{
-      display:flex;
+      display:inline-flex;
       align-items:center;
-      gap:.75rem;
-      font-family:var(--serif);
-      font-size:2rem;
-      font-weight:600;
+      justify-content:center;
+      flex-shrink:0;
       line-height:1;
-      letter-spacing:-0.03em;
     }
     .nav-logo img{
       width:42px;
       height:42px;
       object-fit:contain;
     }
-    .nav-logo span{color:var(--accent)}
     .nav-links{
       display:flex;
       align-items:center;
@@ -703,7 +699,6 @@
     <div class="nav-inner">
       <a href="{% if private_area_nav %}{{ url_for('area_privada') }}{% else %}{{ url_for('index') }}{% endif %}" class="nav-logo">
         <img src="{{ url_for('static', filename='img/logo-reusrevela.png') }}" alt="Logo Reus Revela">
-        <div>Reus <span>Revela</span></div>
       </a>
 
       <div class="nav-links">
