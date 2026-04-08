@@ -225,12 +225,15 @@
           <div class="line-top">
             <div>
               <span class="badge {% if line.is_suggested %}soft{% else %}ready{% endif %}">{{ line.reference }}</span>
-              <h3 class="card-title" style="margin-top:.8rem">{% if lang == 'ca' %}Llenç {{ line.final_label }} · {{ line.quantity }} unitat{% if line.quantity != 1 %}s{% endif %}{% else %}Lienzo {{ line.final_label }} · {{ line.quantity }} unidad{% if line.quantity != 1 %}es{% endif %}{% endif %}</h3>
-              <p>{{ line.edit_label }}</p>
+              <h3 class="card-title" style="margin-top:.8rem">{{ line.title }} · {{ line.quantity }} {% if lang == 'ca' %}unitat{% if line.quantity != 1 %}s{% endif %}{% else %}unidad{% if line.quantity != 1 %}es{% endif %}{% endif %}</h3>
+              <p>{{ line.summary }}</p>
             </div>
             <strong style="font-family:var(--serif);font-size:2rem;line-height:1">{{ "%.2f"|format(line.client_total)|replace(".", ",") }} €</strong>
           </div>
           <div class="line-meta">
+            {% for meta in line.metadata[:2] %}
+            <div class="line-meta-row"><span>{{ meta.label }}</span><strong>{{ meta.value }}</strong></div>
+            {% endfor %}
             <div class="line-meta-row"><span>{% if lang == 'ca' %}Cost taller + IVA{% else %}Coste taller + IVA{% endif %}</span><strong>{{ "%.2f"|format(line.professional_total)|replace(".", ",") }} €</strong></div>
             <div class="line-meta-row"><span>{% if lang == 'ca' %}PVP client final{% else %}PVP cliente final{% endif %}</span><strong>{{ "%.2f"|format(line.client_total)|replace(".", ",") }} €</strong></div>
             {% if line.show_file_size %}
@@ -245,14 +248,14 @@
             <input type="hidden" name="next_path" value="{{ request.full_path.rstrip('?') }}">
             <div class="line-file-grid">
               <select name="file_method">
-                <option value="dropbox" {% if line.file_method == 'dropbox' %}selected{% endif %}>{% if lang == 'ca' %}Dropbox compartit{% else %}Dropbox compartido{% endif %}</option>
-                <option value="link" {% if line.file_method == 'link' %}selected{% endif %}>{% if lang == 'ca' %}Enllaç extern{% else %}Enlace externo{% endif %}</option>
-                <option value="later" {% if line.file_method == 'later' %}selected{% endif %}>{% if lang == 'ca' %}Enviar més tard{% else %}Enviar más tarde{% endif %}</option>
+                <option value="dropbox" {% if line.file_info.method == 'dropbox' %}selected{% endif %}>{% if lang == 'ca' %}Dropbox compartit{% else %}Dropbox compartido{% endif %}</option>
+                <option value="link" {% if line.file_info.method == 'link' %}selected{% endif %}>{% if lang == 'ca' %}Enllaç extern{% else %}Enlace externo{% endif %}</option>
+                <option value="later" {% if line.file_info.method == 'later' %}selected{% endif %}>{% if lang == 'ca' %}Enviar més tard{% else %}Enviar más tarde{% endif %}</option>
               </select>
-              <input type="text" name="file_name" value="{{ line.file_name }}" placeholder="{% if lang == 'ca' %}Nom del fitxer o referència{% else %}Nombre del archivo o referencia{% endif %}">
+              <input type="text" name="file_name" value="{{ line.file_info.name }}" placeholder="{% if lang == 'ca' %}Nom del fitxer o referència{% else %}Nombre del archivo o referencia{% endif %}">
             </div>
-            <input type="text" name="file_link" value="{{ line.file_link }}" placeholder="{% if lang == 'ca' %}Enllaç, carpeta o ubicació del fitxer{% else %}Enlace, carpeta o ubicación del archivo{% endif %}">
-            <textarea name="file_notes" placeholder="{% if lang == 'ca' %}Observacions del fitxer per a aquesta línia{% else %}Observaciones del archivo para esta línea{% endif %}">{{ line.file_notes }}</textarea>
+            <input type="text" name="file_link" value="{{ line.file_info.link }}" placeholder="{% if lang == 'ca' %}Enllaç, carpeta o ubicació del fitxer{% else %}Enlace, carpeta o ubicación del archivo{% endif %}">
+            <textarea name="file_notes" placeholder="{% if lang == 'ca' %}Observacions del fitxer per a aquesta línia{% else %}Observaciones del archivo para esta línea{% endif %}">{{ line.file_info.notes }}</textarea>
             <div class="line-actions">
               <button type="submit" class="ghost-button">{% if lang == 'ca' %}Guardar fitxer{% else %}Guardar archivo{% endif %}</button>
             </div>

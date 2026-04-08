@@ -1173,6 +1173,76 @@ def build_canvas_order_line(size_item, edit_item, quantity, margin_percent, show
     }
 
 
+def build_line_file_info(lang, method="dropbox", name="", link="", notes=""):
+    labels = {
+        "dropbox": {"ca": "Dropbox compartit", "es": "Dropbox compartido"},
+        "link": {"ca": "Enllaç extern", "es": "Enlace externo"},
+        "later": {"ca": "Enviar més tard", "es": "Enviar más tarde"},
+    }
+    selected_method = method if method in labels else "dropbox"
+    return {
+        "method": selected_method,
+        "method_label": labels[selected_method][lang],
+        "name": str(name or "").strip(),
+        "link": str(link or "").strip(),
+        "notes": str(notes or "").strip(),
+        "has_content": bool(str(name or "").strip() or str(link or "").strip() or str(notes or "").strip()),
+    }
+
+
+def build_unified_order_line(
+    *,
+    line_id,
+    reference,
+    product_type,
+    product_type_label,
+    source,
+    title,
+    summary,
+    quantity,
+    professional_subtotal,
+    professional_vat,
+    professional_total,
+    margin_percent,
+    margin_amount,
+    client_subtotal,
+    client_vat,
+    client_total,
+    vat_rate_percent,
+    file_info=None,
+    metadata=None,
+    editable_in="",
+    created_at=None,
+    extra=None,
+):
+    line = {
+        "line_id": line_id,
+        "reference": reference,
+        "product_type": product_type,
+        "product_type_label": product_type_label,
+        "source": source,
+        "title": title,
+        "summary": summary,
+        "quantity": quantity,
+        "professional_subtotal": professional_subtotal,
+        "professional_vat": professional_vat,
+        "professional_total": professional_total,
+        "margin_percent": margin_percent,
+        "margin_amount": margin_amount,
+        "client_subtotal": client_subtotal,
+        "client_vat": client_vat,
+        "client_total": client_total,
+        "vat_rate_percent": vat_rate_percent,
+        "file_info": file_info or build_line_file_info(get_lang()),
+        "metadata": metadata or [],
+        "editable_in": editable_in,
+        "created_at": created_at or datetime.utcnow().isoformat(timespec="seconds"),
+    }
+    if isinstance(extra, dict):
+        line.update(extra)
+    return line
+
+
 def build_order_return_params(source="", draft_id=""):
     params = {"lang": get_lang()}
     if source == "frames":
@@ -1283,16 +1353,52 @@ def _build_canvas_order_line_from_payload(payload, lang, index=1):
         "link": {"ca": "Enllaç extern", "es": "Enlace externo"},
         "later": {"ca": "Enviar més tard", "es": "Enviar más tarde"},
     }
-    line.update(
-        {
-            "line_id": normalized.get("line_id") or f"line_{index:02d}",
-            "reference": f"LINE-{index:02d}",
+    line_id = normalized.get("line_id") or f"line_{index:02d}"
+    reference = f"LINE-{index:02d}"
+    file_info = build_line_file_info(
+        lang,
+        method=file_method,
+        name=normalized.get("file_name", ""),
+        link=normalized.get("file_link", ""),
+        notes=normalized.get("file_notes", ""),
+    )
+    metadata = [
+        {"label": {"ca": "Mida final", "es": "Medida final"}[lang], "value": line["final_label"]},
+        {"label": {"ca": "Preparació", "es": "Preparación"}[lang], "value": line["edit_label"]},
+    ]
+    if show_file_size:
+        metadata.append(
+            {"label": {"ca": "Fitxer amb marge", "es": "Archivo con margen"}[lang], "value": line["file_label"]}
+        )
+    return build_unified_order_line(
+        line_id=line_id,
+        reference=reference,
+        product_type="canvas",
+        product_type_label={"ca": "Llenç", "es": "Lienzo"}[lang],
+        source="private_area",
+        title=f"{ {'ca': 'Llenç', 'es': 'Lienzo'}[lang] } {line['final_label']}",
+        summary=line["edit_label"],
+        quantity=quantity,
+        professional_subtotal=line["professional_subtotal"],
+        professional_vat=line["professional_vat"],
+        professional_total=line["professional_total"],
+        margin_percent=line["margin_percent"],
+        margin_amount=line["margin_amount"],
+        client_subtotal=line["client_subtotal"],
+        client_vat=line["client_vat"],
+        client_total=line["client_total"],
+        vat_rate_percent=line["vat_rate_percent"],
+        file_info=file_info,
+        metadata=metadata,
+        editable_in="canvas",
+        extra={
+            **line,
             "is_suggested": False,
-            "file_method": file_method,
+            "file_method": file_info["method"],
             "file_method_label": file_method_labels.get(file_method, file_method_labels["dropbox"])[lang],
-            "file_name": normalized.get("file_name", ""),
-            "file_link": normalized.get("file_link", ""),
-            "file_notes": normalized.get("file_notes", ""),
+            "file_name": file_info["name"],
+            "file_link": file_info["link"],
+            "file_notes": file_info["notes"],
             "edit_url": url_for(
                 "area_privada_lienzos",
                 lang=lang,
@@ -1302,9 +1408,8 @@ def _build_canvas_order_line_from_payload(payload, lang, index=1):
                 margin=margin_percent,
                 show_file_size="1" if show_file_size else "0",
             ),
-        }
+        },
     )
-    return line
 
 
 def build_canvas_order_context():
@@ -1425,6 +1530,10 @@ def build_canvas_order_context():
 
     return {
         "generated_at": datetime.now(),
+        "order_model": {
+            "schema": "unified_order_line_v1",
+            "ready_for_mixed_products": True,
+        },
         "lines": [
             {
                 **line,
@@ -1587,24 +1696,51 @@ def build_frames_order_context(base_payload=None, draft_id=""):
     missing_client_label = {"ca": "Client pendent", "es": "Cliente pendiente"}[lang]
     missing_phone_label = {"ca": "Telefon pendent", "es": "Telefono pendiente"}[lang]
 
-    line = {
-        "reference": quote_display,
-        "is_imported": True,
-        "quantity": 1,
-        "final_label": final_size or missing_size_label,
-        "edit_label": imported_label,
-        "client_total": total,
-        "deposit_total": deposit,
-        "pending_total": pending,
-        "piece_label": piece_type_label,
-        "piece_measure": piece_measure,
-        "frame_main": frame_main,
-        "frame_pre": frame_pre,
-        "glass": glass,
-        "interior": interior,
-        "print_label": print_label,
-        "materials": materials,
-    }
+    frame_metadata = [
+        {"label": {"ca": "Peça", "es": "Pieza"}[lang], "value": piece_type_label},
+        {"label": {"ca": "Mesura final", "es": "Medida final"}[lang], "value": final_size or missing_size_label},
+    ]
+    if piece_measure:
+        frame_metadata.append({"label": {"ca": "Mesura de la peça", "es": "Medida de la pieza"}[lang], "value": piece_measure})
+    frame_metadata.extend(materials)
+
+    line = build_unified_order_line(
+        line_id="frame_imported",
+        reference=quote_display,
+        product_type="frame",
+        product_type_label={"ca": "Marc", "es": "Marco"}[lang],
+        source="frames",
+        title=f"{ {'ca': 'Marc', 'es': 'Marco'}[lang] } {final_size or missing_size_label}",
+        summary=imported_label,
+        quantity=1,
+        professional_subtotal=0.0,
+        professional_vat=0.0,
+        professional_total=0.0,
+        margin_percent=0.0,
+        margin_amount=0.0,
+        client_subtotal=client_subtotal,
+        client_vat=client_vat,
+        client_total=total,
+        vat_rate_percent=int(vat_rate * 100),
+        file_info=build_line_file_info(lang, method="later"),
+        metadata=frame_metadata,
+        editable_in="frames",
+        extra={
+            "is_imported": True,
+            "final_label": final_size or missing_size_label,
+            "edit_label": imported_label,
+            "deposit_total": deposit,
+            "pending_total": pending,
+            "piece_label": piece_type_label,
+            "piece_measure": piece_measure,
+            "frame_main": frame_main,
+            "frame_pre": frame_pre,
+            "glass": glass,
+            "interior": interior,
+            "print_label": print_label,
+            "materials": materials,
+        },
+    )
 
     recent_orders = [
         {
@@ -1648,6 +1784,10 @@ def build_frames_order_context(base_payload=None, draft_id=""):
 
     return {
         "generated_at": datetime.now(),
+        "order_model": {
+            "schema": "unified_order_line_v1",
+            "ready_for_mixed_products": True,
+        },
         "origin": "frames",
         "origin_label": {"ca": "Importada des de marcs", "es": "Importada desde marcos"}[lang],
         "quote_ref": quote_display,

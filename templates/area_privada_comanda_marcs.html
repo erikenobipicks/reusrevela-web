@@ -187,8 +187,8 @@
       <div class="summary-top">
         <div>
           <span class="badge ready">{{ order_data.origin_label }}</span>
-          <h2 class="display" id="final-size-display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.8rem">{{ line.final_label if line else order_data.final_size_label }}</h2>
-          <p class="muted" style="margin-top:.7rem">{{ line.edit_label if line else order_data.origin_label }}</p>
+          <h2 class="display" id="final-size-display" style="font-size:clamp(2rem, 4vw, 3rem);margin-top:.8rem">{{ line.title if line else order_data.final_size_label }}</h2>
+          <p class="muted" style="margin-top:.7rem">{{ line.summary if line else order_data.origin_label }}</p>
         </div>
         <strong style="font-size:2rem;line-height:1">{{ "%.2f"|format(order_data.client_total)|replace(".", ",") }} &euro;</strong>
       </div>
