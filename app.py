@@ -1947,15 +1947,7 @@ def area_privada_impresions():
 
 @app.route("/area-privada/marcos")
 def area_privada_marcos():
-    return render_template(
-        "area_privada_marcos.html",
-        lang=get_lang(),
-        private_modules=build_private_modules(),
-        calc_service=get_calc_service("frames"),
-        CALC_LOGIN_URL=build_calc_login_url("frames", source="private_area"),
-        CALC_REQUEST_URL=build_calc_request_url("frames"),
-        **build_private_shell_context(),
-    )
+    return redirect(build_direct_calc_url("frames", source="private_area"))
 
 
 @app.route("/area-privada/comanda")
