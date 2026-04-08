@@ -375,6 +375,7 @@ DEFAULT_COMMERCIAL_SETTINGS = {
     "prints": 30.0,
     "albums": 40.0,
     "foam": 32.0,
+    "laminate_foam": 32.0,
     "fine_art": 38.0,
 }
 
@@ -861,16 +862,18 @@ def request_calc_margin_sync(username, settings=None):
         return {"attempted": False, "reason": "missing_context"}
 
     settings = settings or get_private_commercial_settings()
+    normalized_settings = {
+        key: parse_non_negative_float(
+            settings.get(key),
+            default=DEFAULT_COMMERCIAL_SETTINGS[key],
+        )
+        for key in DEFAULT_COMMERCIAL_SETTINGS
+    }
     payload = {
         "username": username,
-        "marge": parse_non_negative_float(
-            settings.get("frames"),
-            default=DEFAULT_COMMERCIAL_SETTINGS["frames"],
-        ),
-        "marge_impressio": parse_non_negative_float(
-            settings.get("prints"),
-            default=DEFAULT_COMMERCIAL_SETTINGS["prints"],
-        ),
+        "marge": normalized_settings["frames"],
+        "marge_impressio": normalized_settings["prints"],
+        "margins": normalized_settings,
     }
     req = urllib_request.Request(
         f"{CALC_URL.rstrip('/')}/api/public/commercial-settings-sync",
@@ -1216,6 +1219,7 @@ def build_private_settings_context():
         "prints": {"ca": "Impressions", "es": "Impresiones"},
         "albums": {"ca": "Àlbums", "es": "Álbumes"},
         "foam": {"ca": "Foam", "es": "Foam"},
+        "laminate_foam": {"ca": "Laminat + foam", "es": "Laminado + foam"},
         "fine_art": {"ca": "Fine art", "es": "Fine art"},
     }
     descriptions = {
@@ -1243,6 +1247,10 @@ def build_private_settings_context():
             "ca": "Et permet reservar un marge específic per a productes muntats sobre foam.",
             "es": "Te permite reservar un margen específico para productos montados sobre foam.",
         },
+        "laminate_foam": {
+            "ca": "Per separar la combinaciÃ³ de laminat i foam quan la vulguis treballar com a producte propi.",
+            "es": "Para separar la combinaciÃ³n de laminado y foam cuando quieras trabajarla como producto propio.",
+        },
         "fine_art": {
             "ca": "Preparat per a còpia fine art i treballs expositius.",
             "es": "Preparado para copia fine art y trabajos expositivos.",
@@ -1258,7 +1266,7 @@ def build_private_settings_context():
                     "description": descriptions[key][lang],
                     "value": settings[key],
                 }
-                for key in ("general", "frames", "canvas", "prints", "albums", "foam", "fine_art")
+                for key in ("general", "frames", "canvas", "prints", "foam", "laminate_foam", "fine_art", "albums")
             ],
         }
     }
@@ -2502,7 +2510,7 @@ def api_private_commercial_settings_sync():
 
     payload = request.get_json(silent=True) or {}
     current = get_private_commercial_settings()
-    for key in ("general", "frames", "canvas", "prints", "foam", "fine_art"):
+    for key in ("general", "frames", "canvas", "prints", "foam", "laminate_foam", "fine_art", "albums"):
         if key in payload:
             current[key] = parse_non_negative_float(
                 payload.get(key),
