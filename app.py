@@ -1117,10 +1117,10 @@ def classify_canvas_size(final_width, final_height, lang, group="standard"):
     }
 
 
-def build_canvas_module_context(draft_payload=None, draft_id=""):
+def build_canvas_module_context(draft_payload=None, draft_id="", safe_mode=False):
     lang = get_lang()
-    source_payload = draft_payload or {}
-    default_margin_percent = get_default_margin_for_product("canvas")
+    source_payload = draft_payload if isinstance(draft_payload, dict) else {}
+    default_margin_percent = DEFAULT_COMMERCIAL_SETTINGS["canvas"] if safe_mode else get_default_margin_for_product("canvas")
     selected_size_id = (request.args.get("size") or source_payload.get("size") or "").strip()
     selected_edit_id = (request.args.get("edit") or source_payload.get("edit") or "").strip()
     selected_quantity = parse_positive_int(request.args.get("qty") or source_payload.get("qty"), default=1)
@@ -1195,7 +1195,7 @@ def build_canvas_module_context(draft_payload=None, draft_id=""):
             "selected_edit_id": selected_edit_id,
             "selected_margin_percent": selected_margin_percent,
             "selected_show_file_size": selected_show_file_size,
-            "saved_drafts": list_saved_canvas_drafts(),
+            "saved_drafts": [] if safe_mode else list_saved_canvas_drafts(),
             "default_margin_percent": default_margin_percent,
         },
         "canvas_preview": {
@@ -2546,12 +2546,25 @@ def api_private_commercial_settings_sync():
 def area_privada_lienzos():
     draft_id = (request.args.get("draft") or "").strip()
     draft_payload = get_saved_canvas_draft(draft_id) if draft_id else None
+    try:
+        canvas_context = build_canvas_module_context(
+            draft_payload=draft_payload,
+            draft_id=draft_id if draft_payload else "",
+        )
+        shell_context = build_private_shell_context()
+    except Exception:
+        app.logger.exception("area_privada_lienzos_failed")
+        session.pop("private_order", None)
+        session.pop("private_canvas_order", None)
+        session.modified = True
+        canvas_context = build_canvas_module_context(safe_mode=True)
+        shell_context = build_private_shell_context()
     return render_template(
         "area_privada_lienzos_v3.html",
         lang=get_lang(),
         private_modules=build_private_modules(),
-        **build_canvas_module_context(draft_payload=draft_payload, draft_id=draft_id if draft_payload else ""),
-        **build_private_shell_context(),
+        **canvas_context,
+        **shell_context,
     )
 
 
