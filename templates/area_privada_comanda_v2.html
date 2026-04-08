@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{% if lang == 'ca' %}Àrea privada | Comanda{% else %}Área privada | Pedido{% endif %}{% endblock %}
-{% block desc %}{% if lang == 'ca' %}Pantalla de comanda per al mòdul de llenços amb diverses línies, client final al final i historial reutilitzable.{% else %}Pantalla de pedido para el módulo de lienzos con varias líneas, cliente final al final e historial reutilizable.{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Comanda privada amb línies mixtes, client reutilitzable i fitxer assignat per producte.{% else %}Pedido privado con líneas mixtas, cliente reutilizable y archivo asignado por producto.{% endif %}{% endblock %}
 
 {% block head %}
 <style>
@@ -193,17 +193,17 @@
   <div class="container order-shell">
     <div class="order-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Comanda{% else %}Pedido{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Agrupa línies i assigna el client al final.{% else %}Agrupa líneas y asigna el cliente al final.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Primer tanques el producte. Després tries el client, el pressupost i la sortida a taller.{% else %}Primero cierras el producto. Después eliges el cliente, el presupuesto y la salida a taller.{% endif %}</p>
+      <h1 class="display">{% if lang == 'ca' %}Agrupa productes, client i fitxers dins d'una sola comanda.{% else %}Agrupa productos, cliente y archivos dentro de un solo pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquí poden conviure llenços, impressions i, quan toqui, línies que arribin des de marcs.{% else %}Aquí pueden convivir lienzos, impresiones y, cuando toque, líneas que lleguen desde marcos.{% endif %}</p>
     </div>
 
     <div class="order-stage fade-up">
       <div>
         <div class="visual-label">{% if lang == 'ca' %}Ordre de treball{% else %}Orden de trabajo{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La comanda junta producte, client i document final en un sol punt.{% else %}El pedido reúne producto, cliente y documento final en un solo punto.{% endif %}</h2>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La comanda és el centre comú on tot acaba encaixant.{% else %}El pedido es el centro común donde todo acaba encajando.{% endif %}</h2>
         <p>{% if lang == 'ca' %}Això et permet repetir clients i preparar pressupost o ordre sense tornar enrere.{% else %}Esto te permite repetir clientes y preparar presupuesto u orden sin volver atrás.{% endif %}</p>
       </div>
-      <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-outline">{% if lang == 'ca' %}Afegir un altre llenç{% else %}Añadir otro lienzo{% endif %}</a>
+      <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-outline">{% if lang == 'ca' %}Afegir més productes{% else %}Añadir más productos{% endif %}</a>
     </div>
   </div>
 </section>
@@ -217,7 +217,7 @@
         {% if not order_data.has_lines %}
         <article class="line-item">
           <h3 class="card-title">{% if lang == 'ca' %}Encara no hi ha cap línia a la comanda.{% else %}Todavía no hay ninguna línea en el pedido.{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Afegeix un llenç des del configurador i aquí el podràs revisar, eliminar o completar amb el fitxer corresponent.{% else %}Añade un lienzo desde el configurador y aquí podrás revisarlo, eliminarlo o completar con el archivo correspondiente.{% endif %}</p>
+          <p>{% if lang == 'ca' %}Afegeix un llenç o una impressió des del seu configurador i aquí ho podràs revisar, eliminar o completar amb el fitxer corresponent.{% else %}Añade un lienzo o una impresión desde su configurador y aquí podrás revisarlo, eliminarlo o completar con el archivo correspondiente.{% endif %}</p>
         </article>
         {% endif %}
         {% for line in order_data.lines %}
@@ -272,7 +272,7 @@
         {% endfor %}
       </div>
       <div class="line-actions">
-        <a href="{{ url_for('area_privada_lienzos') }}" class="btn btn-dark">{% if lang == 'ca' %}Afegir una altra línia{% else %}Añadir otra línea{% endif %}</a>
+        <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Afegir una altra línia{% else %}Añadir otra línea{% endif %}</a>
         <form method="post" action="{{ url_for('area_privada_comanda_clear') }}">
           <button type="submit" class="btn btn-outline">{% if lang == 'ca' %}Buidar comanda{% else %}Vaciar pedido{% endif %}</button>
         </form>

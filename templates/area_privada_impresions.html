@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{% if lang == 'ca' %}Àrea privada | Impressions{% else %}Área privada | Impresiones{% endif %}{% endblock %}
-{% block desc %}{% if lang == 'ca' %}Mòdul d'impressions per a paper fotogràfic, laminat i foam, amb marc separat a la calculadora específica.{% else %}Módulo de impresiones para papel fotográfico, laminado y foam, con marco separado en la calculadora específica.{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Configurador privat d'impressions, laminat i foam, connectat amb la comanda comuna del portal professional.{% else %}Configurador privado de impresiones, laminado y foam, conectado con el pedido común del portal profesional.{% endif %}{% endblock %}
 
 {% block head %}
 <style>
@@ -8,7 +8,7 @@
   .prints-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:start}
   .prints-copy{padding:2rem 0}
   .prints-stage{
-    min-height:460px;
+    min-height:420px;
     padding:2rem;
     border-radius:30px;
     color:#fff;
@@ -20,40 +20,105 @@
     flex-direction:column;
     justify-content:space-between;
   }
-  .prints-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:40ch}
-  .module-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.4rem}
-  .module-chip{
-    padding:.55rem .85rem;
-    border-radius:999px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
-    font-size:.88rem;
+  .prints-stage p{margin-top:.85rem;color:rgba(255,255,255,.76);max-width:42ch}
+  .prints-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:1rem;margin-top:2rem}
+  .config-card,.summary-card,.option-card,.paper-card,.note-card{padding:1.7rem}
+  .config-form{display:grid;gap:1.1rem;margin-top:1.35rem}
+  .inline-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:.85rem}
+  .triple-grid{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:.85rem}
+  .config-form input,.config-form select{
+    width:100%;
+    min-height:50px;
+    padding:.9rem 1rem;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.78);
+    color:var(--ink);
   }
-  .paper-grid,.option-grid,.note-grid{display:grid;gap:1rem;margin-top:2rem}
-  .paper-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-  .option-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
-  .note-grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
-  .paper-card,.option-card,.note-card,.cta-box{padding:1.7rem}
-  .paper-card p,.option-card p,.note-card p{margin-top:.75rem;color:var(--muted)}
-  .option-badge{
+  .field-label{
+    display:block;
+    margin-bottom:.45rem;
+    color:var(--muted);
+    font-size:.92rem;
+    font-weight:700;
+  }
+  .toggle-row{display:flex;gap:.65rem;flex-wrap:wrap}
+  .toggle-chip{
     display:inline-flex;
-    padding:.4rem .72rem;
+    align-items:center;
+    justify-content:center;
+    padding:.6rem .95rem;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.58);
+    color:var(--muted);
+    font-weight:700;
+    text-decoration:none;
+  }
+  .toggle-chip.active{
+    background:rgba(166,120,67,.12);
+    color:var(--accent);
+    border-color:rgba(166,120,67,.28);
+  }
+  .selection-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:.9rem}
+  .selection-card{
+    display:block;
+    padding:1.1rem;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.62);
+    color:inherit;
+    text-decoration:none;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .selection-card:hover{transform:translateY(-1px)}
+  .selection-card.active{
+    border-color:rgba(166,120,67,.32);
+    box-shadow:0 10px 28px rgba(166,120,67,.1);
+    background:rgba(255,255,255,.82);
+  }
+  .selection-card p{margin-top:.55rem;color:var(--muted)}
+  .eyebrow-soft{
+    display:inline-flex;
+    padding:.35rem .62rem;
     border-radius:999px;
     background:rgba(166,120,67,.12);
     color:var(--accent);
-    font-size:.78rem;
-    font-weight:800;
+    font-size:.74rem;
     letter-spacing:.08em;
     text-transform:uppercase;
+    font-weight:800;
   }
-  .cta-box{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:2rem;
-    align-items:end;
+  .summary-box{
+    margin-top:1.1rem;
+    padding:1.35rem;
+    border-radius:24px;
+    background:rgba(166,120,67,.08);
+    border:1px solid rgba(166,120,67,.16);
+  }
+  .summary-box strong{display:block;font-family:var(--serif);font-size:2.7rem;line-height:1;margin-top:.55rem}
+  .summary-list{display:grid;gap:.8rem;margin-top:1.1rem}
+  .summary-line{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.72rem 0;
+    border-bottom:1px solid rgba(18,16,12,.08);
+  }
+  .summary-line:last-child{border-bottom:none}
+  .action-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.3rem}
+  .support-grid{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:1rem;margin-top:2rem}
+  .note-card p{margin-top:.7rem;color:var(--muted)}
+  .muted-note{
+    margin-top:1rem;
+    padding:.95rem 1rem;
+    border-radius:18px;
+    background:rgba(255,255,255,.58);
+    border:1px solid var(--line);
+    color:var(--muted);
   }
   @media (max-width: 1080px){
-    .prints-shell,.paper-grid,.option-grid,.note-grid,.cta-box{
+    .prints-shell,.prints-grid,.selection-grid,.support-grid,.inline-grid,.triple-grid{
       grid-template-columns:1fr;
     }
   }
@@ -65,91 +130,154 @@
   <div class="container prints-shell">
     <div class="prints-copy fade-up">
       <div class="tag">{% if lang == 'ca' %}Impressions{% else %}Impresiones{% endif %}</div>
-      <h1 class="display">{% if lang == 'ca' %}Paper, laminat i foam resolts dins del privat, amb marc només quan realment calgui.{% else %}Papel, laminado y foam resueltos dentro del privado, con marco solo cuando realmente haga falta.{% endif %}</h1>
-      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Aquest apartat està pensat per consultar i preparar còpia fotogràfica, laminat i foam sense barrejar-ho amb el càlcul de marcs.{% else %}Este apartado está pensado para consultar y preparar copia fotográfica, laminado y foam sin mezclarlo con el cálculo de marcos.{% endif %}</p>
-      <div class="module-nav">
-        {% for module in private_modules %}
-        <span class="module-chip">{{ module.title }}</span>
-        {% endfor %}
-      </div>
+      <h1 class="display">{% if lang == 'ca' %}Configura paper, laminat i foam dins del mateix entorn de comanda.{% else %}Configura papel, laminado y foam dentro del mismo entorno de pedido.{% endif %}</h1>
+      <p class="lead" style="margin-top:1rem">{% if lang == 'ca' %}Quan només cal còpia, suport o acabat, es resol aquí. Si hi ha marc, la peça passa a la calculadora específica sense barrejar processos.{% else %}Cuando solo hace falta copia, soporte o acabado, se resuelve aquí. Si hay marco, la pieza pasa a la calculadora específica sin mezclar procesos.{% endif %}</p>
     </div>
 
     <div class="prints-stage fade-up">
       <div>
-        <div class="visual-label">{% if lang == 'ca' %}Criteri de treball{% else %}Criterio de trabajo{% endif %}</div>
-        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.2rem)">{% if lang == 'ca' %}La còpia i el suport es poden pressupostar aquí. El marc continua en la seva calculadora específica.{% else %}La copia y el soporte se pueden presupuestar aquí. El marco sigue en su calculadora específica.{% endif %}</h2>
-        <p>{% if lang == 'ca' %}Això ajuda a mantenir cada producte al seu lloc i evita complicar una consulta que sovint només necessita paper, laminat o foam.{% else %}Esto ayuda a mantener cada producto en su sitio y evita complicar una consulta que muchas veces solo necesita papel, laminado o foam.{% endif %}</p>
+        <div class="visual-label">{% if lang == 'ca' %}Comanda comuna{% else %}Pedido común{% endif %}</div>
+        <h2 class="display" style="font-size:clamp(2rem, 4vw, 3.1rem)">{% if lang == 'ca' %}Afegeix impressions a la mateixa comanda on ja hi poden conviure llenços i, més endavant, altres productes.{% else %}Añade impresiones al mismo pedido donde ya pueden convivir lienzos y, más adelante, otros productos.{% endif %}</h2>
+        <p>{% if lang == 'ca' %}De moment el cost professional s'introdueix manualment. Quan tinguem la tarifa definitiva, aquest mateix mòdul llegirà el preu real sense canviar el flux.{% else %}De momento el coste profesional se introduce manualmente. Cuando tengamos la tarifa definitiva, este mismo módulo leerá el precio real sin cambiar el flujo.{% endif %}</p>
       </div>
-      <a href="{{ prints_module.frames_entry_url }}" class="btn btn-outline">{% if lang == 'ca' %}Anar a marcs{% else %}Ir a marcos{% endif %}</a>
+      <div class="action-row">
+        <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir comanda{% else %}Abrir pedido{% endif %}</a>
+        <a href="{{ prints_module.frames_entry_url }}" class="btn btn-outline">{% if lang == 'ca' %}Si porta marc, anar a marcs{% else %}Si lleva marco, ir a marcos{% endif %}</a>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="section-tight">
-  <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Papers base{% else %}Papeles base{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}La copia pot partir de Lustre o Silk, sempre a la mida que el client necessiti.{% else %}La copia puede partir de Lustre o Silk, siempre a la medida que el cliente necesite.{% endif %}</h2>
-    </div>
-    <div class="paper-grid">
-      {% for paper in prints_module.papers %}
-      <article class="surface paper-card fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Base d'impressió{% else %}Base de impresión{% endif %}</div>
-        <h3 class="card-title">{{ paper.label }}</h3>
-        <p>{{ paper.description }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </div>
-</section>
+  <div class="container prints-grid">
+    <article class="surface config-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Configurador{% else %}Configurador{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2rem, 4vw, 2.9rem);margin-top:.45rem">{% if lang == 'ca' %}Tria la base, defineix la mida i afegeix la línia a la comanda.{% else %}Elige la base, define la medida y añade la línea al pedido.{% endif %}</h2>
 
-<section class="section-tight">
-  <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Combinacions del producte{% else %}Combinaciones del producto{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Opcions clares per pressupostar còpia, suport i acabat segons cada cas.{% else %}Opciones claras para presupuestar copia, soporte y acabado según cada caso.{% endif %}</h2>
-    </div>
-    <div class="option-grid">
-      {% for option in prints_module.build_options %}
-      <article class="surface option-card fade-up">
-        <span class="option-badge">{{ option.id }}</span>
-        <h3 class="card-title" style="margin-top:1rem">{{ option.label }}</h3>
-        <p>{{ option.summary }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </div>
-</section>
+      <form method="get" class="config-form">
+        <input type="hidden" name="lang" value="{{ lang }}">
 
-<section class="section-tight">
-  <div class="container note-grid">
-    <article class="surface note-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Tarifes{% else %}Tarifas{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Pensat per incorporar-hi la tarifa real{% else %}Pensado para incorporar la tarifa real{% endif %}</h3>
-      <p>{% if lang == 'ca' %}La idea és que aquí s'hi consultin les tarifes de paper, laminat i foam amb la mateixa claredat que a la resta del privat.{% else %}La idea es que aquí se consulten las tarifas de papel, laminado y foam con la misma claridad que en el resto del privado.{% endif %}</p>
+        <div>
+          <span class="field-label">{% if lang == 'ca' %}Vista ràpida{% else %}Vista rápida{% endif %}</span>
+          <div class="toggle-row">
+            <a class="toggle-chip {% if prints_module.view_is_client %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='client', pricing_profile=prints_module.selected_profile_id) }}">{% if lang == 'ca' %}PVP + IVA{% else %}PVP + IVA{% endif %}</a>
+            <a class="toggle-chip {% if prints_module.view_is_cost %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view='cost', pricing_profile=prints_module.selected_profile_id) }}">{% if lang == 'ca' %}Cost taller{% else %}Coste taller{% endif %}</a>
+          </div>
+        </div>
+
+        <div>
+          <span class="field-label">{% if lang == 'ca' %}Paper{% else %}Papel{% endif %}</span>
+          <div class="selection-grid">
+            {% for paper in prints_module.papers %}
+            <a class="selection-card {% if paper.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=paper.id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view, pricing_profile=prints_module.selected_profile_id) }}">
+              <span class="eyebrow-soft">{% if lang == 'ca' %}Base{% else %}Base{% endif %}</span>
+              <h3 class="card-title" style="margin-top:.85rem">{{ paper.label }}</h3>
+              <p>{{ paper.description }}</p>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <span class="field-label">{% if lang == 'ca' %}Tipus de línia{% else %}Tipo de línea{% endif %}</span>
+          <div class="selection-grid">
+            {% for option in prints_module.build_options %}
+            <a class="selection-card {% if option.selected %}active{% endif %}" href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=option.id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view, pricing_profile=prints_module.selected_profile_id) }}">
+              <span class="eyebrow-soft">{% if lang == 'ca' %}Acabat{% else %}Acabado{% endif %}</span>
+              <h3 class="card-title" style="margin-top:.85rem">{{ option.label }}</h3>
+              <p>{{ option.summary }}</p>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="triple-grid">
+          <label>
+            <span class="field-label">{% if lang == 'ca' %}Ample (cm){% else %}Ancho (cm){% endif %}</span>
+            <input type="number" name="width" min="1" step="0.1" value="{{ '%.2f'|format(prints_module.selected_width)|replace('.00', '') }}">
+          </label>
+          <label>
+            <span class="field-label">{% if lang == 'ca' %}Alt (cm){% else %}Alto (cm){% endif %}</span>
+            <input type="number" name="height" min="1" step="0.1" value="{{ '%.2f'|format(prints_module.selected_height)|replace('.00', '') }}">
+          </label>
+          <label>
+            <span class="field-label">{% if lang == 'ca' %}Quantitat{% else %}Cantidad{% endif %}</span>
+            <input type="number" name="qty" min="1" step="1" value="{{ prints_module.selected_quantity }}">
+          </label>
+        </div>
+
+        <div class="inline-grid">
+          <label>
+            <span class="field-label">{% if lang == 'ca' %}Cost professional per unitat (€){% else %}Coste profesional por unidad (€){% endif %}</span>
+            <input type="number" name="cost" min="0" step="0.01" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
+          </label>
+          <label>
+            <span class="field-label">{% if lang == 'ca' %}Marge (%) {% else %}Margen (%) {% endif %}</span>
+            <input type="number" name="margin" min="0" step="0.1" value="{{ '%.2f'|format(prints_module.selected_margin_percent) }}">
+          </label>
+        </div>
+
+        <input type="hidden" name="paper" value="{{ prints_module.selected_paper_id }}">
+        <input type="hidden" name="build" value="{{ prints_module.selected_build_id }}">
+        <input type="hidden" name="view" value="{{ prints_module.selected_view }}">
+        <input type="hidden" name="pricing_profile" value="{{ prints_module.selected_profile_id }}">
+
+        <div class="action-row">
+          <button type="submit" class="btn btn-dark">{% if lang == 'ca' %}Actualitzar resum{% else %}Actualizar resumen{% endif %}</button>
+          <a href="{{ prints_module.add_to_order_url }}" class="btn btn-outline">{% if lang == 'ca' %}Afegir a la comanda{% else %}Añadir al pedido{% endif %}</a>
+        </div>
+      </form>
     </article>
+
+    <aside class="surface summary-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Resum de línia{% else %}Resumen de línea{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(1.9rem, 4vw, 2.6rem);margin-top:.45rem">{{ prints_module.summary_title }}</h2>
+      <div class="summary-box">
+        {% if prints_module.view_is_client %}
+        <span>{% if lang == 'ca' %}PVP client final amb IVA{% else %}PVP cliente final con IVA{% endif %}</span>
+        <strong>{{ "%.2f"|format(prints_module.client_total)|replace(".", ",") }} €</strong>
+        {% else %}
+        <span>{% if lang == 'ca' %}Cost taller amb IVA{% else %}Coste taller con IVA{% endif %}</span>
+        <strong>{{ "%.2f"|format(prints_module.professional_total)|replace(".", ",") }} €</strong>
+        {% endif %}
+        <div class="muted-note">{{ prints_module.manual_pricing_note }}</div>
+      </div>
+
+      <div class="summary-list">
+        <div class="summary-line"><span>{% if lang == 'ca' %}Mida{% else %}Medida{% endif %}</span><strong>{{ prints_module.size_label }}</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Paper{% else %}Papel{% endif %}</span><strong>{{ prints_module.papers|selectattr('selected')|map(attribute='label')|first }}</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Acabat{% else %}Acabado{% endif %}</span><strong>{{ prints_module.build_options|selectattr('selected')|map(attribute='label')|first }}</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Cost professional sense IVA{% else %}Coste profesional sin IVA{% endif %}</span><strong>{{ "%.2f"|format(prints_module.professional_subtotal)|replace(".", ",") }} €</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}Marge aplicat{% else %}Margen aplicado{% endif %}</span><strong>{{ "%.2f"|format(prints_module.margin_amount)|replace(".", ",") }} €</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}PVP sense IVA{% else %}PVP sin IVA{% endif %}</span><strong>{{ "%.2f"|format(prints_module.client_subtotal)|replace(".", ",") }} €</strong></div>
+        <div class="summary-line"><span>{% if lang == 'ca' %}IVA{% else %}IVA{% endif %}</span><strong>{{ "%.2f"|format(prints_module.client_vat)|replace(".", ",") }} €</strong></div>
+      </div>
+
+      <div class="action-row">
+        <a href="{{ prints_module.add_to_order_url }}" class="btn btn-dark">{% if lang == 'ca' %}Portar aquesta línia a comanda{% else %}Llevar esta línea al pedido{% endif %}</a>
+        <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure comanda{% else %}Ver pedido{% endif %}</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container support-grid">
     <article class="surface note-card fade-up">
       <div class="eyebrow">{% if lang == 'ca' %}Sense impressió{% else %}Sin impresión{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}El client també pot portar la seva imatge{% else %}El cliente también puede traer su imagen{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Aquest cas queda contemplat com a opció pròpia, perquè el servei pot ser només foam, només suport o algun acabat sense que hi hagi impressió al laboratori.{% else %}Este caso queda contemplado como una opción propia, porque el servicio puede ser solo foam, solo soporte o algún acabado sin que haya impresión en el laboratorio.{% endif %}</p>
+      <h3 class="card-title">{% if lang == 'ca' %}També pots pressupostar només suport o acabat.{% else %}También puedes presupuestar solo soporte o acabado.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}L'opció `Sense fotografia impresa` serveix quan el client porta la imatge i només necessita foam, laminat o el muntatge final.{% else %}La opción `Sin fotografía impresa` sirve cuando el cliente trae la imagen y solo necesita foam, laminado o el montaje final.{% endif %}</p>
     </article>
     <article class="surface note-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Marc separat{% else %}Marco separado{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Quan hi ha marc, surt a la calculadora de marcs{% else %}Cuando hay marco, sale a la calculadora de marcos{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Això manté l'experiència neta: impressió i suports dins del privat; marc a la calculadora especialitzada.{% else %}Esto mantiene la experiencia limpia: impresión y soportes dentro del privado; marco en la calculadora especializada.{% endif %}</p>
+      <div class="eyebrow">{% if lang == 'ca' %}Tarifa viva{% else %}Tarifa viva{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}El flux ja queda resolt encara que el preu encara sigui manual.{% else %}El flujo ya queda resuelto aunque el precio siga siendo manual.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Això ens permet provar comandes mixtes des d'ara. Quan hi connectem la tarifa real, l'operativa no haurà de canviar.{% else %}Esto nos permite probar pedidos mixtos desde ya. Cuando conectemos la tarifa real, la operativa no tendrá que cambiar.{% endif %}</p>
     </article>
-  </div>
-</section>
-
-<section class="section-tight">
-  <div class="container">
-    <div class="surface cta-box fade-up">
-      <div>
-      <div class="tag">{% if lang == 'ca' %}Pas següent{% else %}Paso siguiente{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Aquest apartat està pensat perquè, quan hi entri la tarifa bona, pugui passar directament a pressupost i comanda mixta.{% else %}Este apartado está pensado para que, cuando entre la tarifa buena, pueda pasar directamente a presupuesto y pedido mixto.{% endif %}</h2>
-      </div>
-      <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Tornar al tarifari{% else %}Volver al tarifario{% endif %}</a>
-    </div>
+    <article class="surface note-card fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Marc a part{% else %}Marco aparte{% endif %}</div>
+      <h3 class="card-title">{% if lang == 'ca' %}Si la peça porta marc, passa directament a la calculadora de marcs.{% else %}Si la pieza lleva marco, pasa directamente a la calculadora de marcos.{% endif %}</h3>
+      <p>{% if lang == 'ca' %}Així mantenim clar què es calcula aquí i què surt del motor especialitzat de marcs, però tot acaba encaixant dins de la mateixa àrea privada.{% else %}Así mantenemos claro qué se calcula aquí y qué sale del motor especializado de marcos, pero todo acaba encajando dentro de la misma área privada.{% endif %}</p>
+    </article>
   </div>
 </section>
 {% endblock %}

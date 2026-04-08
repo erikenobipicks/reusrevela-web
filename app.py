@@ -1076,8 +1076,50 @@ def build_pricing_view_context():
     }
 
 
+def get_default_margin_for_product(product_key, profile_id="default"):
+    selected_profile_id = str(profile_id or "default").strip().lower()
+    profile_lookup = {item["id"]: item for item in COMMERCIAL_MARGIN_PROFILES}
+    selected_profile = profile_lookup.get(selected_profile_id, COMMERCIAL_MARGIN_PROFILES[0])
+    return float(selected_profile.get("margins", {}).get(product_key, CANVAS_PRICING["default_margin_percent"]))
+
+
+def format_measure_value(value):
+    if not value:
+        return ""
+    rounded = round(float(value), 2)
+    if abs(rounded - round(rounded)) < 0.01:
+        return str(int(round(rounded)))
+    return ("%.2f" % rounded).rstrip("0").rstrip(".")
+
+
 def build_prints_module_context():
     lang = get_lang()
+    selected_profile_id = (request.args.get("pricing_profile") or "default").strip().lower()
+    default_margin_percent = get_default_margin_for_product("prints", selected_profile_id)
+    selected_paper_id = (request.args.get("paper") or PRINT_PRODUCTS_CONFIG["papers"][0]["id"]).strip().lower()
+    selected_build_id = (request.args.get("build") or PRINT_PRODUCTS_CONFIG["build_options"][0]["id"]).strip().lower()
+    selected_width = parse_non_negative_float(request.args.get("width"), default=30.0)
+    selected_height = parse_non_negative_float(request.args.get("height"), default=40.0)
+    selected_quantity = parse_positive_int(request.args.get("qty"), default=1)
+    selected_cost = parse_non_negative_float(request.args.get("cost"), default=0.0)
+    selected_margin_percent = parse_non_negative_float(request.args.get("margin"), default=default_margin_percent)
+    selected_view = (request.args.get("view") or "client").strip().lower()
+    selected_view = selected_view if selected_view in {"cost", "client"} else "client"
+
+    paper_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["papers"]}
+    build_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["build_options"]}
+    selected_paper = paper_lookup.get(selected_paper_id, PRINT_PRODUCTS_CONFIG["papers"][0])
+    selected_build = build_lookup.get(selected_build_id, PRINT_PRODUCTS_CONFIG["build_options"][0])
+
+    professional_subtotal = round(selected_cost * selected_quantity, 2)
+    professional_vat = round(professional_subtotal * CANVAS_PRICING["vat_rate"], 2)
+    professional_total = round(professional_subtotal + professional_vat, 2)
+    margin_amount = round(professional_subtotal * (selected_margin_percent / 100), 2)
+    client_subtotal = round(professional_subtotal + margin_amount, 2)
+    client_vat = round(client_subtotal * CANVAS_PRICING["vat_rate"], 2)
+    client_total = round(client_subtotal + client_vat, 2)
+    size_label = f"{format_measure_value(selected_width)} x {format_measure_value(selected_height)} cm"
+
     return {
         "prints_module": {
             "papers": [
@@ -1085,6 +1127,7 @@ def build_prints_module_context():
                     "id": item["id"],
                     "label": item["label"][lang],
                     "description": item["description"][lang],
+                    "selected": item["id"] == selected_paper["id"],
                 }
                 for item in PRINT_PRODUCTS_CONFIG["papers"]
             ],
@@ -1093,9 +1136,47 @@ def build_prints_module_context():
                     "id": item["id"],
                     "label": item["label"][lang],
                     "summary": item["summary"][lang],
+                    "selected": item["id"] == selected_build["id"],
                 }
                 for item in PRINT_PRODUCTS_CONFIG["build_options"]
             ],
+            "selected_paper_id": selected_paper["id"],
+            "selected_build_id": selected_build["id"],
+            "selected_width": selected_width,
+            "selected_height": selected_height,
+            "selected_quantity": selected_quantity,
+            "selected_cost": selected_cost,
+            "selected_margin_percent": selected_margin_percent,
+            "selected_profile_id": selected_profile_id,
+            "selected_view": selected_view,
+            "view_is_cost": selected_view == "cost",
+            "view_is_client": selected_view == "client",
+            "size_label": size_label,
+            "summary_title": f"{selected_build['label'][lang]} · {size_label}",
+            "professional_subtotal": professional_subtotal,
+            "professional_vat": professional_vat,
+            "professional_total": professional_total,
+            "margin_amount": margin_amount,
+            "client_subtotal": client_subtotal,
+            "client_vat": client_vat,
+            "client_total": client_total,
+            "manual_pricing_note": {
+                "ca": "De moment, el cost professional es posa manualment fins que hi connectem la tarifa real.",
+                "es": "De momento, el coste profesional se introduce manualmente hasta conectar la tarifa real.",
+            }[lang],
+            "add_to_order_url": url_for(
+                "area_privada_comanda",
+                lang=lang,
+                append=1,
+                product="print",
+                paper=selected_paper["id"],
+                build=selected_build["id"],
+                width=format_measure_value(selected_width),
+                height=format_measure_value(selected_height),
+                qty=selected_quantity,
+                cost=format(selected_cost, ".2f"),
+                margin=format(selected_margin_percent, ".2f"),
+            ),
             "frames_entry_url": url_for("calculadora", service="frames"),
         }
     }
@@ -1261,6 +1342,7 @@ def build_order_return_params(source="", draft_id=""):
 def _normalize_canvas_order_line_payload(payload=None):
     payload = payload or {}
     return {
+        "product_type": "canvas",
         "line_id": str(payload.get("line_id") or "").strip(),
         "size": str(payload.get("size") or payload.get("size_id") or "").strip(),
         "qty": str(payload.get("qty") or payload.get("quantity") or "1").strip(),
@@ -1274,44 +1356,77 @@ def _normalize_canvas_order_line_payload(payload=None):
     }
 
 
-def _get_canvas_order_session():
-    order = session.get("private_canvas_order")
+def _normalize_print_order_line_payload(payload=None):
+    payload = payload or {}
+    return {
+        "product_type": "print",
+        "line_id": str(payload.get("line_id") or "").strip(),
+        "paper": str(payload.get("paper") or "").strip(),
+        "build": str(payload.get("build") or "").strip(),
+        "width": str(payload.get("width") or "30").strip(),
+        "height": str(payload.get("height") or "40").strip(),
+        "qty": str(payload.get("qty") or payload.get("quantity") or "1").strip(),
+        "cost": str(payload.get("cost") or payload.get("professional_unit_cost") or "0").strip(),
+        "margin": str(payload.get("margin") or payload.get("margin_percent") or get_default_margin_for_product("prints")).strip(),
+        "file_method": str(payload.get("file_method") or "dropbox").strip(),
+        "file_name": str(payload.get("file_name") or "").strip(),
+        "file_link": str(payload.get("file_link") or "").strip(),
+        "file_notes": str(payload.get("file_notes") or "").strip(),
+    }
+
+
+def _normalize_private_order_session_line(payload=None):
+    payload = payload or {}
+    product_type = str(payload.get("product_type") or "").strip().lower() or "canvas"
+    if product_type == "print":
+        return _normalize_print_order_line_payload(payload)
+    return _normalize_canvas_order_line_payload(payload)
+
+
+def _get_private_order_session():
+    order = session.get("private_order")
     if not isinstance(order, dict):
-        order = {"lines": []}
+        legacy = session.get("private_canvas_order")
+        if isinstance(legacy, dict):
+            order = {"lines": legacy.get("lines", [])}
+        else:
+            order = {"lines": []}
     lines = order.get("lines")
     if not isinstance(lines, list):
         order["lines"] = []
+    order["lines"] = [_normalize_private_order_session_line(line) for line in order["lines"]]
     return order
 
 
-def _write_canvas_order_session(order):
-    session["private_canvas_order"] = {"lines": order.get("lines", [])}
+def _write_private_order_session(order):
+    session["private_order"] = {"lines": order.get("lines", [])}
+    session.pop("private_canvas_order", None)
     session.modified = True
 
 
-def add_canvas_order_line_to_session(payload):
-    normalized = _normalize_canvas_order_line_payload(payload)
+def add_private_order_line_to_session(payload):
+    normalized = _normalize_private_order_session_line(payload)
     normalized["line_id"] = normalized["line_id"] or f"line_{secrets.token_urlsafe(6)}"
-    order = _get_canvas_order_session()
+    order = _get_private_order_session()
     order.setdefault("lines", []).append(normalized)
-    _write_canvas_order_session(order)
+    _write_private_order_session(order)
     return normalized["line_id"]
 
 
-def remove_canvas_order_line_from_session(line_id):
+def remove_private_order_line_from_session(line_id):
     line_id = str(line_id or "").strip()
     if not line_id:
         return
-    order = _get_canvas_order_session()
+    order = _get_private_order_session()
     order["lines"] = [line for line in order.get("lines", []) if str(line.get("line_id") or "").strip() != line_id]
-    _write_canvas_order_session(order)
+    _write_private_order_session(order)
 
 
-def update_canvas_order_line_file_in_session(line_id, payload):
+def update_private_order_line_file_in_session(line_id, payload):
     line_id = str(line_id or "").strip()
     if not line_id:
         return False
-    order = _get_canvas_order_session()
+    order = _get_private_order_session()
     updated = False
     for line in order.get("lines", []):
         if str(line.get("line_id") or "").strip() != line_id:
@@ -1323,13 +1438,30 @@ def update_canvas_order_line_file_in_session(line_id, payload):
         updated = True
         break
     if updated:
-        _write_canvas_order_session(order)
+        _write_private_order_session(order)
     return updated
 
 
-def clear_canvas_order_session():
+def clear_private_order_session():
+    session.pop("private_order", None)
     session.pop("private_canvas_order", None)
     session.modified = True
+
+
+def add_canvas_order_line_to_session(payload):
+    return add_private_order_line_to_session({**(payload or {}), "product_type": "canvas"})
+
+
+def remove_canvas_order_line_from_session(line_id):
+    return remove_private_order_line_from_session(line_id)
+
+
+def update_canvas_order_line_file_in_session(line_id, payload):
+    return update_private_order_line_file_in_session(line_id, payload)
+
+
+def clear_canvas_order_session():
+    return clear_private_order_session()
 
 
 def _build_canvas_order_line_from_payload(payload, lang, index=1):
@@ -1412,11 +1544,97 @@ def _build_canvas_order_line_from_payload(payload, lang, index=1):
     )
 
 
-def build_canvas_order_context():
+def _build_print_order_line_from_payload(payload, lang, index=1):
+    normalized = _normalize_print_order_line_payload(payload)
+    paper_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["papers"]}
+    build_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["build_options"]}
+    paper_item = paper_lookup.get(normalized.get("paper"), PRINT_PRODUCTS_CONFIG["papers"][0])
+    build_item = build_lookup.get(normalized.get("build"), PRINT_PRODUCTS_CONFIG["build_options"][0])
+    width = parse_non_negative_float(normalized.get("width"), default=30.0)
+    height = parse_non_negative_float(normalized.get("height"), default=40.0)
+    quantity = parse_positive_int(normalized.get("qty"), default=1)
+    professional_unit_cost = parse_non_negative_float(normalized.get("cost"), default=0.0)
+    margin_percent = parse_non_negative_float(normalized.get("margin"), default=get_default_margin_for_product("prints"))
+
+    size_label = f"{format_measure_value(width)} x {format_measure_value(height)} cm"
+    professional_subtotal = round(professional_unit_cost * quantity, 2)
+    professional_vat = round(professional_subtotal * CANVAS_PRICING["vat_rate"], 2)
+    professional_total = round(professional_subtotal + professional_vat, 2)
+    margin_amount = round(professional_subtotal * (margin_percent / 100), 2)
+    client_subtotal = round(professional_subtotal + margin_amount, 2)
+    client_vat = round(client_subtotal * CANVAS_PRICING["vat_rate"], 2)
+    client_total = round(client_subtotal + client_vat, 2)
+    file_info = build_line_file_info(
+        lang,
+        method=normalized.get("file_method") or "dropbox",
+        name=normalized.get("file_name", ""),
+        link=normalized.get("file_link", ""),
+        notes=normalized.get("file_notes", ""),
+    )
+    build_label = build_item["label"][lang]
+    paper_value = "-" if build_item["id"] == "without_print" else paper_item["label"][lang]
+    metadata = [
+        {"label": {"ca": "Mida", "es": "Medida"}[lang], "value": size_label},
+        {"label": {"ca": "Acabat", "es": "Acabado"}[lang], "value": build_label},
+        {"label": {"ca": "Paper", "es": "Papel"}[lang], "value": paper_value},
+    ]
+    line_id = normalized.get("line_id") or f"line_{index:02d}"
+    reference = f"LINE-{index:02d}"
+    return build_unified_order_line(
+        line_id=line_id,
+        reference=reference,
+        product_type="print",
+        product_type_label={"ca": "Impressió", "es": "Impresión"}[lang],
+        source="private_area",
+        title=f"{build_label} · {size_label}",
+        summary=paper_item["description"][lang] if build_item["id"] != "without_print" else build_item["summary"][lang],
+        quantity=quantity,
+        professional_subtotal=professional_subtotal,
+        professional_vat=professional_vat,
+        professional_total=professional_total,
+        margin_percent=margin_percent,
+        margin_amount=margin_amount,
+        client_subtotal=client_subtotal,
+        client_vat=client_vat,
+        client_total=client_total,
+        vat_rate_percent=int(CANVAS_PRICING["vat_rate"] * 100),
+        file_info=file_info,
+        metadata=metadata,
+        editable_in="prints",
+        extra={
+            "print_size_label": size_label,
+            "paper_id": paper_item["id"],
+            "paper_label": paper_item["label"][lang],
+            "build_id": build_item["id"],
+            "build_label": build_label,
+            "professional_unit_cost": professional_unit_cost,
+            "edit_url": url_for(
+                "area_privada_impresions",
+                lang=lang,
+                paper=paper_item["id"],
+                build=build_item["id"],
+                width=format_measure_value(width),
+                height=format_measure_value(height),
+                qty=quantity,
+                cost=format(professional_unit_cost, ".2f"),
+                margin=format(margin_percent, ".2f"),
+            ),
+        },
+    )
+
+
+def _build_private_order_line_from_payload(payload, lang, index=1):
+    product_type = str((payload or {}).get("product_type") or "").strip().lower() or "canvas"
+    if product_type == "print":
+        return _build_print_order_line_from_payload(payload, lang, index=index)
+    return _build_canvas_order_line_from_payload(payload, lang, index=index)
+
+
+def build_private_order_context():
     lang = get_lang()
-    session_lines = _get_canvas_order_session().get("lines", [])
+    session_lines = _get_private_order_session().get("lines", [])
     order_lines = [
-        _build_canvas_order_line_from_payload(item, lang, index=index)
+        _build_private_order_line_from_payload(item, lang, index=index)
         for index, item in enumerate(session_lines, start=1)
     ]
 
@@ -1782,6 +2000,10 @@ def build_frames_order_context(base_payload=None, draft_id=""):
         "select_url": url_for("area_privada_comanda", **{**build_order_return_params("frames", draft_id), "client": (saved_client or {}).get("id", "client_imported")}),
     }
 
+
+def build_canvas_order_context():
+    return build_private_order_context()
+
     return {
         "generated_at": datetime.now(),
         "order_model": {
@@ -2096,22 +2318,37 @@ def area_privada_marcos():
 def area_privada_comanda():
     source = (request.args.get("source") or "").strip().lower()
     if source != "frames" and parse_bool_flag(request.args.get("append")):
-        add_canvas_order_line_to_session(
-            {
-                "size": request.args.get("size"),
-                "qty": request.args.get("qty"),
-                "edit": request.args.get("edit"),
-                "margin": request.args.get("margin"),
-                "show_file_size": request.args.get("show_file_size"),
-            }
-        )
+        product_type = (request.args.get("product") or "canvas").strip().lower()
+        if product_type == "print":
+            add_private_order_line_to_session(
+                {
+                    "product_type": "print",
+                    "paper": request.args.get("paper"),
+                    "build": request.args.get("build"),
+                    "width": request.args.get("width"),
+                    "height": request.args.get("height"),
+                    "qty": request.args.get("qty"),
+                    "cost": request.args.get("cost"),
+                    "margin": request.args.get("margin"),
+                }
+            )
+        else:
+            add_canvas_order_line_to_session(
+                {
+                    "size": request.args.get("size"),
+                    "qty": request.args.get("qty"),
+                    "edit": request.args.get("edit"),
+                    "margin": request.args.get("margin"),
+                    "show_file_size": request.args.get("show_file_size"),
+                }
+            )
         return redirect(url_for("area_privada_comanda", lang=get_lang()))
     draft_id = (request.args.get("draft") or "").strip()
     saved_payload = get_saved_frames_order(draft_id) if source == "frames" and draft_id else None
     order_data = (
         build_frames_order_context(saved_payload, draft_id=draft_id if saved_payload else "")
         if source == "frames"
-        else build_canvas_order_context()
+        else build_private_order_context()
     )
     template_name = "area_privada_comanda_marcs.html" if source == "frames" else "area_privada_comanda_v2.html"
     return render_template(
