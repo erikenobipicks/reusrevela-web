@@ -533,10 +533,10 @@ def _draft_sort_key(item):
 def _store_to_saved_order(row):
     row = row if isinstance(row, dict) else {}
     return {
-        "draft_id": row.get("draft_id", ""),
-        "quote_ref": row.get("quote_ref", ""),
-        "client_name": row.get("client_name", ""),
-        "final_size_label": row.get("final_size_label", ""),
+        "draft_id": str(row.get("draft_id", "") or ""),
+        "quote_ref": str(row.get("quote_ref", "") or ""),
+        "client_name": str(row.get("client_name", "") or ""),
+        "final_size_label": str(row.get("final_size_label", "") or ""),
         "total": float(row.get("total") or 0.0),
         "updated_at": row.get("updated_at", ""),
         "updated_at_label": _format_saved_timestamp(row.get("updated_at", "")),
@@ -595,10 +595,10 @@ def save_frames_order_draft(payload):
 def _store_to_saved_canvas_draft(row):
     row = row if isinstance(row, dict) else {}
     return {
-        "draft_id": row.get("draft_id", ""),
-        "size_label": row.get("size_label", ""),
-        "quantity": int(row.get("quantity") or 1),
-        "edit_label": row.get("edit_label", ""),
+        "draft_id": str(row.get("draft_id", "") or ""),
+        "size_label": str(row.get("size_label", "") or ""),
+        "quantity": parse_positive_int(row.get("quantity"), default=1),
+        "edit_label": str(row.get("edit_label", "") or ""),
         "updated_at": row.get("updated_at", ""),
         "updated_at_label": _format_saved_timestamp(row.get("updated_at", "")),
     }
