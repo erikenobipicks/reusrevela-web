@@ -7,13 +7,22 @@
   <meta name="description" content="{% block desc %}Laboratori fotogràfic i taller d'emmarcació professional a Reus. Impressió fotogràfica, emmarcació a mida i serveis per a fotògrafs professionals.{% endblock %}">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#12100c">
+  {% set logo_url = url_for('static', filename='img/logo-reusrevela.png', _external=True) %}
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
   <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
+  <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo-reusrevela.png') }}">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ self.title()|striptags }}">
   <meta property="og:description" content="{{ self.desc()|striptags }}">
   <meta property="og:url" content="{{ request.base_url }}">
+  <meta property="og:image" content="{{ logo_url }}">
+  <meta property="og:image:alt" content="Logotip de Reus Revela">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ self.title()|striptags }}">
+  <meta name="twitter:description" content="{{ self.desc()|striptags }}">
+  <meta name="twitter:image" content="{{ logo_url }}">
   <link rel="canonical" href="{{ request.base_url }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
