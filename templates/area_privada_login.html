@@ -70,6 +70,7 @@
       <form method="post" class="form-grid">
         <input type="hidden" name="service" value="{{ service }}">
         <input type="hidden" name="source" value="{{ source }}">
+        <input type="hidden" name="next_path" value="{{ next_path }}">
         <div class="field">
           <label for="username">{% if lang == 'ca' %}Correu o usuari professional{% else %}Correo o usuario profesional{% endif %}</label>
           <input id="username" name="username" type="text" value="{{ username }}" autocomplete="username" required>

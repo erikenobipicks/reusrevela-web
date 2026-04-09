@@ -721,7 +721,7 @@
           {% if private_professional.logged_in %}
             <a href="{{ private_logout_url }}" class="nav-secondary">{% if lang == 'ca' %}Sortir{% else %}Salir{% endif %}</a>
           {% else %}
-            <a href="{{ private_login_url }}" class="nav-cta">{% if lang == 'ca' %}Entrar{% else %}Entrar{% endif %}</a>
+            <a href="{{ private_login_url }}" class="nav-cta">{% if lang == 'ca' %}Entrar a l'àrea privada{% else %}Entrar al área privada{% endif %}</a>
           {% endif %}
           <a href="{{ private_return_url }}" class="nav-secondary">{% if lang == 'ca' %}Web principal{% else %}Web principal{% endif %}</a>
         {% elif lang == 'ca' %}
@@ -875,7 +875,7 @@
         <a href="{{ url_for('sobre') }}">{% if lang == 'ca' %}Qui som{% else %}Quiénes somos{% endif %}</a>
         <a href="{{ url_for('contacte') }}">{% if lang == 'ca' %}Contacte{% else %}Contacto{% endif %}</a>
         <a href="{{ CALC_ENTRY_URL }}">
-          {% if lang == 'ca' %}Calculadora per a professionals{% else %}Calculadora para profesionales{% endif %}
+          {% if lang == 'ca' %}Àrea privada professional{% else %}Área privada profesional{% endif %}
         </a>
       </div>
     </div>

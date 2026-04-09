@@ -2,7 +2,7 @@ import json
 import os
 import secrets
 import smtplib
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from email.mime.text import MIMEText
 from urllib import error as urllib_error
@@ -12,7 +12,10 @@ from urllib.parse import urlencode
 from flask import Flask, Response, jsonify, redirect, render_template, request, session, url_for
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
+app.secret_key = os.environ.get("SECRET_KEY") or "reusrevela-private-area-session-v1"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 CALC_URL = os.environ.get("CALC_URL", "https://calculadora.reusrevela.cat")
 CALC_SIGNUP_URL = os.environ.get("CALC_SIGNUP_URL", f"{CALC_URL.rstrip('/')}/api/public/professional-signup")
@@ -958,6 +961,45 @@ def build_calc_request_url(service=None):
     return url_for("contacte", **params)
 
 
+def get_private_target_endpoint(service=None):
+    service = normalize_calc_service(service)
+    endpoint_map = {
+        "general": "area_privada",
+        "canvas": "area_privada_lienzos",
+        "photo_print": "area_privada_impresions",
+        "fine_art": "area_privada_impresions",
+        "albums": "area_privada_tarifari",
+        "frames": "area_privada_marcos",
+    }
+    return endpoint_map.get(service, "area_privada")
+
+
+def get_request_target_path():
+    query = request.query_string.decode("utf-8", errors="ignore")
+    return f"{request.path}?{query}" if query else request.path
+
+
+def normalize_private_next_path(value, service=None):
+    value = str(value or "").strip()
+    if value.startswith("/area-privada"):
+        return value
+    return url_for(get_private_target_endpoint(service), lang=get_lang())
+
+
+def build_private_access_url(service=None, next_path=""):
+    params = {
+        "lang": get_lang(),
+        "source": "private_area",
+    }
+    service = normalize_calc_service(service)
+    if service != "general":
+        params["service"] = service
+    next_path = str(next_path or "").strip()
+    if next_path.startswith("/area-privada"):
+        params["next_path"] = next_path
+    return url_for("area_privada_acces", **params)
+
+
 def build_contact_prefill():
     lang = get_lang()
     requested_subject = (request.args.get("subject") or "").strip()
@@ -1070,6 +1112,10 @@ def build_private_nav():
 def get_private_professional_session():
     data = session.get("private_professional")
     return data if isinstance(data, dict) else {}
+
+
+def has_private_professional_session():
+    return bool(get_private_professional_session().get("username"))
 
 
 def get_private_order_line_count():
@@ -2477,6 +2523,8 @@ def calculadora():
 
 @app.route("/area-privada")
 def area_privada():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("general", next_path=get_request_target_path()))
     return render_template(
         "area_privada_v2.html",
         lang=get_lang(),
@@ -2491,7 +2539,11 @@ def area_privada_acces():
     service = normalize_calc_service(request.values.get("service"))
     source = (request.values.get("source") or "web").strip() or "web"
     username = (request.form.get("username") or "").strip()
+    next_path = normalize_private_next_path(request.values.get("next_path"), service=service)
     access_error = ""
+
+    if request.method == "GET" and has_private_professional_session():
+        return redirect(next_path)
 
     if request.method == "POST":
         password = request.form.get("password") or ""
@@ -2502,9 +2554,11 @@ def area_privada_acces():
                 "service": service,
                 "source": source,
                 "logged_at": datetime.utcnow().isoformat(timespec="seconds"),
+                "calc_frames_redirect_url": str(result.get("redirect_url") or "").strip() if service == "frames" else "",
             }
+            session.permanent = True
             session.modified = True
-            return redirect(result["redirect_url"])
+            return redirect(next_path)
         access_error = result.get("error") or "unknown"
 
     return render_template(
@@ -2514,6 +2568,7 @@ def area_privada_acces():
         service=service,
         source=source,
         username=username,
+        next_path=next_path,
         access_error=access_error,
         access_error_message=get_bridge_error_message(access_error, lang) if access_error else "",
         CALC_DIRECT_URL=build_direct_calc_url(service, lang, source),
@@ -2531,6 +2586,8 @@ def area_privada_sortir():
 
 @app.route("/area-privada/tarifari")
 def area_privada_tarifari():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("general", next_path=get_request_target_path()))
     return render_template(
         "area_privada_tarifari_v2.html",
         lang=get_lang(),
@@ -2543,6 +2600,8 @@ def area_privada_tarifari():
 
 @app.route("/area-privada/ajustos", methods=["GET", "POST"])
 def area_privada_ajustos():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("general", next_path=get_request_target_path()))
     if request.method == "POST":
         settings = save_private_commercial_settings(request.form)
         professional = session.get("private_professional") or {}
@@ -2579,6 +2638,8 @@ def api_private_commercial_settings_sync():
 
 @app.route("/area-privada/lienzos")
 def area_privada_lienzos():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("canvas", next_path=get_request_target_path()))
     draft_id = (request.args.get("draft") or "").strip()
     draft_payload = get_saved_canvas_draft(draft_id) if draft_id else None
     try:
@@ -2605,6 +2666,8 @@ def area_privada_lienzos():
 
 @app.route("/area-privada/impresiones")
 def area_privada_impresions():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("photo_print", next_path=get_request_target_path()))
     return render_template(
         "area_privada_impresions.html",
         lang=get_lang(),
@@ -2616,11 +2679,29 @@ def area_privada_impresions():
 
 @app.route("/area-privada/marcos")
 def area_privada_marcos():
-    return redirect(build_direct_calc_url("frames", source="private_area"))
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("frames", next_path=get_request_target_path()))
+    professional = get_private_professional_session()
+    calc_redirect_url = str(professional.get("calc_frames_redirect_url") or "").strip()
+    if calc_redirect_url:
+        session["private_professional"] = {
+            **professional,
+            "calc_frames_redirect_url": "",
+        }
+        session.modified = True
+        return redirect(calc_redirect_url)
+    try:
+        return redirect(build_direct_calc_url("frames", source="private_area"))
+    except Exception:
+        app.logger.exception("area_privada_marcos_redirect_failed")
+        fallback_query = urlencode({"source": "private_area", "lang": get_lang()})
+        return redirect(f"{CALC_URL.rstrip('/')}/calculadora?{fallback_query}")
 
 
 @app.route("/area-privada/comanda")
 def area_privada_comanda():
+    if not has_private_professional_session():
+        return redirect(build_private_access_url("general", next_path=get_request_target_path()))
     source = (request.args.get("source") or "").strip().lower()
     if source != "frames" and parse_bool_flag(request.args.get("append")):
         product_type = (request.args.get("product") or "canvas").strip().lower()
