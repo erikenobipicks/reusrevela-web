@@ -393,14 +393,6 @@ CANVAS_DRAFT_FIELDS = [
 
 
 def _empty_private_area_store():
-    descriptions["frames"] = {
-        "ca": "Se sincronitza amb la calculadora de marcs per mantenir el mateix criteri comercial.",
-        "es": "Se sincroniza con la calculadora de marcos para mantener el mismo criterio comercial.",
-    }
-    descriptions["prints"] = {
-        "ca": "És el marge propi de la fotografia impresa. Foam, laminat + foam i ProEco passen amb el marge general.",
-        "es": "Es el margen propio de la fotografía impresa. Foam, laminado + foam y ProEco pasan con el margen general.",
-    }
     return {
         "frames_order_drafts": {},
         "canvas_order_drafts": {},
