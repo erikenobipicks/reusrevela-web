@@ -824,6 +824,12 @@ def build_calc_target_path(service=None):
     return "/"
 
 
+def permanent_redirect_to(endpoint, **values):
+    params = request.args.to_dict(flat=True)
+    params.update(values)
+    return redirect(url_for(endpoint, **params), code=301)
+
+
 def get_bridge_error_message(code, lang=None):
     lang = lang or get_lang()
     messages = {
@@ -2458,29 +2464,54 @@ def serveis():
     return render_template("serveis.html", lang=get_lang(), CALC_URL=CALC_URL)
 
 
-@app.route("/albumes-fotograficos")
+@app.route("/albums-fotografics")
 def albumes_fotograficos():
     return render_template("albumes_fotograficos.html", lang=get_lang(), CALC_URL=CALC_URL)
 
 
-@app.route("/marcos-a-medida")
+@app.route("/albumes-fotograficos")
+def albumes_fotograficos_redirect():
+    return permanent_redirect_to("albumes_fotograficos")
+
+
+@app.route("/marcs-a-mida")
 def marcos_a_medida():
     return render_template("marcos_a_medida.html", lang=get_lang(), CALC_URL=CALC_URL)
 
 
-@app.route("/impresion-lienzos")
+@app.route("/marcos-a-medida")
+def marcos_a_medida_redirect():
+    return permanent_redirect_to("marcos_a_medida")
+
+
+@app.route("/impressio-llencos")
 def impresion_lienzos():
     return render_template("impresion_lienzos.html", lang=get_lang(), CALC_URL=CALC_URL)
 
 
-@app.route("/impresion-hahnemuhle")
+@app.route("/impresion-lienzos")
+def impresion_lienzos_redirect():
+    return permanent_redirect_to("impresion_lienzos")
+
+
+@app.route("/impressio-hahnemuhle")
 def impresion_hahnemuhle():
     return render_template("impresion_hahnemuhle.html", lang=get_lang(), CALC_URL=CALC_URL)
 
 
-@app.route("/sobre")
+@app.route("/impresion-hahnemuhle")
+def impresion_hahnemuhle_redirect():
+    return permanent_redirect_to("impresion_hahnemuhle")
+
+
+@app.route("/qui-som")
 def sobre():
     return render_template("sobre.html", lang=get_lang(), CALC_URL=CALC_URL)
+
+
+@app.route("/sobre")
+def sobre_redirect():
+    return permanent_redirect_to("sobre")
 
 
 @app.route("/contacte")
@@ -2503,7 +2534,7 @@ def professionals():
     )
 
 
-@app.route("/calculadora")
+@app.route("/area-professional")
 def calculadora():
     return render_template(
         "calculadora.html",
@@ -2511,6 +2542,11 @@ def calculadora():
         CALC_URL=CALC_URL,
         **build_calc_page_context(request.args.get("service")),
     )
+
+
+@app.route("/calculadora")
+def calculadora_redirect():
+    return permanent_redirect_to("calculadora")
 
 
 @app.route("/area-privada")
