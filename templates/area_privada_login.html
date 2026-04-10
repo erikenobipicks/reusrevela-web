@@ -66,7 +66,27 @@
       <div class="eyebrow">{% if lang == 'ca' %}Validaci&oacute; de compte{% else %}Validaci&oacute;n de cuenta{% endif %}</div>
       <h2 class="display" style="font-size:clamp(1.55rem, 3vw, 2.2rem)">{% if lang == 'ca' %}Mateixes credencials, mateix accés.{% else %}Mismas credenciales, mismo acceso.{% endif %}</h2>
       <p>{% if lang == 'ca' %}Si ja tens accés, entres. Si encara no el tens, et preparem l'alta des del formulari de contacte.{% else %}Si ya tienes acceso, entras. Si aún no lo tienes, te preparamos el alta desde el formulario de contacto.{% endif %}</p>
-      {% if access_error_message %}<div class="notice error">{{ access_error_message }}</div>{% endif %}
+      {% if access_error_message %}
+        <div class="notice error">
+          {% if access_error_message == "network_error" %}
+            {% if lang == 'ca' %}
+              No hem pogut verificar l'accés en aquest moment. Torna-ho a provar
+              en uns minuts o contacta amb el taller si el problema continua.
+            {% else %}
+              No hemos podido verificar el acceso en este momento. Vuelve a
+              intentarlo en unos minutos o contacta con el taller si el problema persiste.
+            {% endif %}
+          {% else %}
+            {% if lang == 'ca' %}
+              No hem pogut iniciar sessió. Comprova les dades i torna-ho a provar.
+              Si el problema continua, contacta amb el taller.
+            {% else %}
+              No hemos podido iniciar sesión. Comprueba los datos e inténtalo
+              de nuevo. Si el problema persiste, contacta con el taller.
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
       <form method="post" class="form-grid">
         <input type="hidden" name="service" value="{{ service }}">
         <input type="hidden" name="source" value="{{ source }}">

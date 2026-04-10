@@ -907,6 +907,34 @@ def request_calc_bridge_login(username, password, service=None, lang=None, sourc
         return {"ok": False, "error": "network_error"}
 
 
+def request_calc_professional_summary(username):
+    username = (username or "").strip().lower()
+    if not username or not CALC_BRIDGE_TOKEN or not CALC_URL:
+        return None
+
+    payload = {
+        "username": username,
+    }
+    req = urllib_request.Request(
+        f"{CALC_URL.rstrip('/')}/api/public/professional-summary",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Bridge-Token": CALC_BRIDGE_TOKEN,
+        },
+        method="POST",
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=4) as resp:
+            body = resp.read().decode("utf-8")
+            data = json.loads(body or "{}")
+            return data if isinstance(data, dict) and data.get("ok") else None
+    except urllib_error.HTTPError:
+        return None
+    except (urllib_error.URLError, TimeoutError, ValueError, Exception):
+        return None
+
+
 def request_calc_margin_sync(username, settings=None):
     username = (username or "").strip().lower()
     if not username or not CALC_BRIDGE_TOKEN or not CALC_URL:
@@ -1136,6 +1164,12 @@ def build_private_shell_context():
         "private_professional": {
             "logged_in": is_logged,
             "username": professional.get("username", ""),
+            "name": professional.get("name", ""),
+            "business_name": professional.get("business_name", ""),
+            "pending_count": sum(
+                1 for q in professional.get("recent_quotes", [])
+                if q.get("pendent")
+            ),
             "label": (
                 "Sessió professional activa" if lang == "ca" else "Sesión profesional activa"
             ) if is_logged else (
@@ -2587,10 +2621,18 @@ def area_privada_acces():
                 "logged_at": datetime.utcnow().isoformat(timespec="seconds"),
                 "calc_frames_redirect_url": str(result.get("redirect_url") or "").strip() if service == "frames" else "",
             }
+            summary = request_calc_professional_summary(username)
+            if summary:
+                session["private_professional"]["name"] = summary.get("name", "")
+                session["private_professional"]["business_name"] = summary.get("business_name", "")
+                session["private_professional"]["profile_type"] = summary.get("profile_type", "")
+                session["private_professional"]["access_status"] = summary.get("access_status", "")
+                session["private_professional"]["recent_quotes"] = summary.get("recent_quotes", [])
             session.permanent = True
             session.modified = True
             return redirect(next_path)
-        access_error = result.get("error") or "unknown"
+        raw_error = result.get("error") or "unknown"
+        access_error = "network_error" if raw_error == "network_error" else "auth_error"
 
     return render_template(
         "area_privada_login.html",

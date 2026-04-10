@@ -726,10 +726,18 @@
           <div class="private-status {% if private_professional.logged_in %}logged{% endif %}">
             <span class="private-status-dot"></span>
             <div class="private-status-copy">
-              <strong>{{ private_professional.label }}</strong>
-              <span>{{ private_professional.detail }}</span>
+              {% if private_professional.name or private_professional.business_name %}
+                <strong>{{ private_professional.name or private_professional.username }}</strong>
+                <span>{{ private_professional.business_name or private_professional.detail }}</span>
+              {% else %}
+                <strong>{{ private_professional.label }}</strong>
+                <span>{{ private_professional.detail }}</span>
+              {% endif %}
             </div>
           </div>
+          {% if private_professional.logged_in and private_professional.pending_count %}
+            <span class="nav-global-badge">{{ private_professional.pending_count }}</span>
+          {% endif %}
           {% for item in private_nav_links %}
             <a href="{{ item.href }}" {% if item.active %}class="active"{% endif %}>
               {{ item.label }}
