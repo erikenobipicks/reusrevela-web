@@ -2536,12 +2536,15 @@ def professionals():
 
 @app.route("/area-professional")
 def calculadora():
-    return render_template(
-        "calculadora.html",
-        lang=get_lang(),
-        CALC_URL=CALC_URL,
-        **build_calc_page_context(request.args.get("service")),
-    )
+    # Legacy public entry kept only as a permanent redirect.
+    # calculadora.html stays in the repo on purpose in case we want to recover it later.
+    # return render_template(
+    #     "calculadora.html",
+    #     lang=get_lang(),
+    #     CALC_URL=CALC_URL,
+    #     **build_calc_page_context(request.args.get("service")),
+    # )
+    return permanent_redirect_to("professionals")
 
 
 @app.route("/calculadora")
