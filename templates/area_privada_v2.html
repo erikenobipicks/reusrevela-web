@@ -96,11 +96,74 @@
     gap:1rem;
     margin-top:2rem;
   }
+
+  .task-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .9rem;
+    margin-top: 1.25rem;
+  }
+  .task-card {
+    display: block;
+    padding: 1.1rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,.56);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition: border-color .15s;
+  }
+  .task-card:hover { border-color: var(--accent); }
+  .task-featured { border: 2px solid var(--accent); }
+  .task-title {
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .task-desc {
+    margin-top: .4rem;
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .quotes-list { display: grid; gap: 0; }
+  .quote-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .85rem 0;
+    border-bottom: 1px solid var(--line);
+    gap: 1rem;
+  }
+  .quote-row:last-child { border-bottom: none; }
+  .quote-main { display: flex; flex-direction: column; gap: .2rem; }
+  .quote-client { font-size: .95rem; color: var(--text); }
+  .quote-meta { font-size: .82rem; color: var(--muted); }
+  .quote-right {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-shrink: 0;
+  }
+  .quote-price { font-size: .9rem; color: var(--text); font-weight: 500; }
+  .quote-badge {
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .3rem .65rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .badge-ok { background: var(--success-soft); color: var(--success); }
+  .badge-pagat { background: rgba(166,120,67,.12); color: var(--accent); }
+  .badge-pendent { background: rgba(220,53,69,.1); color: #dc3545; }
+
   @media (max-width: 1080px){
     .dashboard-top,.modules{grid-template-columns:1fr}
   }
   @media (max-width: 720px){
     .dash-summary{grid-template-columns:1fr}
+    .task-grid { grid-template-columns: 1fr; }
   }
 </style>
 {% endblock %}
@@ -110,79 +173,152 @@
   <div class="container">
     <div class="dashboard-top">
       <article class="surface dash-panel fade-up">
-        <div class="tag">{% if lang == 'ca' %}Panell professional{% else %}Panel profesional{% endif %}</div>
-        <h1 class="display">{% if lang == 'ca' %}Tot el privat, més a mà.{% else %}Todo el privado, más a mano.{% endif %}</h1>
-        <p>{% if lang == 'ca' %}Sessió, productes i comanda al mateix punt.{% else %}Sesión, productos y pedido en el mismo punto.{% endif %}</p>
-        <div class="dash-summary">
-          <div class="dash-metric">
-            <strong>{% if private_professional.logged_in %}OK{% else %}--{% endif %}</strong>
-            <span>{% if lang == 'ca' %}estat de sessió{% else %}estado de sesión{% endif %}</span>
-          </div>
-          <div class="dash-metric">
-            <strong>{{ private_cart_count }}</strong>
-            <span>{% if lang == 'ca' %}línies a comanda{% else %}líneas en pedido{% endif %}</span>
-          </div>
-          <div class="dash-metric">
-            <strong>6</strong>
-            <span>{% if lang == 'ca' %}accessos principals{% else %}accesos principales{% endif %}</span>
-          </div>
+        <div class="tag">
+          {% if lang == 'ca' %}Panell professional{% else %}Panel profesional{% endif %}
         </div>
-        <div class="dash-actions">
-          <a href="{{ url_for('area_privada_tarifari') }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir tarifari{% else %}Abrir tarifario{% endif %}</a>
-          <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir comanda{% else %}Abrir pedido{% endif %}</a>
-          <a href="{{ url_for('area_privada_marcos') }}" class="btn btn-outline">{% if lang == 'ca' %}Anar a marcs{% else %}Ir a marcos{% endif %}</a>
+
+        {% if private_professional.name %}
+          <h1 class="display">
+            {% if lang == 'ca' %}Bona feina, {{ private_professional.name }}.
+            {% else %}Buen trabajo, {{ private_professional.name }}.{% endif %}
+          </h1>
+          {% if private_professional.business_name %}
+            <p>{{ private_professional.business_name }}</p>
+          {% endif %}
+        {% else %}
+          <h1 class="display">
+            {% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}
+          </h1>
+        {% endif %}
+
+        <div class="task-grid">
+
+          <a href="{{ url_for('area_privada_marcos') }}" class="task-card task-featured">
+            <div class="task-title">
+              {% if lang == 'ca' %}Calcular un marc{% else %}Calcular un marco{% endif %}
+            </div>
+            <div class="task-desc">
+              {% if lang == 'ca' %}Mides, motllura, vidre i preu final al moment
+              {% else %}Medidas, moldura, vidrio y precio final al momento{% endif %}
+            </div>
+          </a>
+
+          <a href="{{ url_for('area_privada_lienzos') }}" class="task-card">
+            <div class="task-title">
+              {% if lang == 'ca' %}Pressupost de llenç{% else %}Presupuesto de lienzo{% endif %}
+            </div>
+            <div class="task-desc">
+              {% if lang == 'ca' %}Mesures, laminat Protter i preparació del fitxer
+              {% else %}Medidas, laminado Protter y preparación del archivo{% endif %}
+            </div>
+          </a>
+
+          <a href="{{ url_for('area_privada_impresions') }}" class="task-card">
+            <div class="task-title">
+              {% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}
+            </div>
+            <div class="task-desc">
+              {% if lang == 'ca' %}Lustre, Silk, laminat i opcions d'acabat
+              {% else %}Lustre, Silk, laminado y opciones de acabado{% endif %}
+            </div>
+          </a>
+
         </div>
       </article>
 
       <article class="surface dash-quick fade-up">
-        <div class="eyebrow">{% if lang == 'ca' %}Lectura ràpida{% else %}Lectura rápida{% endif %}</div>
+        <div class="eyebrow">
+          {% if lang == 'ca' %}Estat del compte{% else %}Estado de la cuenta{% endif %}
+        </div>
         <div class="quick-grid" style="margin-top:1rem">
+
           <div class="quick-value">
             <div>
-              <strong>{{ private_professional.label }}</strong>
-              <p>{{ private_professional.detail }}</p>
+              <strong>{% if lang == 'ca' %}Sessió{% else %}Sesión{% endif %}</strong>
+              <p style="color:var(--success)">
+                {% if lang == 'ca' %}Activa{% else %}Activa{% endif %}
+              </p>
             </div>
           </div>
+
           <div class="quick-value">
             <div>
-              <strong>{% if lang == 'ca' %}Comanda activa{% else %}Pedido activo{% endif %}</strong>
-              <p>{% if lang == 'ca' %}La cistella professional hauria de ser visible sempre.{% else %}La cesta profesional debería ser visible siempre.{% endif %}</p>
+              <strong>{% if lang == 'ca' %}Pendents{% else %}Pendientes{% endif %}</strong>
+              <p>{{ private_professional.pending_count }}</p>
             </div>
-            <span class="quick-badge">{{ private_cart_count }}</span>
+            {% if private_professional.pending_count > 0 %}
+              <span class="quick-badge">{{ private_professional.pending_count }}</span>
+            {% endif %}
           </div>
+
           <div class="quick-value">
             <div>
-              <strong>{% if lang == 'ca' %}Marcs integrat{% else %}Marcos integrado{% endif %}</strong>
-              <p>{% if lang == 'ca' %}Quan cal marc, l'entrada és directa a la calculadora bona.{% else %}Cuando hace falta marco, la entrada es directa a la calculadora correcta.{% endif %}</p>
+              <strong>{% if lang == 'ca' %}Tarifari{% else %}Tarifario{% endif %}</strong>
+              <p>
+                <a href="{{ url_for('area_privada_tarifari') }}">
+                  {% if lang == 'ca' %}Consultar{% else %}Consultar{% endif %}
+                </a>
+              </p>
             </div>
           </div>
+
         </div>
       </article>
     </div>
 
     <div class="section-head fade-up">
       <div>
-        <div class="eyebrow">{% if lang == 'ca' %}Accessos{% else %}Accesos{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Tria mòdul i entra a treballar.{% else %}Elige módulo y entra a trabajar.{% endif %}</h2>
+        <div class="eyebrow">
+          {% if lang == 'ca' %}Últims pressupostos{% else %}Últimos presupuestos{% endif %}
+        </div>
+        <h2 class="display">
+          {% if lang == 'ca' %}El teu historial recent.{% else %}Tu historial reciente.{% endif %}
+        </h2>
       </div>
+      <a href="{{ url_for('area_privada_comanda') }}" class="btn btn-outline">
+        {% if lang == 'ca' %}Veure comanda{% else %}Ver pedido{% endif %}
+      </a>
     </div>
 
-    <div class="modules">
-      {% for module in private_modules %}
-      <article class="surface dash-card module-card fade-up">
-        <div class="module-head">
-          <div class="eyebrow">{{ module.eyebrow }}</div>
-          <span class="module-status {% if module.status == 'ready' %}ready{% else %}planned{% endif %}">
-            {% if module.status == 'ready' %}{% if lang == 'ca' %}actiu{% else %}activo{% endif %}{% else %}{% if lang == 'ca' %}pendent{% else %}pendiente{% endif %}{% endif %}
-          </span>
+    <div class="surface dash-panel fade-up" style="margin-top:1rem">
+      {% if private_professional.recent_quotes %}
+        <div class="quotes-list">
+          {% for q in private_professional.recent_quotes %}
+            <div class="quote-row">
+              <div class="quote-main">
+                <strong class="quote-client">{{ q.client_nom or '—' }}</strong>
+                <span class="quote-meta">
+                  {% if q.num_pressupost %}#{{ q.num_pressupost }} · {% endif %}
+                  {{ q.date or '' }}
+                </span>
+              </div>
+              <div class="quote-right">
+                {% if q.preu_final %}
+                  <span class="quote-price">{{ "%.2f"|format(q.preu_final) }} €</span>
+                {% endif %}
+                {% if q.entregat %}
+                  <span class="quote-badge badge-ok">
+                    {% if lang == 'ca' %}Entregat{% else %}Entregado{% endif %}
+                  </span>
+                {% elif q.pagat %}
+                  <span class="quote-badge badge-pagat">
+                    {% if lang == 'ca' %}Pagat{% else %}Pagado{% endif %}
+                  </span>
+                {% elif q.pendent %}
+                  <span class="quote-badge badge-pendent">
+                    {% if lang == 'ca' %}Pendent{% else %}Pendiente{% endif %}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        <h3 class="card-title">{{ module.title }}</h3>
-        <p>{{ module.summary }}</p>
-        {% if module.href %}
-        <a href="{{ module.href }}" class="btn btn-dark">{% if lang == 'ca' %}Obrir{% else %}Abrir{% endif %}</a>
-        {% endif %}
-      </article>
-      {% endfor %}
+      {% else %}
+        <p style="color:var(--muted)">
+          {% if lang == 'ca' %}Encara no hi ha pressupostos recents.
+          {% else %}Aún no hay presupuestos recientes.{% endif %}
+        </p>
+      {% endif %}
     </div>
   </div>
 </section>

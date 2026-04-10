@@ -1098,29 +1098,13 @@ def build_private_nav():
             "label": "Portal" if lang == "ca" else "Portal",
         },
         {
-            "endpoint": "area_privada_tarifari",
-            "label": "Tarifari" if lang == "ca" else "Tarifario",
-        },
-        {
-            "endpoint": "area_privada_lienzos",
-            "label": "Llenços" if lang == "ca" else "Lienzos",
-        },
-        {
-            "endpoint": "area_privada_impresions",
-            "label": "Impressions" if lang == "ca" else "Impresiones",
-        },
-        {
-            "endpoint": "area_privada_marcos",
-            "label": "Marcs" if lang == "ca" else "Marcos",
+            "endpoint": "area_privada_comanda",
+            "label": "Comanda" if lang == "ca" else "Pedido",
+            "badge": cart_count if cart_count > 0 else None,
         },
         {
             "endpoint": "area_privada_ajustos",
             "label": "Ajustos" if lang == "ca" else "Ajustes",
-        },
-        {
-            "endpoint": "area_privada_comanda",
-            "label": "Comanda" if lang == "ca" else "Pedido",
-            "badge": cart_count,
         },
     ]
 
@@ -1170,6 +1154,7 @@ def build_private_shell_context():
                 1 for q in professional.get("recent_quotes", [])
                 if q.get("pendent")
             ),
+            "recent_quotes": professional.get("recent_quotes", []),
             "label": (
                 "Sessió professional activa" if lang == "ca" else "Sesión profesional activa"
             ) if is_logged else (
