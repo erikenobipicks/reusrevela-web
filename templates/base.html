@@ -647,9 +647,12 @@
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "ProfessionalService",
+      "@id": "{{ request.url_root.rstrip('/') }}#business",
       "name": "Reus Revela",
       "url": "{{ request.url_root.rstrip('/') }}",
+      "logo": "{{ url_for('static', filename='img/logo-reusrevela.png', _external=True) }}",
+      "image": "{{ url_for('static', filename='img/hero-portada-2026.png', _external=True) }}",
       "telephone": "+34977316111",
       "email": "reusrevela@gmail.com",
       "address": {
@@ -661,6 +664,14 @@
         "addressCountry": "ES"
       },
       "areaServed": [
+        {
+          "@type": "City",
+          "name": "Reus"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Camp de Tarragona"
+        },
         {
           "@type": "AdministrativeArea",
           "name": "Tarragona"

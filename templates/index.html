@@ -1,466 +1,774 @@
 {% extends "base.html" %}
-{% block title %}{% if lang == 'ca' %}Reus Revela | Àlbums, marcs a mida i impressió fotogràfica a Tarragona{% else %}Reus Revela | Álbumes, marcos a medida e impresión fotográfica en Tarragona{% endif %}{% endblock %}
-{% block desc %}{% if lang == 'ca' %}Taller fotogràfic a Reus especialitzat en àlbums fotogràfics, marcs a mida, impressió de llenços i impressió fotogràfica. Treballem per a Tarragona, Catalunya i clients d'arreu d'Espanya.{% else %}Taller fotográfico en Reus especializado en álbumes fotográficos, marcos a medida, impresión de lienzos e impresión fotográfica. Trabajamos para Tarragona, Cataluña y clientes de toda España.{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ca' %}Laboratori fotogràfic a Reus | Impressió, marcs i fine art{% else %}Laboratorio fotográfico en Reus | Impresión, marcos y fine art{% endif %}{% endblock %}
+{% block desc %}{% if lang == 'ca' %}Laboratori fotogràfic i taller d’emmarcació a Reus. Impressió fotogràfica, fine art Hahnemühle, marcs a mida, àlbums i llenços.{% else %}Laboratorio fotográfico y taller de enmarcación en Reus. Impresión fotográfica, fine art Hahnemühle, marcos a medida, álbumes y lienzos.{% endif %}{% endblock %}
 
 {% block head %}
+<link rel="preload" as="image" href="{{ url_for('static', filename='img/hero-portada-2026.webp') }}" type="image/webp" fetchpriority="high">
 <style>
-  .hero{
-    min-height:calc(100svh - var(--nav-h));
-    padding:2rem 0 3.5rem;
-    display:grid;
-    align-items:center;
+  .home-hero{
+    padding:2.35rem 0 1.25rem;
   }
-  .hero-shell{
+  .home-hero-grid{
     display:grid;
-    grid-template-columns:1.05fr .95fr;
-    gap:2.25rem;
+    grid-template-columns:minmax(0, 1.02fr) minmax(320px, .98fr);
+    gap:2rem;
     align-items:stretch;
   }
-  .hero-copy{
-    padding:4rem 0 2rem;
+  .home-hero-copy{
+    padding:1.2rem 0;
   }
-  .hero-copy .display em{
-    color:var(--accent);
-    font-style:normal;
+  .home-hero-copy .display{
+    max-width:12ch;
+    margin-top:1rem;
   }
-  .hero-actions{
+  .home-hero-copy .lead{
+    max-width:61ch;
+    margin-top:1.1rem;
+  }
+  .home-hero-actions{
     display:flex;
-    gap:1rem;
     flex-wrap:wrap;
+    gap:.85rem;
     margin-top:2rem;
   }
-  .hero-notes{
-    display:flex;
-    gap:1.8rem;
-    flex-wrap:wrap;
-    margin-top:2.2rem;
-    color:var(--muted);
-    font-size:.95rem;
+  .home-proof-list{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:.85rem;
+    margin-top:2rem;
   }
-  .hero-notes strong{
+  .home-proof-item{
+    padding:1rem 1.05rem;
+    border-radius:18px;
+    border:1px solid rgba(18, 16, 12, 0.08);
+    background:rgba(255,255,255,.68);
+    box-shadow:0 14px 40px rgba(18,16,12,.05);
+  }
+  .home-proof-item strong{
     display:block;
-    color:var(--ink);
-    font-size:1.15rem;
+    font-size:.82rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:.3rem;
   }
-  .hero-stage{
+  .home-proof-item span{
+    color:var(--ink);
+    font-weight:700;
+    line-height:1.35;
+  }
+  .home-hero-visual{
     position:relative;
-    min-height:620px;
-    padding:2rem;
+    min-height:640px;
     border-radius:34px;
     overflow:hidden;
     background:
-      linear-gradient(140deg, rgba(23, 18, 15, .38) 0%, rgba(45, 36, 29, .58) 45%, rgba(143, 103, 63, .72) 100%),
-      url("{{ url_for('static', filename='img/hero-portada-2026.png') }}") center/cover no-repeat;
-    box-shadow:0 28px 80px rgba(18, 16, 12, 0.22);
+      linear-gradient(145deg, rgba(21, 17, 13, .22), rgba(21, 17, 13, .5)),
+      url("{{ url_for('static', filename='img/hero-portada-2026.webp') }}") center/cover no-repeat;
+    box-shadow:0 28px 75px rgba(18,16,12,.16);
   }
-  .hero-frame{
+  .home-hero-overlay{
     position:absolute;
-    top:2rem;
-    right:2rem;
-    width:min(44%, 260px);
-    aspect-ratio:4 / 5;
+    inset:auto 1.35rem 1.35rem 1.35rem;
+    padding:1.3rem;
     border-radius:24px;
-    border:1px solid rgba(255,255,255,.18);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)),
-      url("{{ url_for('static', filename='img/catalogo-marcs.png') }}") center/cover no-repeat;
-    backdrop-filter:blur(8px);
-    box-shadow:0 18px 40px rgba(0,0,0,.16);
-    overflow:hidden;
-  }
-  .hero-frame::before{
-    content:"";
-    position:absolute;
-    inset:14px;
-    border:1px solid rgba(255,255,255,.3);
-    border-radius:16px;
-  }
-  .hero-frame::after{
-    content:"";
-    position:absolute;
-    inset:28px;
-    border-radius:10px;
-    background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
-  }
-  .hero-stage-copy{
-    position:absolute;
-    left:2rem;
-    bottom:2rem;
-    max-width:390px;
+    background:rgba(20,16,13,.74);
     color:#fff;
+    backdrop-filter:blur(10px);
   }
-  .hero-stage-copy p{
-    color:rgba(255,255,255,.72);
-    margin-top:.8rem;
+  .home-hero-overlay p{
+    margin-top:.55rem;
+    color:rgba(255,255,255,.76);
   }
-  .hero-badge{
+  .home-hero-contact{
+    margin-top:1rem;
+    display:grid;
+    gap:.75rem;
+  }
+  .home-hero-contact a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.9rem 1rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.12);
+    transition:transform .2s ease, background .2s ease;
+  }
+  .home-hero-contact a:hover{
+    transform:translateY(-1px);
+    background:rgba(255,255,255,.14);
+  }
+  .home-hero-contact span{
+    color:rgba(255,255,255,.68);
+    font-size:.84rem;
+  }
+  .home-section-head{
+    max-width:68ch;
+    margin-bottom:2rem;
+  }
+  .home-section-head p{
+    margin-top:.9rem;
+    color:var(--muted);
+  }
+  .home-value-grid,
+  .home-cases-grid,
+  .home-services-grid,
+  .home-audience-grid,
+  .home-process-grid,
+  .home-trust-grid,
+  .home-faq-grid{
+    display:grid;
+    gap:1rem;
+  }
+  .home-value-grid{
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+  }
+  .home-cases-grid{
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+  }
+  .home-value-card,
+  .home-case-card,
+  .home-service-card,
+  .home-audience-card,
+  .home-local-panel,
+  .home-step,
+  .home-trust-item,
+  .home-faq-item{
+    padding:1.5rem;
+    border-radius:24px;
+    border:1px solid rgba(18, 16, 12, 0.08);
+    background:rgba(255,255,255,.72);
+    box-shadow:0 18px 55px rgba(18,16,12,.06);
+  }
+  .home-value-card h3,
+  .home-case-card h3,
+  .home-service-card h3,
+  .home-audience-card h3,
+  .home-local-panel h3,
+  .home-step h3,
+  .home-faq-item h3{
+    font-family:var(--serif);
+    font-size:1.65rem;
+    line-height:1.02;
+  }
+  .home-value-card p,
+  .home-case-card p,
+  .home-service-card p,
+  .home-audience-card p,
+  .home-local-panel p,
+  .home-step p,
+  .home-trust-item p,
+  .home-faq-item p{
+    margin-top:.75rem;
+    color:var(--muted);
+  }
+  .home-value-card strong,
+  .home-step strong{
     display:inline-flex;
     align-items:center;
-    gap:.5rem;
-    padding:.55rem .85rem;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.08);
-    font-size:.82rem;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:1rem;
+    font-weight:800;
     letter-spacing:.08em;
     text-transform:uppercase;
+    margin-bottom:1rem;
   }
-
-  .split-band{
-    padding:2rem 0 0;
+  .home-case-card{
+    min-height:100%;
   }
-  .split-band-inner{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:1.25rem;
+  .home-case-card strong{
+    display:inline-flex;
+    margin-bottom:1rem;
+    color:var(--accent);
+    font-size:.76rem;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
   }
-  .split-card{
-    padding:1.6rem;
+  .home-services-grid{
+    grid-template-columns:repeat(5, minmax(0, 1fr));
   }
-  .split-card p{
-    margin-top:.65rem;
-    color:var(--muted);
-  }
-
-  .services-showcase{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:1rem;
-    margin-top:2.5rem;
-  }
-  .service-block{
-    padding:1.5rem;
-    border-radius:22px;
-    background:rgba(255,255,255,.58);
-    border:1px solid rgba(18, 16, 12, 0.08);
-    min-height:280px;
+  .home-service-card{
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
-    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    min-height:100%;
   }
-  .service-block:hover{
-    transform:translateY(-4px);
-    border-color:rgba(166, 120, 67, .3);
-    box-shadow:var(--shadow);
-  }
-  .service-index{
-    font-family:var(--serif);
-    font-size:2.3rem;
-    color:rgba(166, 120, 67, .65);
-    line-height:1;
-  }
-  .service-block p{
-    color:var(--muted);
-    margin:.8rem 0 1rem;
-  }
-  .service-link{
-    font-weight:700;
+  .home-service-card .service-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    margin-bottom:1rem;
     color:var(--accent);
+    font-size:.76rem;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
   }
-
-  .proof-grid{
+  .home-service-card .btn{
+    margin-top:auto;
+    width:max-content;
+  }
+  .home-audience-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+  .home-audience-card .btn{
+    margin-top:1.35rem;
+  }
+  .home-pro-note{
+    margin-top:1.1rem;
+    padding:1rem 1.1rem;
+    border-radius:18px;
+    background:rgba(166, 120, 67, 0.08);
+    color:var(--muted);
+  }
+  .home-local-grid{
     display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:1.5rem;
+    grid-template-columns:minmax(0, 1.2fr) minmax(260px, .8fr);
+    gap:1rem;
     align-items:stretch;
   }
-  .proof-panel{
-    padding:2rem;
-  }
-  .proof-metrics{
-    margin-top:1.5rem;
+  .home-local-list{
     display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:1rem;
+    gap:.8rem;
+    margin-top:1.2rem;
   }
-  .proof-list{
+  .home-local-list li,
+  .home-trust-item{
+    list-style:none;
+  }
+  .home-local-list li{
+    padding:.95rem 1rem;
+    border-radius:16px;
+    border:1px solid rgba(18, 16, 12, 0.08);
+    background:rgba(255,255,255,.58);
+    color:var(--ink);
+    font-weight:700;
+  }
+  .home-local-support{
     display:grid;
-    gap:1rem;
+    gap:.8rem;
     align-content:start;
-    padding:2rem;
   }
-  .proof-list li{
-    padding:1rem 0;
-    border-bottom:1px solid rgba(18, 16, 12, 0.08);
+  .home-local-support li{
+    list-style:none;
+    padding:1rem 1.05rem;
+    border-radius:18px;
+    background:rgba(166, 120, 67, 0.08);
+    color:var(--ink);
+    font-weight:700;
   }
-  .proof-list li:last-child{border-bottom:none}
-  .proof-list strong{
+  .home-process-grid{
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+  }
+  .home-step strong{
+    font-family:var(--serif);
+    font-size:1.25rem;
+  }
+  .home-trust-grid{
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+  }
+  .home-trust-item{
+    min-height:100%;
+  }
+  .home-trust-item strong{
     display:block;
-    margin-bottom:.35rem;
-    font-size:1rem;
+    font-size:.82rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:.55rem;
   }
-  .proof-list span{color:var(--muted)}
-
-  .cta-section{
-    padding:4rem 0;
+  .home-faq-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
   }
-  .cta-shell{
-    padding:3rem;
+  .home-final-cta{
+    padding:2rem;
     border-radius:32px;
     background:
-      radial-gradient(circle at top left, rgba(255,255,255,.1), transparent 22%),
-      linear-gradient(135deg, #14100d 0%, #34271e 48%, #a67843 100%);
+      radial-gradient(circle at top left, rgba(255,255,255,.16), transparent 26%),
+      linear-gradient(140deg, #17120f 0%, #2f241b 48%, #a67843 100%);
     color:#fff;
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:2rem;
-    align-items:end;
+    box-shadow:0 26px 70px rgba(18,16,12,.18);
   }
-  .cta-shell p{
-    max-width:50ch;
-    color:rgba(255,255,255,.72);
-    margin-top:.75rem;
+  .home-final-cta p{
+    margin-top:.85rem;
+    max-width:56ch;
+    color:rgba(255,255,255,.76);
+  }
+  .home-final-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.85rem;
+    margin-top:1.6rem;
+  }
+  .home-final-actions .btn-outline{
+    border-color:rgba(255,255,255,.22);
+    background:rgba(255,255,255,.1);
+    color:#fff;
+  }
+  .home-final-actions .btn-outline:hover{
+    background:rgba(255,255,255,.16);
   }
 
-  @media (max-width: 1040px){
-    .hero-shell,
-    .proof-grid,
-    .cta-shell{
-      grid-template-columns:1fr;
+  @media (max-width: 1180px){
+    .home-services-grid{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
     }
-    .services-showcase{
+    .home-trust-grid{
       grid-template-columns:repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 760px){
-    .split-band-inner,
-    .proof-metrics,
-    .services-showcase{
+  @media (max-width: 980px){
+    .home-hero-grid,
+    .home-local-grid,
+    .home-value-grid,
+    .home-cases-grid,
+    .home-audience-grid,
+    .home-process-grid,
+    .home-faq-grid{
       grid-template-columns:1fr;
     }
-    .hero-stage{
-      min-height:480px;
+    .home-proof-list{
+      grid-template-columns:1fr;
     }
-    .hero-frame{
-      width:180px;
+    .home-hero-visual{
+      min-height:520px;
     }
-    .hero-copy{
-      padding-top:2rem;
+  }
+
+  @media (max-width: 760px){
+    .home-hero{
+      padding-top:1.4rem;
     }
-    .cta-shell{
-      padding:2rem;
+    .home-services-grid,
+    .home-trust-grid{
+      grid-template-columns:1fr;
+    }
+    .home-hero-copy .display{
+      max-width:11ch;
+    }
+    .home-hero-visual{
+      min-height:460px;
+      border-radius:28px;
+    }
+    .home-final-cta{
+      padding:1.6rem;
+      border-radius:26px;
     }
   }
 </style>
 {% endblock %}
 
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "{{ request.base_url }}#webpage",
+  "url": "{{ request.base_url }}",
+  "name": "{% if lang == 'ca' %}Laboratori fotogràfic a Reus | Impressió, marcs i fine art{% else %}Laboratorio fotográfico en Reus | Impresión, marcos y fine art{% endif %}",
+  "description": "{% if lang == 'ca' %}Laboratori fotogràfic i taller d’emmarcació a Reus. Impressió fotogràfica, fine art Hahnemühle, marcs a mida, àlbums i llenços.{% else %}Laboratorio fotográfico y taller de enmarcación en Reus. Impresión fotográfica, fine art Hahnemühle, marcos a medida, álbumes y lienzos.{% endif %}",
+  "inLanguage": "{% if lang == 'ca' %}ca{% else %}es{% endif %}",
+  "about": {
+    "@id": "{{ request.url_root.rstrip('/') }}#business"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "{{ url_for('static', filename='img/hero-portada-2026.webp', _external=True) }}"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "{% if lang == 'ca' %}Serveis principals{% else %}Servicios principales{% endif %}",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}",
+        "url": "{{ url_for('serveis', _external=True) }}#impressio"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{% if lang == 'ca' %}Impressió fine art Hahnemühle{% else %}Impresión fine art Hahnemühle{% endif %}",
+        "url": "{{ url_for('impresion_hahnemuhle', _external=True) }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}",
+        "url": "{{ url_for('marcos_a_medida', _external=True) }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}",
+        "url": "{{ url_for('albumes_fotograficos', _external=True) }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "{% if lang == 'ca' %}Impressió en llenç{% else %}Impresión en lienzo{% endif %}",
+        "url": "{{ url_for('impresion_lienzos', _external=True) }}"
+      }
+    ]
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="hero">
-  <div class="container hero-shell">
-    <div class="hero-copy fade-up">
-      <div class="tag">{% if lang == 'ca' %}Reus · Tarragona · Catalunya{% else %}Reus · Tarragona · Cataluña{% endif %}</div>
-      <h1 class="display">
+<section class="home-hero">
+  <div class="container home-hero-grid">
+    <div class="home-hero-copy fade-up">
+      <div class="tag">{% if lang == 'ca' %}Reus · Camp de Tarragona · Catalunya{% else %}Reus · Camp de Tarragona · Cataluña{% endif %}</div>
+      <h1 class="display">{% if lang == 'ca' %}Laboratori fotogràfic i taller d’emmarcació a Reus{% else %}Laboratorio fotográfico y taller de enmarcación en Reus{% endif %}</h1>
+      <p class="lead">
         {% if lang == 'ca' %}
-          El taller on la fotografia acaba bé: <em>impresa</em>, <em>emmarcada</em> o preparada per lliurar.
+          Impressió fotogràfica, fine art Hahnemühle, marcs a mida, àlbums i llenços per a particulars, fotògrafs i negocis que volen un resultat ben acabat.
         {% else %}
-          El taller donde la fotografía acaba bien: <em>impresa</em>, <em>enmarcada</em> o preparada para entregar.
-        {% endif %}
-      </h1>
-      <p class="lead" style="margin-top:1.15rem">
-        {% if lang == 'ca' %}
-          Som laboratori i taller fotogràfic a Reus. Fem àlbums, marcs a mida, llenços i còpia fotogràfica per a particulars, fotògrafs i negocis que volen un resultat ben acabat.
-        {% else %}
-          Somos laboratorio y taller fotográfico en Reus. Hacemos álbumes, marcos a medida, lienzos y copia fotográfica para particulares, fotógrafos y negocios que quieren un resultado bien acabado.
+          Impresión fotográfica, fine art Hahnemühle, marcos a medida, álbumes y lienzos para particulares, fotógrafos y negocios que quieren un resultado bien resuelto.
         {% endif %}
       </p>
-
-      <div class="hero-actions">
-        <a href="{{ url_for('serveis') }}" class="btn btn-dark">
-          {% if lang == 'ca' %}Veure serveis{% else %}Ver servicios{% endif %}
-        </a>
-        <a href="{{ url_for('contacte') }}" class="btn btn-outline">
-          {% if lang == 'ca' %}Demanar informació{% else %}Pedir información{% endif %}
-        </a>
+      <div class="home-hero-actions">
+        <a href="{{ url_for('contacte') }}" class="btn btn-gold">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
+        <a href="{{ url_for('serveis') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure serveis{% else %}Ver servicios{% endif %}</a>
       </div>
-
-      <div class="hero-notes">
-        <div>
-          <strong>+40</strong>
-          {% if lang == 'ca' %}anys d'ofici{% else %}años de oficio{% endif %}
+      <div class="home-proof-list" aria-label="{% if lang == 'ca' %}Punts de confiança{% else %}Puntos de confianza{% endif %}">
+        <div class="home-proof-item">
+          <strong>01</strong>
+          <span>{% if lang == 'ca' %}Taller propi a Reus{% else %}Taller propio en Reus{% endif %}</span>
         </div>
-        <div>
-          <strong>Reus</strong>
-          {% if lang == 'ca' %}taller propi{% else %}taller propio{% endif %}
+        <div class="home-proof-item">
+          <strong>02</strong>
+          <span>{% if lang == 'ca' %}Més de 40 anys d’ofici{% else %}Más de 40 años de oficio{% endif %}</span>
         </div>
-        <div>
-          <strong>Espanya</strong>
-          {% if lang == 'ca' %}abast comercial{% else %}alcance comercial{% endif %}
+        <div class="home-proof-item">
+          <strong>03</strong>
+          <span>{% if lang == 'ca' %}Atenció per a particulars i professionals{% else %}Atención para particulares y profesionales{% endif %}</span>
         </div>
       </div>
     </div>
 
-    <div class="hero-stage fade-up">
-      <div class="hero-frame" aria-hidden="true"></div>
-      <div class="hero-stage-copy">
-        <div class="hero-badge">
-          {% if lang == 'ca' %}Àlbums · marcs · llenços{% else %}Álbumes · marcos · lienzos{% endif %}
-        </div>
-        <h2 class="display" style="margin-top:1rem;font-size:clamp(2rem, 4vw, 3.4rem)">
-          {% if lang == 'ca' %}Del fitxer a la peça final, sense perdre criteri pel camí.{% else %}Del archivo a la pieza final, sin perder criterio por el camino.{% endif %}
-        </h2>
+    <div class="home-hero-visual fade-up">
+      <div class="home-hero-overlay">
+        <div class="visual-label">{% if lang == 'ca' %}Tracte directe{% else %}Trato directo{% endif %}</div>
+        <h2 class="card-title">{% if lang == 'ca' %}Ofici fotogràfic, producció cuidada i criteri de taller.{% else %}Oficio fotográfico, producción cuidada y criterio de taller.{% endif %}</h2>
         <p>
           {% if lang == 'ca' %}
-            No ens quedem en treure una còpia. Ens importa com quedarà a les mans del client, a la paret o dins d'un àlbum.
+            Si tens clara la feina, preparem pressupost. Si no, t’ajudem a decidir mida, suport, paper, marc o acabat abans de produir.
           {% else %}
-            No nos quedamos en sacar una copia. Nos importa cómo quedará en las manos del cliente, en la pared o dentro de un álbum.
+            Si tienes clara la pieza, preparamos presupuesto. Si no, te ayudamos a decidir tamaño, soporte, papel, marco o acabado antes de producir.
           {% endif %}
         </p>
+        <div class="home-hero-contact">
+          <a href="tel:+34977316111">
+            <div>
+              <strong>{% if lang == 'ca' %}Telèfon{% else %}Teléfono{% endif %}</strong>
+              <span>977 316 111</span>
+            </div>
+            <span>{% if lang == 'ca' %}Contacte directe{% else %}Contacto directo{% endif %}</span>
+          </a>
+          <a href="https://wa.me/34613346180?text={% if lang == 'ca' %}Hola%20Reus%20Revela%2C%20voldria%20demanar%20pressupost.{% else %}Hola%20Reus%20Revela%2C%20quiero%20pedir%20presupuesto.{% endif %}" target="_blank" rel="noopener">
+            <div>
+              <strong>WhatsApp</strong>
+              <span>+34 613 34 61 80</span>
+            </div>
+            <span>{% if lang == 'ca' %}Resposta àgil{% else %}Respuesta ágil{% endif %}</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="split-band">
-  <div class="container split-band-inner">
-    <article class="surface split-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Àlbums per a casaments, comunions, estudis i entregues amb més pes.{% else %}Álbumes para bodas, comuniones, estudios y entregas con más peso.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Perquè un bon reportatge no es perdi en una carpeta: també ha de quedar ben resolt quan s'entrega.{% else %}Porque un buen reportaje no debería quedarse en una carpeta: también tiene que quedar bien resuelto cuando se entrega.{% endif %}</p>
-    </article>
-    <article class="surface split-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida per quan la peça demana una presentació bona de veritat.{% else %}Marcos a medida para cuando la pieza pide una presentación de verdad.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}No es tracta només d'encaixar una mida: es tracta que el marc acompanyi la peça i no li robi protagonisme.{% else %}No se trata solo de encajar una medida: se trata de que el marco acompañe a la pieza y no le robe protagonismo.{% endif %}</p>
-    </article>
-    <article class="surface split-card fade-up">
-      <div class="eyebrow">{% if lang == 'ca' %}Llenços impresos{% else %}Lienzos impresos{% endif %}</div>
-      <h3 class="card-title">{% if lang == 'ca' %}Llenços per portar una imatge a paret amb força i sense complicacions.{% else %}Lienzos para llevar una imagen a pared con fuerza y sin complicaciones.{% endif %}</h3>
-      <p>{% if lang == 'ca' %}Una opció molt clara per a decoració, regal o negoci quan la imatge ha de tenir cos i presència.{% else %}Una opción muy clara para decoración, regalo o negocio cuando la imagen tiene que tener cuerpo y presencia.{% endif %}</p>
-    </article>
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Criteri de taller{% else %}Criterio de taller{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Del fitxer a la peça final, amb criteri de taller{% else %}Del archivo a la pieza final, con criterio de taller{% endif %}</h2>
+      <p>
+        {% if lang == 'ca' %}
+          No només imprimim. T’ajudem a decidir quin acabat encaixa millor amb la peça, l’ús i la manera com s’ha de lliurar o exposar: còpia fotogràfica, fine art, marc a mida, àlbum o llenç.
+        {% else %}
+          No solo imprimimos. Te ayudamos a decidir qué acabado encaja mejor con la pieza, su uso y la manera en que se tiene que entregar o exponer: copia fotográfica, fine art, marco a medida, álbum o lienzo.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="home-value-grid">
+      <article class="home-value-card fade-up">
+        <strong>AR</strong>
+        <h3>{% if lang == 'ca' %}Assessorament real{% else %}Asesoramiento real{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Mirem la peça abans de recomanar un producte.{% else %}Miramos la pieza antes de recomendar un producto.{% endif %}</p>
+      </article>
+      <article class="home-value-card fade-up">
+        <strong>PP</strong>
+        <h3>{% if lang == 'ca' %}Producció pròpia{% else %}Producción propia{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Treball de taller, no solucions genèriques.{% else %}Trabajo de taller, no soluciones genéricas.{% endif %}</p>
+      </article>
+      <article class="home-value-card fade-up">
+        <strong>PF</strong>
+        <h3>{% if lang == 'ca' %}Presentació final{% else %}Presentación final{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Perquè el resultat no perdi valor quan surt de pantalla.{% else %}Para que el resultado no pierda valor cuando sale de pantalla.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Serveis principals{% else %}Servicios principales{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Què podem produir al taller{% else %}Qué podemos producir en el taller{% endif %}</h2>
+      <p>
+        {% if lang == 'ca' %}
+          La home t’obre camí cap als serveis clau del taller: impressió fotogràfica, fine art, marcs a mida, àlbums i llenços.
+        {% else %}
+          La home te lleva a los servicios clave del taller: impresión fotográfica, fine art, marcos a medida, álbumes y lienzos.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="home-services-grid">
+      <article class="home-service-card fade-up">
+        <div class="service-kicker">{% if lang == 'ca' %}Paper fotogràfic{% else %}Papel fotográfico{% endif %}</div>
+        <h3>{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Còpies en paper fotogràfic professional, formats flexibles i acabats segons el tipus de feina.{% else %}Copias en papel fotográfico profesional, formatos flexibles y acabados según el tipo de trabajo.{% endif %}</p>
+        <a href="{{ url_for('serveis') }}#impressio" class="btn btn-outline">{% if lang == 'ca' %}Veure impressió{% else %}Ver impresión{% endif %}</a>
+      </article>
+      <article class="home-service-card fade-up">
+        <div class="service-kicker">Hahnemühle</div>
+        <h3>{% if lang == 'ca' %}Impressió fine art{% else %}Impresión fine art{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Per a obra, exposició, portafoli i còpia d’autor amb més presència de paper i acabat.{% else %}Para obra, exposición, portafolio y copia de autor con más presencia de papel y acabado.{% endif %}</p>
+        <a href="{{ url_for('impresion_hahnemuhle') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure fine art{% else %}Ver fine art{% endif %}</a>
+      </article>
+      <article class="home-service-card fade-up">
+        <div class="service-kicker">{% if lang == 'ca' %}Emmarcació{% else %}Enmarcación{% endif %}</div>
+        <h3>{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Emmarcació per a fotografia, làmina i obra gràfica, resolta segons la peça i l’espai.{% else %}Enmarcación para fotografía, lámina y obra gráfica, resuelta según la pieza y el espacio.{% endif %}</p>
+        <a href="{{ url_for('marcos_a_medida') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure marcs{% else %}Ver marcos{% endif %}</a>
+      </article>
+      <article class="home-service-card fade-up">
+        <div class="service-kicker">{% if lang == 'ca' %}Entrega final{% else %}Entrega final{% endif %}</div>
+        <h3>{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Àlbums per a casaments, sessions, estudis i entregues que han de quedar ben presentades.{% else %}Álbumes para bodas, sesiones, estudios y entregas que tienen que quedar bien presentadas.{% endif %}</p>
+        <a href="{{ url_for('albumes_fotograficos') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure àlbums{% else %}Ver álbumes{% endif %}</a>
+      </article>
+      <article class="home-service-card fade-up">
+        <div class="service-kicker">{% if lang == 'ca' %}Decoració i negoci{% else %}Decoración y negocio{% endif %}</div>
+        <h3>{% if lang == 'ca' %}Impressió en llenç{% else %}Impresión en lienzo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Llenços per a decoració, regal o negoci quan la imatge ha d’anar directament a paret.{% else %}Lienzos para decoración, regalo o negocio cuando la imagen tiene que ir directamente a pared.{% endif %}</p>
+        <a href="{{ url_for('impresion_lienzos') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure llenços{% else %}Ver lienzos{% endif %}</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Feines habituals{% else %}Trabajos habituales{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}No tots els encàrrecs entren pel nom del producte{% else %}No todos los encargos entran por el nombre del producto{% endif %}</h2>
+      <p>
+        {% if lang == 'ca' %}
+          Molta gent sap què vol resoldre, però no sempre sap si això passa per una còpia, un marc, un llenç o un fine art. Aquesta és la mena de feina que ens arriba sovint al taller.
+        {% else %}
+          Mucha gente sabe qué quiere resolver, pero no siempre sabe si eso pasa por una copia, un marco, un lienzo o un fine art. Este es el tipo de trabajo que nos llega a menudo al taller.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="home-cases-grid">
+      <article class="home-case-card fade-up">
+        <strong>{% if lang == 'ca' %}Particulars{% else %}Particulares{% endif %}</strong>
+        <h3>{% if lang == 'ca' %}Fotos per casa, record o regal{% else %}Fotos para casa, recuerdo o regalo{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Quan la imatge ha d’acabar emmarcada, en llenç o en còpia fotogràfica amb una presència més cuidada que una impressió estàndard.{% else %}Cuando la imagen tiene que acabar enmarcada, en lienzo o en copia fotográfica con una presencia más cuidada que una impresión estándar.{% endif %}</p>
+      </article>
+      <article class="home-case-card fade-up">
+        <strong>{% if lang == 'ca' %}Fotografia professional{% else %}Fotografía profesional{% endif %}</strong>
+        <h3>{% if lang == 'ca' %}Entrega per a client, estudi o reportatge{% else %}Entrega para cliente, estudio o reportaje{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Àlbums, còpies, muntatges i acabats per a fotògrafs i estudis que necessiten una producció repetible i una entrega solvent.{% else %}Álbumes, copias, montajes y acabados para fotógrafos y estudios que necesitan una producción repetible y una entrega solvente.{% endif %}</p>
+      </article>
+      <article class="home-case-card fade-up">
+        <strong>{% if lang == 'ca' %}Obra i negoci{% else %}Obra y negocio{% endif %}</strong>
+        <h3>{% if lang == 'ca' %}Exposició, paret o espai comercial{% else %}Exposición, pared o espacio comercial{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Fine art Hahnemühle, emmarcació i peces decoratives per a galeries, oficines, botigues, hostaleria o presentació d’obra.{% else %}Fine art Hahnemühle, enmarcación y piezas decorativas para galerías, oficinas, tiendas, hostelería o presentación de obra.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Per a qui treballem{% else %}Para quién trabajamos{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Servei de taller per a clients finals i per a professionals{% else %}Servicio de taller para clientes finales y para profesionales{% endif %}</h2>
+    </div>
+
+    <div class="home-audience-grid">
+      <article class="home-audience-card fade-up">
+        <h3>{% if lang == 'ca' %}Particulars{% else %}Particulares{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Fotos per emmarcar, records familiars, regals, llenços, àlbums i peces per a casa.{% else %}Fotos para enmarcar, recuerdos familiares, regalos, lienzos, álbumes y piezas para casa.{% endif %}</p>
+        <a href="{{ url_for('contacte') }}" class="btn btn-gold">{% if lang == 'ca' %}Parlar del teu projecte{% else %}Hablar de tu proyecto{% endif %}</a>
+      </article>
+      <article class="home-audience-card fade-up">
+        <h3>{% if lang == 'ca' %}Professionals{% else %}Profesionales{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Fotògrafs, estudis, galeries, associacions i negocis que necessiten una producció cuidada, repetible i amb bon criteri d’acabat.{% else %}Fotógrafos, estudios, galerías, asociaciones y negocios que necesitan una producción cuidada, repetible y con buen criterio de acabado.{% endif %}</p>
+        <div class="home-pro-note">
+          {% if lang == 'ca' %}
+            Si ja treballes amb volum o necessites pressupostar amb més agilitat, tens l’àrea professional com a accés específic.
+          {% else %}
+            Si ya trabajas con volumen o necesitas presupuestar con más agilidad, tienes el área profesional como acceso específico.
+          {% endif %}
+        </div>
+        <a href="{{ url_for('professionals') }}" class="btn btn-outline">{% if lang == 'ca' %}Veure àrea professional{% else %}Ver área profesional{% endif %}</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-local-grid">
+      <div class="home-local-panel fade-up">
+        <div class="tag">{% if lang == 'ca' %}SEO local{% else %}SEO local{% endif %}</div>
+        <h2 class="display">{% if lang == 'ca' %}Taller fotogràfic a Reus, amb servei habitual a Tarragona{% else %}Taller fotográfico en Reus, con servicio habitual en Tarragona{% endif %}</h2>
+        <p>
+          {% if lang == 'ca' %}
+            Som a Reus i treballem sobretot per a clients del Camp de Tarragona que busquen impressió fotogràfica, marcs a mida i producció fine art amb tracte directe. També podem atendre projectes d’altres punts de Catalunya quan el tipus de feina encaixa amb el nostre taller.
+          {% else %}
+            Estamos en Reus y trabajamos sobre todo para clientes del Camp de Tarragona que buscan impresión fotográfica, marcos a medida y producción fine art con trato directo. También podemos atender proyectos de otros puntos de Cataluña cuando el tipo de trabajo encaja con nuestro taller.
+          {% endif %}
+        </p>
+        <ul class="home-local-list">
+          <li>{% if lang == 'ca' %}Atenció directa des del taller{% else %}Atención directa desde el taller{% endif %}</li>
+          <li>{% if lang == 'ca' %}Pressupostos segons tipus de peça{% else %}Presupuestos según tipo de pieza{% endif %}</li>
+          <li>{% if lang == 'ca' %}Recollida o coordinació del lliurament{% else %}Recogida o coordinación de la entrega{% endif %}</li>
+        </ul>
+      </div>
+
+      <ul class="home-local-support fade-up">
+        <li>{% if lang == 'ca' %}Laboratori fotogràfic professional a Reus{% else %}Laboratorio fotográfico profesional en Reus{% endif %}</li>
+        <li>{% if lang == 'ca' %}Impressió fotogràfica i fine art Hahnemühle{% else %}Impresión fotográfica y fine art Hahnemühle{% endif %}</li>
+        <li>{% if lang == 'ca' %}Marcs a mida i acabat final amb criteri{% else %}Marcos a medida y acabado final con criterio{% endif %}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Procés{% else %}Proceso{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Com treballem{% else %}Cómo trabajamos{% endif %}</h2>
+    </div>
+
+    <div class="home-process-grid">
+      <article class="home-step fade-up">
+        <strong>1</strong>
+        <h3>{% if lang == 'ca' %}Ens expliques què necessites{% else %}Nos explicas qué necesitas{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Ens dones context, ús, mida o idea general de la peça.{% else %}Nos das contexto, uso, medida o idea general de la pieza.{% endif %}</p>
+      </article>
+      <article class="home-step fade-up">
+        <strong>2</strong>
+        <h3>{% if lang == 'ca' %}Valorem peça, ús i acabat{% else %}Valoramos pieza, uso y acabado{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Aterrem el suport i l’acabat segons el resultat que busques.{% else %}Aterrizamos el soporte y el acabado según el resultado que buscas.{% endif %}</p>
+      </article>
+      <article class="home-step fade-up">
+        <strong>3</strong>
+        <h3>{% if lang == 'ca' %}Preparem pressupost i producció{% else %}Preparamos presupuesto y producción{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Quan està clar, activem pressupost i passem a taller.{% else %}Cuando está claro, activamos presupuesto y pasamos a taller.{% endif %}</p>
+      </article>
+      <article class="home-step fade-up">
+        <strong>4</strong>
+        <h3>{% if lang == 'ca' %}Lliurem la feina ben resolta{% else %}Entregamos el trabajo bien resuelto{% endif %}</h3>
+        <p>{% if lang == 'ca' %}La peça surt preparada per penjar, entregar o exposar.{% else %}La pieza sale preparada para colgar, entregar o exponer.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">{% if lang == 'ca' %}Confiança{% else %}Confianza{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Per què treballar amb Reus Revela{% else %}Por qué trabajar con Reus Revela{% endif %}</h2>
+    </div>
+
+    <div class="home-trust-grid">
+      <article class="home-trust-item fade-up">
+        <strong>{% if lang == 'ca' %}Des de 1985{% else %}Desde 1985{% endif %}</strong>
+        <p>{% if lang == 'ca' %}Laboratori fotogràfic i taller d’emmarcació des de 1985.{% else %}Laboratorio fotográfico y taller de enmarcación desde 1985.{% endif %}</p>
+      </article>
+      <article class="home-trust-item fade-up">
+        <strong>{% if lang == 'ca' %}Ofici{% else %}Oficio{% endif %}</strong>
+        <p>{% if lang == 'ca' %}Tracte directe i criteri de taller en cada pressupost.{% else %}Trato directo y criterio de taller en cada presupuesto.{% endif %}</p>
+      </article>
+      <article class="home-trust-item fade-up">
+        <strong>{% if lang == 'ca' %}Producció{% else %}Producción{% endif %}</strong>
+        <p>{% if lang == 'ca' %}Feina per a particulars, fotògrafs i negocis amb necessitat real d’acabat.{% else %}Trabajo para particulares, fotógrafos y negocios con necesidad real de acabado.{% endif %}</p>
+      </article>
+      <article class="home-trust-item fade-up">
+        <strong>{% if lang == 'ca' %}Servei local{% else %}Servicio local{% endif %}</strong>
+        <p>{% if lang == 'ca' %}Servei local des de Reus per al Camp de Tarragona i Catalunya.{% else %}Servicio local desde Reus para el Camp de Tarragona y Cataluña.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="home-section-head fade-up">
+      <div class="tag">FAQ</div>
+      <h2 class="display">{% if lang == 'ca' %}Preguntes habituals{% else %}Preguntas habituales{% endif %}</h2>
+    </div>
+
+    <div class="home-faq-grid">
+      <article class="home-faq-item fade-up">
+        <h3>{% if lang == 'ca' %}Quin tipus d’impressió fotogràfica feu?{% else %}¿Qué tipo de impresión fotográfica hacéis?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Treballem còpia fotogràfica professional en diferents formats i acabats, segons si la peça és per regalar, exposar, emmarcar o entregar a client.{% else %}Trabajamos copia fotográfica profesional en distintos formatos y acabados, según si la pieza es para regalar, exponer, enmarcar o entregar a cliente.{% endif %}</p>
+      </article>
+      <article class="home-faq-item fade-up">
+        <h3>{% if lang == 'ca' %}També feu marcs a mida per a obra i làmina?{% else %}¿También hacéis marcos a medida para obra y lámina?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Sí. Emmarquem fotografia, làmina i obra gràfica, ajustant marc, protecció i presentació segons la peça i l’espai on anirà.{% else %}Sí. Enmarcamos fotografía, lámina y obra gráfica, ajustando marco, protección y presentación según la pieza y el espacio donde irá.{% endif %}</p>
+      </article>
+      <article class="home-faq-item fade-up">
+        <h3>{% if lang == 'ca' %}Podeu preparar còpies fine art per a exposicions?{% else %}¿Podéis preparar copias fine art para exposiciones?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Sí. Produïm impressió fine art Hahnemühle per a obra, portafoli i exposició quan el projecte demana més presència de paper i acabat.{% else %}Sí. Producimos impresión fine art Hahnemühle para obra, portafolio y exposición cuando el proyecto pide más presencia de papel y acabado.{% endif %}</p>
+      </article>
+      <article class="home-faq-item fade-up">
+        <h3>{% if lang == 'ca' %}Treballeu només a Reus?{% else %}¿Trabajáis solo en Reus?{% endif %}</h3>
+        <p>{% if lang == 'ca' %}Som a Reus i és on fem el tracte més directe, però també treballem habitualment amb clients de Tarragona i d’altres punts de Catalunya.{% else %}Estamos en Reus y es donde hacemos el trato más directo, pero también trabajamos habitualmente con clientes de Tarragona y de otros puntos de Cataluña.{% endif %}</p>
+      </article>
+    </div>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="fade-up">
-      <div class="tag">{% if lang == 'ca' %}Serveis principals{% else %}Servicios principales{% endif %}</div>
-      <h2 class="display" style="max-width:12ch">
-        {% if lang == 'ca' %}Tot el que fem perquè una fotografia quedi ben acabada.{% else %}Todo lo que hacemos para que una fotografía quede bien acabada.{% endif %}
-      </h2>
-    </div>
-
-    <div class="services-showcase">
-      <article class="service-block fade-up">
-        <div>
-          <div class="service-index">01</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Àlbums fotogràfics{% else %}Álbumes fotográficos{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Àlbums per a casaments, sessions, estudis i entregues que han de quedar ben presentades.{% else %}Álbumes para bodas, sesiones, estudios y entregas que tienen que quedar bien presentadas.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('albumes_fotograficos') }}">{% if lang == 'ca' %}Veure pàgina{% else %}Ver página{% endif %}</a>
-      </article>
-
-      <article class="service-block fade-up">
-        <div>
-          <div class="service-index">02</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Marcs a mida{% else %}Marcos a medida{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Marcs per a fotografia, làmina i obra gràfica, resolts segons la peça i l'espai on aniran.{% else %}Marcos para fotografía, lámina y obra gráfica, resueltos según la pieza y el espacio donde irán.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('marcos_a_medida') }}">{% if lang == 'ca' %}Explorar servei{% else %}Explorar servicio{% endif %}</a>
-      </article>
-
-      <article class="service-block fade-up">
-        <div>
-          <div class="service-index">03</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Impressió de llenços{% else %}Impresión de lienzos{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Llenços per a paret, regals i espais comercials que demanen una imatge amb presència.{% else %}Lienzos para pared, regalos y espacios comerciales que piden una imagen con presencia.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('impresion_lienzos') }}">{% if lang == 'ca' %}Saber-ne més{% else %}Saber más{% endif %}</a>
-      </article>
-
-      <article class="service-block fade-up">
-        <div>
-          <div class="service-index">04</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Impressió fotogràfica{% else %}Impresión fotográfica{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Còpies en paper fotogràfic amb qualitat alta, bona definició i acabat adequat per a cada tipus de feina.{% else %}Copias en papel fotográfico con calidad alta, buena definición y acabado adecuado para cada tipo de trabajo.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('serveis') }}#impressio">{% if lang == 'ca' %}Veure detall{% else %}Ver detalle{% endif %}</a>
-      </article>
-
-      <article class="service-block fade-up">
-        <div>
-          <div class="service-index">05</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Impressió Hahnemühle{% else %}Impresión Hahnemühle{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Fine art per a obra, exposició i còpia d'autor quan el paper també importa.{% else %}Fine art para obra, exposición y copia de autor cuando el papel también importa.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('impresion_hahnemuhle') }}">{% if lang == 'ca' %}Veure servei{% else %}Ver servicio{% endif %}</a>
-      </article>
-
-      <article class="service-block fade-up" style="background:linear-gradient(180deg, rgba(166,120,67,.12), rgba(255,255,255,.8));border-color:rgba(166,120,67,.22)">
-        <div>
-          <div class="service-index">06</div>
-          <h3 class="card-title">{% if lang == 'ca' %}Àrea professional{% else %}Área profesional{% endif %}</h3>
-          <p>{% if lang == 'ca' %}Accés a tarifes, productes i comandes per a qui treballa sovint amb el taller.{% else %}Acceso a tarifas, productos y pedidos para quien trabaja a menudo con el taller.{% endif %}</p>
-        </div>
-        <a class="service-link" href="{{ url_for('calculadora') }}">{% if lang == 'ca' %}Accedir{% else %}Acceder{% endif %}</a>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section-tight">
-  <div class="container proof-grid">
-    <article class="panel proof-panel fade-up">
-      <div class="tag">{% if lang == 'ca' %}Com treballem{% else %}Cómo trabajamos{% endif %}</div>
-      <h2 class="display">{% if lang == 'ca' %}Som a Reus i treballem amb tracte directe, tant si vens de prop com si el projecte arriba de fora.{% else %}Estamos en Reus y trabajamos con trato directo, tanto si vienes de cerca como si el proyecto llega desde fuera.{% endif %}</h2>
-      <p class="lead" style="margin-top:1rem">
+    <div class="home-final-cta fade-up">
+      <div class="tag" style="background:rgba(255,255,255,.12);color:#fff">{% if lang == 'ca' %}Parlem del teu projecte{% else %}Hablemos de tu proyecto{% endif %}</div>
+      <h2 class="display" style="font-size:clamp(2.3rem, 5vw, 4.1rem);margin-top:1rem">{% if lang == 'ca' %}Tens clar el que necessites o vols que t’orientem?{% else %}¿Tienes claro lo que necesitas o quieres que te orientemos?{% endif %}</h2>
+      <p>
         {% if lang == 'ca' %}
-          Ens és fàcil treballar de prop a Reus i Tarragona, però també atenem encàrrecs d'altres zones quan el tipus de feina encaixa amb el que fem al taller.
+          Explica’ns si busques impressió fotogràfica, un marc a mida, una còpia fine art, un àlbum o un llenç, i t’ajudarem a enfocar la millor opció.
         {% else %}
-          Nos resulta fácil trabajar de cerca en Reus y Tarragona, pero también atendemos encargos de otras zonas cuando el tipo de trabajo encaja con lo que hacemos en el taller.
+          Cuéntanos si buscas impresión fotográfica, un marco a medida, una copia fine art, un álbum o un lienzo, y te ayudaremos a enfocar la mejor opción.
         {% endif %}
       </p>
-      <div class="proof-metrics">
-        <div class="metric">
-          <strong>Reus</strong>
-          <span>{% if lang == 'ca' %}taller i atenció directa{% else %}taller y atención directa{% endif %}</span>
-        </div>
-        <div class="metric">
-          <strong>Tarragona</strong>
-          <span>{% if lang == 'ca' %}àmbit natural de captació{% else %}ámbito natural de captación{% endif %}</span>
-        </div>
-        <div class="metric">
-          <strong>Espanya</strong>
-          <span>{% if lang == 'ca' %}abast comercial ampliat{% else %}alcance comercial ampliado{% endif %}</span>
-        </div>
+      <div class="home-final-actions">
+        <a href="{{ url_for('contacte') }}" class="btn btn-gold">{% if lang == 'ca' %}Demanar pressupost{% else %}Pedir presupuesto{% endif %}</a>
+        <a href="https://wa.me/34613346180?text={% if lang == 'ca' %}Hola%20Reus%20Revela%2C%20necessito%20orientaci%C3%B3%20o%20pressupost.{% else %}Hola%20Reus%20Revela%2C%20necesito%20orientaci%C3%B3n%20o%20presupuesto.{% endif %}" target="_blank" rel="noopener" class="btn btn-outline">{% if lang == 'ca' %}Escriure per WhatsApp{% else %}Escribir por WhatsApp{% endif %}</a>
       </div>
-    </article>
-
-    <ul class="surface proof-list fade-up">
-      <li>
-        <strong>{% if lang == 'ca' %}Tracte de taller{% else %}Trato de taller{% endif %}</strong>
-        <span>{% if lang == 'ca' %}Ens agrada resoldre cada feina segons la peça, no empènyer tothom cap al mateix producte.{% else %}Nos gusta resolver cada trabajo según la pieza, no empujar a todo el mundo hacia el mismo producto.{% endif %}</span>
-      </li>
-      <li>
-        <strong>{% if lang == 'ca' %}Criteri abans que soroll{% else %}Criterio antes que ruido{% endif %}</strong>
-        <span>{% if lang == 'ca' %}Si una imatge demana un àlbum, un marc o una còpia fine art, volem poder dir-ho clarament i fer-ho bé.{% else %}Si una imagen pide un álbum, un marco o una copia fine art, queremos poder decirlo claramente y hacerlo bien.{% endif %}</span>
-      </li>
-      <li>
-        <strong>{% if lang == 'ca' %}Ofici i continuïtat{% else %}Oficio y continuidad{% endif %}</strong>
-        <span>{% if lang == 'ca' %}Venim de laboratori fotogràfic i continuem treballant amb aquesta mirada de detall, material i acabat final.{% else %}Venimos de laboratorio fotográfico y seguimos trabajando con esa mirada de detalle, material y acabado final.{% endif %}</span>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<section class="cta-section">
-  <div class="container">
-    <div class="cta-shell fade-up">
-      <div>
-        <div class="tag" style="background:rgba(255,255,255,.12);color:#f3d8b7">{% if lang == 'ca' %}Projectes i pressupostos{% else %}Proyectos y presupuestos{% endif %}</div>
-        <h2 class="display">{% if lang == 'ca' %}Si ja saps què necessites, anem directes al pressupost.{% else %}Si ya sabes lo que necesitas, vamos directos al presupuesto.{% endif %}</h2>
-        <p>
-          {% if lang == 'ca' %}
-            Explica'ns si busques un àlbum fotogràfic, un marc a mida, una impressió de llenç o una producció combinada. T'ajudarem a enfocar la millor opció.
-          {% else %}
-            Cuéntanos si buscas un álbum fotográfico, un marco a medida, una impresión en lienzo o una producción combinada. Te ayudaremos a enfocar la mejor opción.
-          {% endif %}
-        </p>
-      </div>
-      <a href="{{ url_for('contacte') }}" class="btn btn-gold">
-        {% if lang == 'ca' %}Contactar ara{% else %}Contactar ahora{% endif %}
-      </a>
     </div>
   </div>
 </section>
