@@ -5,20 +5,31 @@
 {% block head %}
 <style>
   .pro-hero{
-    padding:3rem 0 2rem;
+    padding:1rem 0 .45rem;
   }
   .pro-shell{
     display:grid;
-    grid-template-columns:1.05fr .95fr;
-    gap:2rem;
-    align-items:stretch;
+    grid-template-columns:1.08fr .92fr;
+    gap:1.35rem;
+    align-items:start;
   }
   .pro-copy{
-    padding:2rem 0;
+    padding:.35rem 0;
+  }
+  .pro-copy h1.display{
+    font-size:clamp(1.42rem, 2.15vw, 1.95rem);
+    line-height:1.02;
+    max-width:16ch;
+  }
+  .pro-copy .lead{
+    margin-top:.38rem !important;
+    font-size:.84rem;
+    line-height:1.28;
+    max-width:52ch;
   }
   .pro-stage{
-    min-height:540px;
-    padding:2rem;
+    min-height:300px;
+    padding:.9rem;
     border-radius:30px;
     color:#fff;
     background:
@@ -29,40 +40,50 @@
     flex-direction:column;
     justify-content:space-between;
   }
+  .pro-stage h2.display{
+    font-size:clamp(1.05rem, 1.7vw, 1.45rem) !important;
+    line-height:1.08;
+  }
   .pro-highlights{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:1rem;
-    margin-top:2rem;
+    gap:.8rem;
+    margin-top:1.25rem;
   }
   .highlight{
-    padding:1.2rem;
+    padding:.85rem;
     border-radius:22px;
     background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.12);
   }
   .highlight h3{
     font-family:var(--serif);
-    font-size:1.45rem;
+    font-size:1.05rem;
     font-weight:600;
   }
   .highlight p{
     margin-top:.45rem;
     color:rgba(255,255,255,.7);
-    font-size:.95rem;
+    font-size:.8rem;
   }
   .access-grid{
     display:grid;
     grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:1rem;
-    margin-top:2.25rem;
+    gap:.85rem;
+    margin-top:.65rem;
   }
   .access-card{
-    padding:2rem;
+    padding:.75rem;
+  }
+  .access-card .card-title{
+    font-size:.94rem;
+    line-height:1.1;
   }
   .access-card p{
     color:var(--muted);
-    margin:1rem 0 1.5rem;
+    margin:.35rem 0 .55rem;
+    font-size:.78rem;
+    line-height:1.22;
   }
   .profiles{
     display:grid;
@@ -114,6 +135,9 @@
     .steps,
     .pro-highlights{
       grid-template-columns:1fr;
+    }
+    .pro-stage{
+      min-height:auto;
     }
   }
 </style>
