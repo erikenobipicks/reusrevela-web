@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import secrets
 import smtplib
 from datetime import datetime, timedelta
@@ -976,6 +977,53 @@ def request_calc_margin_sync(username, settings=None):
         return {"attempted": True, "ok": False, "detail": str(exc)}
 
 
+def fetch_calc_pricing():
+    """Obté les tarifes professionals de la calculadora.
+    Retorna un dict amb claus impressio, laminate_only, encolat_pro,
+    o None si no es pot connectar.
+    """
+    if not CALC_BRIDGE_TOKEN or not CALC_URL:
+        return None
+    req = urllib_request.Request(
+        f"{CALC_URL.rstrip('/')}/api/public/pricing",
+        headers={"X-Bridge-Token": CALC_BRIDGE_TOKEN},
+        method="GET",
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=4) as resp:
+            data = json.loads(resp.read().decode("utf-8") or "{}")
+            return data if isinstance(data, dict) and data.get("ok") else None
+    except Exception:
+        return None
+
+
+def _parse_ref_dims(ref):
+    """Extreu (ample, alt) d'una referència tipus '20x30' o 'ENC30x40'."""
+    m = re.search(r'(\d+)[xX](\d+)', ref or '')
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    return None, None
+
+
+def _find_closest_impressio(impressio_list, width, height):
+    """Troba el preu més baix de la taula impressio que cobreixi
+    les dimensions sol·licitades (en qualsevol orientació).
+    Si cap mida cobreix, retorna la més gran disponible.
+    """
+    candidates = []
+    for item in impressio_list:
+        rw, rh = _parse_ref_dims(item.get('ref', ''))
+        if rw is None:
+            continue
+        if (rw >= width and rh >= height) or (rw >= height and rh >= width):
+            candidates.append(item)
+    if candidates:
+        return min(candidates, key=lambda x: float(x.get('preu', 0)))
+    if impressio_list:
+        return max(impressio_list, key=lambda x: float(x.get('preu', 0)))
+    return None
+
+
 def build_calc_request_url(service=None):
     calc_service = get_calc_service(service)
     params = {
@@ -1404,10 +1452,24 @@ def build_prints_module_context():
     selected_width = parse_non_negative_float(request.args.get("width"), default=30.0)
     selected_height = parse_non_negative_float(request.args.get("height"), default=40.0)
     selected_quantity = parse_positive_int(request.args.get("qty"), default=1)
-    selected_cost = parse_non_negative_float(request.args.get("cost"), default=0.0)
     selected_margin_percent = parse_non_negative_float(request.args.get("margin"), default=default_margin_percent)
     selected_view = (request.args.get("view") or "client").strip().lower()
     selected_view = selected_view if selected_view in {"cost", "client"} else "client"
+
+    # Preu automàtic des de la calculadora
+    cost_explicit = request.args.get("cost")
+    pricing_data = fetch_calc_pricing()
+    impressio_list = pricing_data.get("impressio", []) if pricing_data else []
+    matched_print = _find_closest_impressio(impressio_list, selected_width, selected_height)
+    auto_cost = float(matched_print["preu"]) if matched_print else 0.0
+    auto_ref = matched_print["ref"] if matched_print else ""
+
+    if cost_explicit is not None:
+        selected_cost = parse_non_negative_float(cost_explicit, default=auto_cost)
+        cost_is_auto = False
+    else:
+        selected_cost = auto_cost
+        cost_is_auto = True
 
     paper_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["papers"]}
     build_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["build_options"]}
@@ -1462,10 +1524,9 @@ def build_prints_module_context():
             "client_subtotal": client_subtotal,
             "client_vat": client_vat,
             "client_total": client_total,
-            "manual_pricing_note": {
-                "ca": "De moment, el cost professional es posa manualment fins que hi connectem la tarifa real.",
-                "es": "De momento, el coste profesional se introduce manualmente hasta conectar la tarifa real.",
-            }[lang],
+            "cost_is_auto": cost_is_auto,
+            "auto_ref": auto_ref,
+            "pricing_connected": bool(impressio_list),
             "add_to_order_url": url_for(
                 "area_privada_comanda",
                 lang=lang,
