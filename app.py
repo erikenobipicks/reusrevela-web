@@ -1375,6 +1375,10 @@ def get_default_margin_for_product(product_key, profile_id="default"):
 def build_pricing_view_context():
     lang = get_lang()
     settings = get_private_commercial_settings()
+    pricing_data = fetch_calc_pricing()
+    impressio_list  = pricing_data.get("impressio", [])    if pricing_data else []
+    laminate_list   = pricing_data.get("laminate_only", []) if pricing_data else []
+    encolat_list    = pricing_data.get("encolat_pro", [])   if pricing_data else []
     return {
         "pricing_view": {
             "margins": settings,
@@ -1386,6 +1390,11 @@ def build_pricing_view_context():
                 "ca": "La vista cost mostra la tarifa base per al fotògraf, abans d'aplicar el marge comercial.",
                 "es": "La vista coste muestra la tarifa base para el fotógrafo, antes de aplicar el margen comercial.",
             }[lang],
+            "pricing_connected": bool(impressio_list),
+            "impressio": impressio_list,
+            "laminate_only": laminate_list,
+            "encolat_pro": [r for r in encolat_list if r.get("tipus") == "encolat"],
+            "protter":     [r for r in encolat_list if r.get("tipus") == "protter"],
         }
     }
 

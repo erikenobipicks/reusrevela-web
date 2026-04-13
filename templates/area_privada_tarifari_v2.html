@@ -327,6 +327,90 @@
   </div>
 </section>
 
+{% if pricing_view.pricing_connected %}
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Impressions fotogràfiques{% else %}Impresiones fotográficas{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Còpies Lustre i Silk per mida.{% else %}Copias Lustre y Silk por medida.{% endif %}</h2>
+    </div>
+
+    <div class="surface filter-shell fade-up">
+      <div class="eyebrow">{% if lang == 'ca' %}Filtres{% else %}Filtros{% endif %}</div>
+      <div class="filter-toolbar">
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Vista{% else %}Vista{% endif %}</span>
+          <div class="view-toggle">
+            <button type="button" class="view-button imp-view-btn is-active" data-view-mode="cost">{% if lang == 'ca' %}Cost taller{% else %}Coste taller{% endif %}</button>
+            <button type="button" class="view-button imp-view-btn" data-view-mode="pvp">{% if lang == 'ca' %}PVP client final amb IVA{% else %}PVP cliente final con IVA{% endif %}</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">{% if lang == 'ca' %}Marge actiu{% else %}Margen activo{% endif %}</span>
+          <strong>{{ '%.2f'|format(pricing_view.margins.prints)|replace('.', ',') }} %</strong>
+          <a href="{{ url_for('area_privada_ajustos') }}" class="btn btn-outline">{% if lang == 'ca' %}Obrir ajustos{% else %}Abrir ajustes{% endif %}</a>
+        </div>
+      </div>
+      <div class="pricing-note">{{ pricing_view.margin_note }}</div>
+    </div>
+
+    <div class="size-grid" id="imp-size-grid">
+      {% for item in pricing_view.impressio %}
+      <article class="surface size-card fade-up" data-base-price="{{ item.preu }}">
+        <div class="eyebrow">{% if lang == 'ca' %}Impressió{% else %}Impresión{% endif %}</div>
+        <h3 class="card-title">{{ item.ref }}</h3>
+        {% if item.descripcio %}<p>{{ item.descripcio }}</p>{% endif %}
+        <span class="size-price" data-imp-price-output>{{ "%.2f"|format(item.preu)|replace(".", ",") }} € + IVA</span>
+        <span class="size-price-note" data-imp-price-note>{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}</span>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if pricing_view.laminate_only %}
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Laminat{% else %}Laminado{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Laminat sol per mida.{% else %}Laminado solo por medida.{% endif %}</h2>
+    </div>
+    <div class="size-grid">
+      {% for item in pricing_view.laminate_only %}
+      <article class="surface size-card fade-up" data-base-price="{{ item.preu }}">
+        <div class="eyebrow">{% if lang == 'ca' %}Laminat{% else %}Laminado{% endif %}</div>
+        <h3 class="card-title">{{ item.ref }}</h3>
+        <span class="size-price" data-lam-price-output>{{ "%.2f"|format(item.preu)|replace(".", ",") }} € + IVA</span>
+        <span class="size-price-note" data-lam-price-note>{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}</span>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if pricing_view.protter %}
+<section class="section-tight">
+  <div class="container">
+    <div class="fade-up">
+      <div class="tag">{% if lang == 'ca' %}Protter{% else %}Protter{% endif %}</div>
+      <h2 class="display">{% if lang == 'ca' %}Laminat Protter al buit per mida.{% else %}Laminado Protter al vacío por medida.{% endif %}</h2>
+    </div>
+    <div class="size-grid">
+      {% for item in pricing_view.protter %}
+      <article class="surface size-card fade-up" data-base-price="{{ item.preu }}">
+        <div class="eyebrow">Protter</div>
+        <h3 class="card-title">{{ item.mida }}</h3>
+        <span class="size-price" data-pro-price-output>{{ "%.2f"|format(item.preu)|replace(".", ",") }} € + IVA</span>
+        <span class="size-price-note" data-pro-price-note>{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}</span>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endif %}
+
 <section class="section-tight">
   <div class="container benefit-grid">
     <article class="surface benefit-card fade-up">
@@ -452,5 +536,66 @@
 
   applyFilters();
   updatePriceView();
+
+  // Impressions / laminat / protter toggle
+  const impMarginPercent = Number({{ pricing_view.margins.prints|tojson }});
+  const impViewButtons = Array.from(document.querySelectorAll(".imp-view-btn"));
+  let impViewMode = "cost";
+
+  const updateImpPriceView = () => {
+    // Impressions
+    document.querySelectorAll("#imp-size-grid .size-card").forEach((card) => {
+      const base = Number(card.dataset.basePrice || 0);
+      const out  = card.querySelector("[data-imp-price-output]");
+      const note = card.querySelector("[data-imp-price-note]");
+      if (!out || !note) return;
+      if (impViewMode === "pvp") {
+        const total = base * (1 + impMarginPercent / 100) * (1 + VAT_RATE);
+        out.textContent  = `${formatCurrency(total)} {% if lang == 'ca' %}PVP final{% else %}PVP final{% endif %}`;
+        note.textContent = `{{ pricing_view.margin_note }}`;
+      } else {
+        out.textContent  = `${formatCurrency(base)} + IVA`;
+        note.textContent = `{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}`;
+      }
+    });
+    // Laminat
+    document.querySelectorAll("[data-lam-price-output]").forEach((out) => {
+      const card = out.closest(".size-card");
+      const note = card ? card.querySelector("[data-lam-price-note]") : null;
+      const base = Number(card ? card.dataset.basePrice : 0);
+      if (impViewMode === "pvp") {
+        const total = base * (1 + impMarginPercent / 100) * (1 + VAT_RATE);
+        out.textContent = `${formatCurrency(total)} {% if lang == 'ca' %}PVP final{% else %}PVP final{% endif %}`;
+        if (note) note.textContent = `{{ pricing_view.margin_note }}`;
+      } else {
+        out.textContent = `${formatCurrency(base)} + IVA`;
+        if (note) note.textContent = `{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}`;
+      }
+    });
+    // Protter
+    document.querySelectorAll("[data-pro-price-output]").forEach((out) => {
+      const card = out.closest(".size-card");
+      const note = card ? card.querySelector("[data-pro-price-note]") : null;
+      const base = Number(card ? card.dataset.basePrice : 0);
+      if (impViewMode === "pvp") {
+        const total = base * (1 + impMarginPercent / 100) * (1 + VAT_RATE);
+        out.textContent = `${formatCurrency(total)} {% if lang == 'ca' %}PVP final{% else %}PVP final{% endif %}`;
+        if (note) note.textContent = `{{ pricing_view.margin_note }}`;
+      } else {
+        out.textContent = `${formatCurrency(base)} + IVA`;
+        if (note) note.textContent = `{% if lang == 'ca' %}Cost taller per al fotògraf.{% else %}Coste taller para el fotógrafo.{% endif %}`;
+      }
+    });
+  };
+
+  impViewButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      impViewMode = btn.dataset.viewMode || "cost";
+      impViewButtons.forEach((b) => b.classList.toggle("is-active", b === btn));
+      updateImpPriceView();
+    });
+  });
+
+  updateImpPriceView();
 </script>
 {% endblock %}
