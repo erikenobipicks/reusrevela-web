@@ -178,24 +178,19 @@
 
           <div class="inline-grid">
             <div>
-              {% if prints_module.pricing_connected %}
-                <span class="field-label">{% if lang == 'ca' %}Cost professional / unitat (€){% else %}Coste profesional / unidad (€){% endif %}</span>
-                {% if prints_module.cost_is_auto %}
-                  <div style="display:flex;align-items:center;gap:.6rem;min-height:50px;padding:.9rem 1rem;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.78)">
-                    <span style="font-weight:700">{{ '%.2f'|format(prints_module.selected_cost) }} €</span>
-                    <span style="color:var(--muted);font-size:.82rem">{{ prints_module.auto_ref }}</span>
-                    <input type="hidden" name="cost" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
-                  </div>
-                  <a href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view) }}" style="font-size:.8rem;color:var(--muted);display:block;margin-top:.35rem">{% if lang == 'ca' %}Ajustar manualment{% else %}Ajustar manualmente{% endif %}</a>
-                {% else %}
-                  <input type="number" name="cost" min="0" step="0.01" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
+              <span class="field-label">{% if lang == 'ca' %}Cost professional / unitat (€){% else %}Coste profesional / unidad (€){% endif %}</span>
+              {% if prints_module.can_auto and prints_module.cost_is_auto %}
+                <div style="display:flex;align-items:center;gap:.6rem;min-height:50px;padding:.9rem 1rem;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.78)">
+                  <span style="font-weight:700">{{ '%.2f'|format(prints_module.selected_cost) }} €</span>
+                  {% if prints_module.auto_ref %}<span style="color:var(--muted);font-size:.82rem">{{ prints_module.auto_ref }}</span>{% endif %}
+                  <input type="hidden" name="cost" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
+                </div>
+                <a href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, cost='%.2f'|format(prints_module.selected_cost), margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view) }}" style="font-size:.8rem;color:var(--muted);display:block;margin-top:.35rem">{% if lang == 'ca' %}Ajustar manualment{% else %}Ajustar manualmente{% endif %}</a>
+              {% else %}
+                <input type="number" name="cost" min="0" step="0.01" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
+                {% if prints_module.can_auto %}
                   <a href="{{ url_for('area_privada_impresions', lang=lang, paper=prints_module.selected_paper_id, build=prints_module.selected_build_id, width=prints_module.selected_width, height=prints_module.selected_height, qty=prints_module.selected_quantity, margin='%.2f'|format(prints_module.selected_margin_percent), view=prints_module.selected_view) }}" style="font-size:.8rem;color:var(--muted);display:block;margin-top:.35rem">{% if lang == 'ca' %}Usar preu automàtic{% else %}Usar precio automático{% endif %}</a>
                 {% endif %}
-              {% else %}
-                <label>
-                  <span class="field-label">{% if lang == 'ca' %}Cost professional / unitat (€){% else %}Coste profesional / unidad (€){% endif %}</span>
-                  <input type="number" name="cost" min="0" step="0.01" value="{{ '%.2f'|format(prints_module.selected_cost) }}">
-                </label>
               {% endif %}
             </div>
             <label>
@@ -222,14 +217,12 @@
           <span>{% if lang == 'ca' %}Cost taller amb IVA{% else %}Coste taller con IVA{% endif %}</span>
           <strong>{{ "%.2f"|format(prints_module.professional_total)|replace(".", ",") }} €</strong>
           {% endif %}
-          {% if prints_module.pricing_connected %}
-            {% if prints_module.cost_is_auto %}
-              <div class="muted-note">{% if lang == 'ca' %}Preu de la tarifa real · mida {{ prints_module.auto_ref }}{% else %}Precio de la tarifa real · talla {{ prints_module.auto_ref }}{% endif %}</div>
-            {% else %}
-              <div class="muted-note">{% if lang == 'ca' %}Preu introduït manualment.{% else %}Precio introducido manualmente.{% endif %}</div>
-            {% endif %}
+          {% if prints_module.can_auto and prints_module.cost_is_auto %}
+            <div class="muted-note">{% if lang == 'ca' %}Preu de la tarifa real{% if prints_module.auto_ref %} · {{ prints_module.auto_ref }}{% endif %}{% else %}Precio de la tarifa real{% if prints_module.auto_ref %} · {{ prints_module.auto_ref }}{% endif %}{% endif %}</div>
+          {% elif not prints_module.can_auto and prints_module.selected_build_id == 'foam_only' %}
+            <div class="muted-note">{% if lang == 'ca' %}Foam: introdueix el cost manualment.{% else %}Foam: introduce el coste manualmente.{% endif %}</div>
           {% else %}
-            <div class="muted-note">{% if lang == 'ca' %}Tarifa no disponible, preu manual.{% else %}Tarifa no disponible, precio manual.{% endif %}</div>
+            <div class="muted-note">{% if lang == 'ca' %}Preu introduït manualment.{% else %}Precio introducido manualmente.{% endif %}</div>
           {% endif %}
           <div class="muted-note">{% if lang == 'ca' %}Marge per defecte carregat des d'ajustos comercials.{% else %}Margen por defecto cargado desde ajustes comerciales.{% endif %}</div>
         </div>

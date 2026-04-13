@@ -1024,6 +1024,24 @@ def _find_closest_impressio(impressio_list, width, height):
     return None
 
 
+def _find_closest_laminate(laminate_list, width, height):
+    """Troba el preu més baix de la taula laminate_only que cobreixi
+    les dimensions sol·licitades (en qualsevol orientació).
+    """
+    candidates = []
+    for item in laminate_list:
+        rw, rh = _parse_ref_dims(item.get('ref', ''))
+        if rw is None:
+            continue
+        if (rw >= width and rh >= height) or (rw >= height and rh >= width):
+            candidates.append(item)
+    if candidates:
+        return min(candidates, key=lambda x: float(x.get('preu', 0)))
+    if laminate_list:
+        return max(laminate_list, key=lambda x: float(x.get('preu', 0)))
+    return None
+
+
 def build_calc_request_url(service=None):
     calc_service = get_calc_service(service)
     params = {
@@ -1456,20 +1474,52 @@ def build_prints_module_context():
     selected_view = (request.args.get("view") or "client").strip().lower()
     selected_view = selected_view if selected_view in {"cost", "client"} else "client"
 
-    # Preu automàtic des de la calculadora
+    # Preu automàtic des de la calculadora segons el tipus d'acabat
     cost_explicit = request.args.get("cost")
     pricing_data = fetch_calc_pricing()
-    impressio_list = pricing_data.get("impressio", []) if pricing_data else []
-    matched_print = _find_closest_impressio(impressio_list, selected_width, selected_height)
-    auto_cost = float(matched_print["preu"]) if matched_print else 0.0
-    auto_ref = matched_print["ref"] if matched_print else ""
+    impressio_list  = pricing_data.get("impressio", [])   if pricing_data else []
+    laminate_list   = pricing_data.get("laminate_only", []) if pricing_data else []
+
+    matched_print    = _find_closest_impressio(impressio_list, selected_width, selected_height)
+    matched_laminate = _find_closest_laminate(laminate_list,   selected_width, selected_height)
+
+    print_cost    = float(matched_print["preu"])    if matched_print    else 0.0
+    laminate_cost = float(matched_laminate["preu"]) if matched_laminate else 0.0
+
+    # Cost base per tipus d'acabat:
+    # print_only     → preu impressió
+    # laminate_only  → preu laminat
+    # laminate_foam  → preu impressió + preu laminat
+    # without_print  → 0 (client porta la imatge)
+    # foam_only      → no hi ha tarifa, cal entrada manual
+    if selected_build_id == "print_only":
+        auto_cost = print_cost
+        auto_ref  = matched_print["ref"] if matched_print else ""
+        can_auto  = bool(impressio_list)
+    elif selected_build_id == "laminate_only":
+        auto_cost = laminate_cost
+        auto_ref  = matched_laminate["ref"] if matched_laminate else ""
+        can_auto  = bool(laminate_list)
+    elif selected_build_id == "laminate_foam":
+        auto_cost = print_cost + laminate_cost
+        auto_ref  = f"{matched_print['ref'] if matched_print else '?'} + {matched_laminate['ref'] if matched_laminate else '?'}"
+        can_auto  = bool(impressio_list and laminate_list)
+    elif selected_build_id == "without_print":
+        auto_cost = 0.0
+        auto_ref  = ""
+        can_auto  = True
+    else:
+        # foam_only: sense tarifa automàtica
+        auto_cost = 0.0
+        auto_ref  = ""
+        can_auto  = False
 
     if cost_explicit is not None:
         selected_cost = parse_non_negative_float(cost_explicit, default=auto_cost)
         cost_is_auto = False
     else:
         selected_cost = auto_cost
-        cost_is_auto = True
+        cost_is_auto = can_auto
 
     paper_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["papers"]}
     build_lookup = {item["id"]: item for item in PRINT_PRODUCTS_CONFIG["build_options"]}
@@ -1527,6 +1577,7 @@ def build_prints_module_context():
             "cost_is_auto": cost_is_auto,
             "auto_ref": auto_ref,
             "pricing_connected": bool(impressio_list),
+            "can_auto": can_auto,
             "add_to_order_url": url_for(
                 "area_privada_comanda",
                 lang=lang,
